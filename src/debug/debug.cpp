@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2002-2015  The DOSBox Team
+ *  Copyright (C) 2002-2017  The DOSBox Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -447,6 +447,9 @@ void CBreakpoint::ActivateBreakpointsExceptAt(PhysPt adr)
 bool CBreakpoint::CheckBreakpoint(Bitu seg, Bitu off)
 // Checks if breakpoint is valid and should stop execution
 {
+	// Quick exit if there are no breakpoints
+	if (BPoints.empty()) return false;
+
 	// Search matching breakpoint
 	std::list<CBreakpoint*>::iterator i;
 	CBreakpoint* bp;
@@ -505,6 +508,8 @@ bool CBreakpoint::CheckBreakpoint(Bitu seg, Bitu off)
 bool CBreakpoint::CheckIntBreakpoint(PhysPt adr, Bit8u intNr, Bit16u ahValue, Bit16u alValue)
 // Checks if interrupt breakpoint is valid and should stop execution
 {
+	if (BPoints.empty()) return false;
+
 	// Search matching breakpoint
 	std::list<CBreakpoint*>::iterator i;
 	CBreakpoint* bp;
@@ -1734,8 +1739,8 @@ Bit32u DEBUG_CheckKeys(void) {
 
 					// ensure all breakpoints are activated
 					CBreakpoint::ActivateBreakpoints();
-
-					return 0;
+					skipDraw = true;
+					break;
 				}
 				// If we aren't stepping over something, do a normal step.
 				// NB: Fall-through
