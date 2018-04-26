@@ -37,6 +37,7 @@ target_link_libraries( dosbox
     dosbox_misc
     dosbox_shell
     dosbox_serial
+    dosbox_mame
     dosbox_gui_tk
     ${DOSBOX_LIBRARIES}
 )

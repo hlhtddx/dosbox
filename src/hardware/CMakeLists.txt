@@ -1,5 +1,7 @@
 
-add_subdirectory( serialport )# Generating the library libhardware.a
+add_subdirectory( serialport )
+add_subdirectory( mame )
+
 set(project "dosbox_hardware")
 
 set(${project}, "")
