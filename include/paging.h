@@ -99,9 +99,7 @@ void MEM_SetPageHandler(Bitu phys_page, Bitu pages, PageHandler * handler);
 void MEM_ResetPageHandler(Bitu phys_page, Bitu pages);
 
 
-#ifdef _MSC_VER
 #pragma pack (1)
-#endif
 struct X86_PageEntryBlock{
 #ifdef WORDS_BIGENDIAN
 	Bit32u		base:20;
@@ -128,10 +126,8 @@ struct X86_PageEntryBlock{
 	Bit32u		avl:3;
 	Bit32u		base:20;
 #endif
-} GCC_ATTRIBUTE(packed);
-#ifdef _MSC_VER
+};
 #pragma pack ()
-#endif
 
 
 union X86PageEntry {

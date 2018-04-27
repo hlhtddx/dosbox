@@ -85,9 +85,7 @@ private:
 	} allocation;
 };
 
-#ifdef _MSC_VER
 #pragma pack (1)
-#endif
 struct bootstrap {
 	Bit8u  nearjmp[3];
 	Bit8u  oemname[8];
@@ -107,7 +105,7 @@ struct bootstrap {
 	Bit8u  bootcode[474];
 	Bit8u  magic1; /* 0x55 */
 	Bit8u  magic2; /* 0xaa */
-} GCC_ATTRIBUTE(packed);
+};
 
 struct direntry {
 	Bit8u entryname[11];
@@ -122,7 +120,7 @@ struct direntry {
 	Bit16u modDate;
 	Bit16u loFirstClust;
 	Bit32u entrysize;
-} GCC_ATTRIBUTE(packed);
+};
 
 struct partTable {
 	Bit8u booter[446];
@@ -136,11 +134,9 @@ struct partTable {
 	} pentry[4];
 	Bit8u  magic1; /* 0x55 */
 	Bit8u  magic2; /* 0xaa */
-} GCC_ATTRIBUTE(packed);
+};
 
-#ifdef _MSC_VER
 #pragma pack ()
-#endif
 //Forward
 class imageDisk;
 class fatDrive : public DOS_Drive {
@@ -234,9 +230,7 @@ private:
 	char driveLetter;
 };
 
-#ifdef _MSC_VER
 #pragma pack (1)
-#endif
 struct isoPVD {
 	Bit8u type;
 	Bit8u standardIdent[5];
@@ -262,7 +256,7 @@ struct isoPVD {
 	Bit32u locationOptPathTableM;
 	Bit8u rootEntry[34];
 	Bit32u unused4[1858];
-} GCC_ATTRIBUTE(packed);
+};
 
 struct isoDirEntry {
 	Bit8u length;
@@ -285,11 +279,9 @@ struct isoDirEntry {
 	Bit16u VolumeSeqNumberM;
 	Bit8u fileIdentLength;
 	Bit8u ident[222];
-} GCC_ATTRIBUTE(packed);
+};
 
-#ifdef _MSC_VER
 #pragma pack ()
-#endif
 
 #if defined (WORDS_BIGENDIAN)
 #define EXTENT_LOCATION(de)	((de).extentLocationM)

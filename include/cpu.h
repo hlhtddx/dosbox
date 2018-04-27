@@ -222,9 +222,7 @@ void CPU_SetFlags(Bitu word,Bitu mask);
 #define DESC_CODE_R_C_A				0x1e
 #define DESC_CODE_R_C_NA			0x1f
 
-#ifdef _MSC_VER
-#pragma pack (1)
-#endif
+#pragma pack(1)
 
 struct S_Descriptor {
 #ifdef WORDS_BIGENDIAN
@@ -254,7 +252,7 @@ struct S_Descriptor {
 	Bit32u g			:1;
 	Bit32u base_24_31	:8;
 #endif
-}GCC_ATTRIBUTE(packed);
+};
 
 struct G_Descriptor {
 #ifdef WORDS_BIGENDIAN
@@ -276,7 +274,7 @@ struct G_Descriptor {
 	Bit32u p			:1;
 	Bit32u offset_16_31	:16;
 #endif
-} GCC_ATTRIBUTE(packed);
+};
 
 struct TSS_16 {	
     Bit16u back;                 /* Back link to other task */
@@ -295,7 +293,7 @@ struct TSS_16 {
     Bit16u ss;                   /* The application stack selector */
     Bit16u ds;                   /* The data selector */
     Bit16u ldt;                  /* The local descriptor table */
-} GCC_ATTRIBUTE(packed);
+};
 
 struct TSS_32 {	
     Bit32u back;                /* Back link to other task */
@@ -317,11 +315,10 @@ struct TSS_32 {
     Bit32u fs;                   /* And another extra selector */
     Bit32u gs;                   /* ... and another one */
     Bit32u ldt;                  /* The local descriptor table */
-} GCC_ATTRIBUTE(packed);
+};
 
-#ifdef _MSC_VER
 #pragma pack()
-#endif
+
 class Descriptor
 {
 public:

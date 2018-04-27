@@ -4,4 +4,4 @@ set(${project}_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/zmbv.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/zmbv.h
 )
-add_library(dosbox_${project} STATIC ${${project}_SOURCES} )
+add_library( ${project} STATIC ${${project}_SOURCES} )

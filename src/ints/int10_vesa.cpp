@@ -47,9 +47,7 @@ static char string_vendorname[]="DOSBox Development Team";
 static char string_productname[]="DOSBox - The DOS Emulator";
 static char string_productrev[]="DOSBox " VERSION;
 
-#ifdef _MSC_VER
-#pragma pack (1)
-#endif
+#pragma pack(1)
 struct MODE_INFO{
 	Bit16u ModeAttributes;
 	Bit8u WinAAttributes;
@@ -84,10 +82,8 @@ struct MODE_INFO{
 	Bit32u OffScreenMemOffset;
 	Bit16u OffScreenMemSize;
 	Bit8u Reserved[206];
-} GCC_ATTRIBUTE(packed);
-#ifdef _MSC_VER
+};
 #pragma pack()
-#endif
 
 
 

@@ -820,20 +820,16 @@ Bit8u FCB_Parsename(Bit16u seg,Bit16u offset,Bit8u parser ,char *string, Bit8u *
 	Bitu index=0;
 	Bit8u fill=' ';
 /* First get the old data from the fcb */
-#ifdef _MSC_VER
-#pragma pack (1)
-#endif
+#pragma pack(1)
 	union {
 		struct {
 			char drive[2];
 			char name[9];
 			char ext[4];
-		} GCC_ATTRIBUTE (packed) part;
+		} part;
 		char full[DOS_FCBNAME];
 	} fcb_name;
-#ifdef _MSC_VER
 #pragma pack()
-#endif
 	/* Get the old information from the previous fcb */
 	fcb.GetName(fcb_name.full);
 	fcb_name.part.drive[0]-='A'-1;fcb_name.part.drive[1]=0;

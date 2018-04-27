@@ -179,9 +179,7 @@ namespace Adlib {
 
 /* Raw DRO capture stuff */
 
-#ifdef _MSC_VER
-#pragma pack (1)
-#endif
+#pragma pack(1)
 
 #define HW_OPL2 0
 #define HW_DUALOPL2 1
@@ -199,10 +197,8 @@ struct RawHeader {
 	Bit8u delay256;				/* 0x17, Bit8u Delay 1-256 msec command */
 	Bit8u delayShift8;			/* 0x18, Bit8u (delay + 1)*256 */			
 	Bit8u conversionTableSize;	/* 0x191, Bit8u Raw Conversion Table size */
-} GCC_ATTRIBUTE(packed);
-#ifdef _MSC_VER
+};
 #pragma pack()
-#endif
 /*
 	The Raw Tables is < 128 and is used to convert raw commands into a full register index 
 	When the high bit of a raw command is set it indicates the cmd/data pair is to be sent to the 2nd port
