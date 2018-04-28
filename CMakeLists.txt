@@ -102,6 +102,12 @@ endif( FPU_X86 )
 
 if( OPENGL )
     message(" OPENGL Enabled")
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        find_library(OPENGL_LIB OpenGL)
+    else()
+        find_library(OPENGL_LIB GL)
+    endif()
+    set(DOSBOX_LIBRARIES ${DOSBOX_LIBRARIES} ${OPENGL_LIB} )
     add_definitions(-DC_OPENGL=1)
 endif( OPENGL )
 
