@@ -130,7 +130,7 @@ if( SDL_SND_LIBRARY )
     set(DOSBOX_LIBRARIES ${DOSBOX_LIBRARIES} ${SDL_SND_LIBRARY} )
 endif( SDL_SND_LIBRARY )
 
-pkg_check_modules(SDL_NET REQUIRED sdl<=1.2.99 sdl_net<=1.2.99)
+pkg_check_modules(SDL_NET REQUIRED sdl<=1.2.99 SDL_net<=1.2.99)
 if (SDL_NET_FOUND)
     set(DOSBOX_LIBRARIES ${DOSBOX_LIBRARIES} ${SDL_NET_LIBRARIES} )
     include_directories(${SDL_NET_INCLUDE_DIRS})
