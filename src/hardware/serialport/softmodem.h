@@ -60,10 +60,10 @@ public:
 	~CFifo() {
 		delete[] data;
 	}
-	INLINE Bitu left(void) {
+	inline Bitu left(void) {
 		return size-used;
 	}
-	INLINE Bitu inuse(void) {
+	inline Bitu inuse(void) {
 		return used;
 	}
 	void clear(void) {

@@ -161,7 +161,7 @@ public:
 
 	// Returns a single 16-bit sample from the Gravis's RAM
 
-	INLINE Bit32s GetSample8() const {
+	inline Bit32s GetSample8() const {
 		Bit32u useAddr = WaveAddr >> WAVE_FRACT;
 		if (WaveAdd >= (1 << WAVE_FRACT)) {
 			Bit32s tmpsmall = (Bit8s)GUSRam[useAddr];
@@ -178,7 +178,7 @@ public:
 		}
 	}
 
-	INLINE Bit32s GetSample16() const {
+	inline Bit32s GetSample16() const {
 		Bit32u useAddr = WaveAddr >> WAVE_FRACT;
 		// Formula used to convert addresses for use with 16-bit samples
 		Bit32u holdAddr = useAddr & 0xc0000L;
@@ -212,7 +212,7 @@ public:
 		if (oldirq != myGUS.WaveIRQ) 
 			CheckVoiceIrq();
 	}
-	INLINE Bit8u ReadWaveCtrl(void) {
+	inline Bit8u ReadWaveCtrl(void) {
 		Bit8u ret=WaveCtrl;
 		if (myGUS.WaveIRQ & irqmask) ret|=0x80;
 		return ret;
@@ -241,7 +241,7 @@ public:
 		if (old != myGUS.RampIRQ) 
 			CheckVoiceIrq();
 	}
-	INLINE Bit8u ReadRampCtrl(void) {
+	inline Bit8u ReadRampCtrl(void) {
 		Bit8u ret=RampCtrl;
 		if (myGUS.RampIRQ & irqmask) ret |= 0x80;
 		return ret;
@@ -252,7 +252,7 @@ public:
 		double realadd = (frameadd*(double)myGUS.basefreq/(double)GUS_RATE) * (double)(1 << RAMP_FRACT);
 		RampAdd = (Bit32u)realadd;
 	}
-	INLINE void WaveUpdate(void) {
+	inline void WaveUpdate(void) {
 		if (WaveCtrl & ( WCTRL_STOP | WCTRL_STOPPED)) return;
 		Bit32s WaveLeft;
 		if (WaveCtrl & WCTRL_DECREASING) {
@@ -281,7 +281,7 @@ public:
 			WaveAddr = (WaveCtrl & WCTRL_DECREASING) ? WaveStart : WaveEnd;
 		}
 	}
-	INLINE void UpdateVolumes(void) {
+	inline void UpdateVolumes(void) {
 		Bit32s templeft=RampVol - PanLeft;
 		templeft&=~(templeft >> 31);
 		Bit32s tempright=RampVol - PanRight;
@@ -289,7 +289,7 @@ public:
 		VolLeft=vol16bit[templeft >> RAMP_FRACT];
 		VolRight=vol16bit[tempright >> RAMP_FRACT];
 	}
-	INLINE void RampUpdate(void) {
+	inline void RampUpdate(void) {
 		/* Check if ramping enabled */
 		if (RampCtrl & 0x3) return;
 		Bit32s RampLeft;
@@ -388,7 +388,7 @@ static void GUSReset(void) {
 	}
 }
 
-static INLINE void GUS_CheckIRQ(void) {
+static inline void GUS_CheckIRQ(void) {
 	if (myGUS.IRQStatus && (myGUS.mixControl & 0x08)) 
 		PIC_ActivateIRQ(myGUS.irq1);
 

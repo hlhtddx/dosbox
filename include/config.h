@@ -16,32 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if C_ATTRIBUTE_ALWAYS_INLINE
-#define INLINE inline __attribute__((always_inline))
-#else
-#define INLINE inline
-#endif
-
-#if C_ATTRIBUTE_FASTCALL
-#define DB_FASTCALL __attribute__((fastcall))
-#else
-#define DB_FASTCALL
-#endif
-
-#if C_HAS_ATTRIBUTE
-#define GCC_ATTRIBUTE(x) __attribute__ ((x))
-#else
-#define GCC_ATTRIBUTE(x) /* attribute not supported */
-#endif
-
-#if C_HAS_BUILTIN_EXPECT
-#define GCC_UNLIKELY(x) __builtin_expect((x),0)
-#define GCC_LIKELY(x) __builtin_expect((x),1)
-#else
-#define GCC_UNLIKELY(x) (x)
-#define GCC_LIKELY(x) (x)
-#endif
-
 /* Version number of package */
 #define VERSION "SVN"
 

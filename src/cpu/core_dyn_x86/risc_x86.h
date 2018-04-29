@@ -50,7 +50,7 @@ public:
 	bool notusable;
 	void Load(DynReg * _dynreg,bool stale=false) {
 		if (!_dynreg) return;
-		if (GCC_UNLIKELY((Bitu)dynreg)) Clear();
+		if ((Bitudynreg)) Clear();
 		dynreg=_dynreg;
 		last_used=x86gen.last_used;
 		dynreg->flags&=~DYNFLG_CHANGED;
@@ -62,13 +62,13 @@ public:
 		dynreg->flags|=DYNFLG_ACTIVE;
 	}
 	void Save(void) {
-		if (GCC_UNLIKELY(!((Bitu)dynreg))) IllegalOption("GenReg->Save");
+		if (!((Bitudynreg))) IllegalOption("GenReg->Save");
 		dynreg->flags&=~DYNFLG_CHANGED;
 		cache_addw(0x0589+(index << (8+3)));		//Mov [data],reg
 		cache_addd((Bit32u)dynreg->data);
 	}
 	void Release(void) {
-		if (GCC_UNLIKELY(!((Bitu)dynreg))) return;
+		if (!((Bitudynreg))) return;
 		if (dynreg->flags&DYNFLG_CHANGED && dynreg->flags&DYNFLG_SAVE) {
 			Save();
 		}
@@ -746,7 +746,7 @@ static void gen_call_function(void * func,char const* ops,...) {
 	x86gen.regs[X86_REG_EAX]->Clear();
 	x86gen.regs[X86_REG_EAX]->notusable=true;
 	/* Save the flags */
-	if (GCC_UNLIKELY(!skip_flags)) gen_protectflags();
+	if (!skip_flags) gen_protectflags();
 	/* Scan for the amount of params */
 	if (ops) {
 		va_list params;
@@ -1010,7 +1010,7 @@ static void gen_jmp_ptr(void * ptr,Bits imm=0) {
 }
 
 static void gen_save_flags(DynReg * dynreg) {
-	if (GCC_UNLIKELY(x86gen.flagsactive)) IllegalOption("gen_save_flags");
+	if (x86gen.flagsactive) IllegalOption("gen_save_flags");
 	GenReg * genreg=FindDynReg(dynreg);
 	cache_addb(0x8b);					//MOV REG,[esp]
 	cache_addw(0x2404+(genreg->index << 3));
@@ -1018,7 +1018,7 @@ static void gen_save_flags(DynReg * dynreg) {
 }
 
 static void gen_load_flags(DynReg * dynreg) {
-	if (GCC_UNLIKELY(x86gen.flagsactive)) IllegalOption("gen_load_flags");
+	if (x86gen.flagsactive) IllegalOption("gen_load_flags");
 	cache_addw(0xc483);				//ADD ESP,4
 	cache_addb(0x4);
 	GenReg * genreg=FindDynReg(dynreg);
@@ -1043,7 +1043,7 @@ static void gen_return(BlockReturn retcode) {
 }
 
 static void gen_return_fast(BlockReturn retcode,bool ret_exception=false) {
-	if (GCC_UNLIKELY(x86gen.flagsactive)) IllegalOption("gen_return_fast");
+	if (x86gen.flagsactive) IllegalOption("gen_return_fast");
 	cache_addw(0x0d8b);			//MOV ECX, the flags
 	cache_addd((Bit32u)&cpu_regs.flags);
 	if (!ret_exception) {

@@ -207,7 +207,7 @@ void INT10_ScrollWindow(Bit8u rul,Bit8u cul,Bit8u rlr,Bit8u clr,Bit8s nlines,Bit
 	if (page==0xff) base+=real_readw(BIOSMEM_SEG,BIOSMEM_CURRENT_START);
 	else base+=page*real_readw(BIOSMEM_SEG,BIOSMEM_PAGE_SIZE);
 	
-	if (GCC_UNLIKELY(machine==MCH_PCJR)) {
+	if (machine==MCH_PCJR) {
 		if (real_readb(BIOSMEM_SEG, BIOSMEM_CURRENT_MODE) >= 9) {
 			// PCJr cannot handle these modes at 0xb800
 			// See INT10_PutPixel M_TANDY16
@@ -529,9 +529,9 @@ void WriteChar(Bit16u col,Bit16u row,Bit8u page,Bit8u chr,Bit8u attr,bool useatt
 	}
 	fontdata+=chr*cheight;
 
-	if(GCC_UNLIKELY(!useattr)) { //Set attribute(color) to a sensible value
+	if(!useattr) { //Set attribute(color) to a sensible value
 		static bool warned_use = false;
-		if(GCC_UNLIKELY(!warned_use)){ 
+		if(!warned_use){
 			LOG(LOG_INT10,LOG_ERROR)("writechar used without attribute in non-textmode %c %X",chr,chr);
 			warned_use = true;
 		}

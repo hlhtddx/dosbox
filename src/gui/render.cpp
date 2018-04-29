@@ -101,7 +101,7 @@ static void RENDER_StartLineHandler(const void * s) {
 		const Bitu *src = (Bitu*)s;
 		Bitu *cache = (Bitu*)(render.scale.cacheRead);
 		for (Bits x=render.src.start;x>0;) {
-			if (GCC_UNLIKELY(src[0] != cache[0])) {
+			if (src[0] != cache[0]) {
 				if (!GFX_StartUpdate( render.scale.outWrite, render.scale.outPitch )) {
 					RENDER_DrawLine = RENDER_EmptyLineHandler;
 					return;
@@ -145,11 +145,11 @@ static void RENDER_ClearCacheHandler(const void * src) {
 }
 
 bool RENDER_StartUpdate(void) {
-	if (GCC_UNLIKELY(render.updating))
+	if (render.updating)
 		return false;
-	if (GCC_UNLIKELY(!render.active))
+	if (!render.active)
 		return false;
-	if (GCC_UNLIKELY(render.frameskip.count<render.frameskip.max)) {
+	if (render.frameskip.count<render.frameskip.max) {
 		render.frameskip.count++;
 		return false;
 	}
@@ -165,10 +165,10 @@ bool RENDER_StartUpdate(void) {
 	Scaler_ChangedLines[0] = 0;
 	Scaler_ChangedLineIndex = 0;
 	/* Clearing the cache will first process the line to make sure it's never the same */
-	if (GCC_UNLIKELY( render.scale.clearCache) ) {
+	if ( render.scale.clearCache ) {
 //		LOG_MSG("Clearing cache");
 		//Will always have to update the screen with this one anyway, so let's update already
-		if (GCC_UNLIKELY(!GFX_StartUpdate( render.scale.outWrite, render.scale.outPitch )))
+		if (!GFX_StartUpdate( render.scale.outWrite, render.scale.outPitch ))
 			return false;
 		render.fullFrame = true;
 		render.scale.clearCache = false;
@@ -176,13 +176,13 @@ bool RENDER_StartUpdate(void) {
 	} else {
 		if (render.pal.changed) {
 			/* Assume pal changes always do a full screen update anyway */
-			if (GCC_UNLIKELY(!GFX_StartUpdate( render.scale.outWrite, render.scale.outPitch )))
+			if (!GFX_StartUpdate( render.scale.outWrite, render.scale.outPitch ))
 				return false;
 			RENDER_DrawLine = render.scale.linePalHandler;
 			render.fullFrame = true;
 		} else {
 			RENDER_DrawLine = RENDER_StartLineHandler;
-			if (GCC_UNLIKELY(CaptureState & (CAPTURE_IMAGE|CAPTURE_VIDEO))) 
+			if (CaptureState & (CAPTURE_IMAGE|CAPTURE_VIDEO))
 				render.fullFrame = true;
 			else
 				render.fullFrame = false;
@@ -201,10 +201,10 @@ static void RENDER_Halt( void ) {
 
 extern Bitu PIC_Ticks;
 void RENDER_EndUpdate( bool abort ) {
-	if (GCC_UNLIKELY(!render.updating))
+	if (!render.updating)
 		return;
 	RENDER_DrawLine = RENDER_EmptyLineHandler;
-	if (GCC_UNLIKELY(CaptureState & (CAPTURE_IMAGE|CAPTURE_VIDEO))) {
+	if (CaptureState & (CAPTURE_IMAGE|CAPTURE_VIDEO)) {
 		Bitu pitch, flags;
 		flags = 0;
 		if (render.src.dblw != render.src.dblh) {

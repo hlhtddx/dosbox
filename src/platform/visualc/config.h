@@ -53,11 +53,11 @@
 #define C_DIRECTSERIAL 1
 
 #define GCC_ATTRIBUTE(x) /* attribute not supported */
-#define GCC_UNLIKELY(x) (x)
+#define x (x)
 #define GCC_LIKELY(x) (x)
 
-#define INLINE __forceinline
-#define DB_FASTCALL __fastcall
+#define inline __forceinline
+#define __fastcall
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400) 
 #pragma warning(disable : 4996) 

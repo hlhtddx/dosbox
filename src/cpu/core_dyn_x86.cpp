@@ -267,7 +267,7 @@ restart_core:
 #endif
 #endif
 	CodePageHandler * chandler=0;
-	if (GCC_UNLIKELY(MakeCodePage(ip_point,chandler))) {
+	if (MakeCodePage(ip_point,chandler)) {
 		CPU_Exception(cpu.exception.which,cpu.exception.error);
 		goto restart_core;
 	}

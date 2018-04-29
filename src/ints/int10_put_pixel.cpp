@@ -174,7 +174,7 @@ void INT10_PutPixel(Bit16u x,Bit16u y,Bit8u page,Bit8u color) {
 			break;
 		}
 	default:
-		if(GCC_UNLIKELY(!putpixelwarned)) {
+		if(!putpixelwarned) {
 			putpixelwarned = true;		
 			LOG(LOG_INT10,LOG_ERROR)("PutPixel unhandled mode type %d",CurMode->type);
 		}

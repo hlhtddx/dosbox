@@ -59,7 +59,7 @@ public:
 	~MyFifo() {
 		delete[] data;
 	}
-	INLINE Bitu getFree(void) {
+	inline Bitu getFree(void) {
 		return size-used;
 	}
 	bool isEmpty() {
@@ -69,7 +69,7 @@ public:
 		return (size-used)==0;
 	}
 
-	INLINE Bitu getUsage(void) {
+	inline Bitu getUsage(void) {
 		return used;
 	}
 	void setSize(Bitu newsize)

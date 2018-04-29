@@ -131,7 +131,7 @@ static struct DynDecode {
 static bool MakeCodePage(Bitu lin_addr,CodePageHandlerDynRec * &cph) {
 	Bit8u rdval;
 	//Ensure page contains memory:
-	if (GCC_UNLIKELY(mem_readb_checked(lin_addr,&rdval))) return true;
+	if (mem_readb_checked(lin_addr,&rdval)) return true;
 
 	PageHandler * handler=get_tlb_readhandler(lin_addr);
 	if (handler->flags & PFLAG_HASCODE) {
@@ -213,7 +213,7 @@ static void decode_advancepage(void) {
 
 // fetch the next byte of the instruction stream
 static Bit8u decode_fetchb(void) {
-	if (GCC_UNLIKELY(decode.page.index>=4096)) {
+	if (decode.page.index>=4096) {
 		decode_advancepage();
 	}
 	decode.page.wmap[decode.page.index]+=0x01;
@@ -223,7 +223,7 @@ static Bit8u decode_fetchb(void) {
 }
 // fetch the next word of the instruction stream
 static Bit16u decode_fetchw(void) {
-	if (GCC_UNLIKELY(decode.page.index>=4095)) {
+	if (decode.page.index>=4095) {
    		Bit16u val=decode_fetchb();
 		val|=decode_fetchb() << 8;
 		return val;
@@ -234,7 +234,7 @@ static Bit16u decode_fetchw(void) {
 }
 // fetch the next dword of the instruction stream
 static Bit32u decode_fetchd(void) {
-	if (GCC_UNLIKELY(decode.page.index>=4093)) {
+	if (decode.page.index>=4093) {
    		Bit32u val=decode_fetchb();
 		val|=decode_fetchb() << 8;
 		val|=decode_fetchb() << 16;
@@ -251,10 +251,10 @@ static Bit32u decode_fetchd(void) {
 
 // adjust writemap mask to care for map holes due to special
 // codefetch functions
-static void INLINE decode_increase_wmapmask(Bitu size) {
+static void inline decode_increase_wmapmask(Bitu size) {
 	Bitu mapidx;
 	CacheBlockDynRec* activecb=decode.active_block; 
-	if (GCC_UNLIKELY(!activecb->cache.wmapmask)) {
+	if (!activecb->cache.wmapmask) {
 		// no mask memory yet allocated, start with a small buffer
 		activecb->cache.wmapmask=(Bit8u*)malloc(START_WMMEM);
 		memset(activecb->cache.wmapmask,0,START_WMMEM);
@@ -263,7 +263,7 @@ static void INLINE decode_increase_wmapmask(Bitu size) {
 		mapidx=0;
 	} else {
 		mapidx=decode.page.index-activecb->cache.maskstart;
-		if (GCC_UNLIKELY(mapidx+size>=activecb->cache.masklen)) {
+		if (mapidx+size>=activecb->cache.masklen) {
 			// mask buffer too small, increase
 			Bitu newmasklen=activecb->cache.masklen*4;
 			if (newmasklen<mapidx+size) newmasklen=((mapidx+size)&~3)*2;
@@ -286,7 +286,7 @@ static void INLINE decode_increase_wmapmask(Bitu size) {
 // fetch a byte, val points to the code location if possible,
 // otherwise val contains the current value read from the position
 static bool decode_fetchb_imm(Bitu & val) {
-	if (GCC_UNLIKELY(decode.page.index>=4096)) {
+	if (decode.page.index>=4096) {
 		decode_advancepage();
 	}
 	// see if position is directly accessible
@@ -371,7 +371,7 @@ static bool decode_fetchd_imm(Bitu & val) {
 
 
 // modrm decoding helper
-static void INLINE dyn_get_modrm(void) {
+static void inline dyn_get_modrm(void) {
 	decode.modrm.val=decode_fetchb();
 	decode.modrm.mod=(decode.modrm.val >> 6) & 3;
 	decode.modrm.reg=(decode.modrm.val >> 3) & 7;
@@ -472,24 +472,24 @@ static void dyn_reduce_cycles(void) {
 
 // set reg to the start of the next instruction
 // set reg_eip to the start of the current instruction
-static INLINE void dyn_set_eip_last_end(HostReg reg) {
+static inline void dyn_set_eip_last_end(HostReg reg) {
 	gen_mov_word_to_reg(reg,&reg_eip,true);
 	gen_add_imm(reg,(Bit32u)(decode.code-decode.code_start));
 	gen_add_direct_word(&reg_eip,decode.op_start-decode.code_start,decode.big_op);
 }
 
 // set reg_eip to the start of the current instruction
-static INLINE void dyn_set_eip_last(void) {
+static inline void dyn_set_eip_last(void) {
 	gen_add_direct_word(&reg_eip,decode.op_start-decode.code_start,cpu.code.big);
 }
 
 // set reg_eip to the start of the next instruction
-static INLINE void dyn_set_eip_end(void) {
+static inline void dyn_set_eip_end(void) {
 	gen_add_direct_word(&reg_eip,decode.code-decode.code_start,cpu.code.big);
 }
 
 // set reg_eip to the start of the next instruction plus an offset (imm)
-static INLINE void dyn_set_eip_end(HostReg reg,Bit32u imm=0) {
+static inline void dyn_set_eip_end(HostReg reg,Bit32u imm=0) {
 	gen_mov_word_to_reg(reg,&reg_eip,true); //get_extend_word will mask off the upper bits
 	//gen_mov_word_to_reg(reg,&reg_eip,decode.big_op);
 	gen_add_imm(reg,(Bit32u)(decode.code-decode.code_start+imm));
@@ -503,72 +503,72 @@ static INLINE void dyn_set_eip_end(HostReg reg,Bit32u imm=0) {
 // is architecture dependent
 // R=host register; I=32bit immediate value; A=address value; m=memory
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_R(void * func,Bitu op) {
+static DRC_PTR_SIZE_IM inline gen_call_function_R(void * func,Bitu op) {
 	gen_load_param_reg(op,0);
 	return gen_call_function_setup(func, 1);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_R3(void * func,Bitu op) {
+static DRC_PTR_SIZE_IM inline gen_call_function_R3(void * func,Bitu op) {
 	gen_load_param_reg(op,2);
 	return gen_call_function_setup(func, 3, true);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_RI(void * func,Bitu op1,Bitu op2) {
+static DRC_PTR_SIZE_IM inline gen_call_function_RI(void * func,Bitu op1,Bitu op2) {
 	gen_load_param_imm(op2,1);
 	gen_load_param_reg(op1,0);
 	return gen_call_function_setup(func, 2);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_RA(void * func,Bitu op1,DRC_PTR_SIZE_IM op2) {
+static DRC_PTR_SIZE_IM inline gen_call_function_RA(void * func,Bitu op1,DRC_PTR_SIZE_IM op2) {
 	gen_load_param_addr(op2,1);
 	gen_load_param_reg(op1,0);
 	return gen_call_function_setup(func, 2);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_RR(void * func,Bitu op1,Bitu op2) {
+static DRC_PTR_SIZE_IM inline gen_call_function_RR(void * func,Bitu op1,Bitu op2) {
 	gen_load_param_reg(op2,1);
 	gen_load_param_reg(op1,0);
 	return gen_call_function_setup(func, 2);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_IR(void * func,Bitu op1,Bitu op2) {
+static DRC_PTR_SIZE_IM inline gen_call_function_IR(void * func,Bitu op1,Bitu op2) {
 	gen_load_param_reg(op2,1);
 	gen_load_param_imm(op1,0);
 	return gen_call_function_setup(func, 2);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_I(void * func,Bitu op) {
+static DRC_PTR_SIZE_IM inline gen_call_function_I(void * func,Bitu op) {
 	gen_load_param_imm(op,0);
 	return gen_call_function_setup(func, 1);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_II(void * func,Bitu op1,Bitu op2) {
+static DRC_PTR_SIZE_IM inline gen_call_function_II(void * func,Bitu op1,Bitu op2) {
 	gen_load_param_imm(op2,1);
 	gen_load_param_imm(op1,0);
 	return gen_call_function_setup(func, 2);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_III(void * func,Bitu op1,Bitu op2,Bitu op3) {
+static DRC_PTR_SIZE_IM inline gen_call_function_III(void * func,Bitu op1,Bitu op2,Bitu op3) {
 	gen_load_param_imm(op3,2);
 	gen_load_param_imm(op2,1);
 	gen_load_param_imm(op1,0);
 	return gen_call_function_setup(func, 3);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_IA(void * func,Bitu op1,DRC_PTR_SIZE_IM op2) {
+static DRC_PTR_SIZE_IM inline gen_call_function_IA(void * func,Bitu op1,DRC_PTR_SIZE_IM op2) {
 	gen_load_param_addr(op2,1);
 	gen_load_param_imm(op1,0);
 	return gen_call_function_setup(func, 2);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_IIR(void * func,Bitu op1,Bitu op2,Bitu op3) {
+static DRC_PTR_SIZE_IM inline gen_call_function_IIR(void * func,Bitu op1,Bitu op2,Bitu op3) {
 	gen_load_param_reg(op3,2);
 	gen_load_param_imm(op2,1);
 	gen_load_param_imm(op1,0);
 	return gen_call_function_setup(func, 3);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_IIIR(void * func,Bitu op1,Bitu op2,Bitu op3,Bitu op4) {
+static DRC_PTR_SIZE_IM inline gen_call_function_IIIR(void * func,Bitu op1,Bitu op2,Bitu op3,Bitu op4) {
 	gen_load_param_reg(op4,3);
 	gen_load_param_imm(op3,2);
 	gen_load_param_imm(op2,1);
@@ -576,7 +576,7 @@ static DRC_PTR_SIZE_IM INLINE gen_call_function_IIIR(void * func,Bitu op1,Bitu o
 	return gen_call_function_setup(func, 4);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_IRRR(void * func,Bitu op1,Bitu op2,Bitu op3,Bitu op4) {
+static DRC_PTR_SIZE_IM inline gen_call_function_IRRR(void * func,Bitu op1,Bitu op2,Bitu op3,Bitu op4) {
 	gen_load_param_reg(op4,3);
 	gen_load_param_reg(op3,2);
 	gen_load_param_reg(op2,1);
@@ -584,12 +584,12 @@ static DRC_PTR_SIZE_IM INLINE gen_call_function_IRRR(void * func,Bitu op1,Bitu o
 	return gen_call_function_setup(func, 4);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_m(void * func,Bitu op) {
+static DRC_PTR_SIZE_IM inline gen_call_function_m(void * func,Bitu op) {
 	gen_load_param_mem(op,2);
 	return gen_call_function_setup(func, 3, true);
 }
 
-static DRC_PTR_SIZE_IM INLINE gen_call_function_mm(void * func,Bitu op1,Bitu op2) {
+static DRC_PTR_SIZE_IM inline gen_call_function_mm(void * func,Bitu op1,Bitu op2) {
 	gen_load_param_mem(op2,3);
 	gen_load_param_mem(op1,2);
 	return gen_call_function_setup(func, 4, true);

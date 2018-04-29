@@ -226,26 +226,26 @@ static inline Bits MakeVolume( Bitu wave, Bitu volume ) {
 	return (sig >> exp);
 };
 
-static Bits DB_FASTCALL WaveForm0( Bitu i, Bitu volume ) {
+static Bits WaveForm0( Bitu i, Bitu volume ) {
 	Bits neg = 0 - (( i >> 9) & 1);//Create ~0 or 0
 	Bitu wave = SinTable[i & 511];
 	return (MakeVolume( wave, volume ) ^ neg) - neg;
 }
-static Bits DB_FASTCALL WaveForm1( Bitu i, Bitu volume ) {
+static Bits WaveForm1( Bitu i, Bitu volume ) {
 	Bit32u wave = SinTable[i & 511];
 	wave |= ( ( (i ^ 512 ) & 512) - 1) >> ( 32 - 12 );
 	return MakeVolume( wave, volume );
 }
-static Bits DB_FASTCALL WaveForm2( Bitu i, Bitu volume ) {
+static Bits WaveForm2( Bitu i, Bitu volume ) {
 	Bitu wave = SinTable[i & 511];
 	return MakeVolume( wave, volume );
 }
-static Bits DB_FASTCALL WaveForm3( Bitu i, Bitu volume ) {
+static Bits WaveForm3( Bitu i, Bitu volume ) {
 	Bitu wave = SinTable[i & 255];
 	wave |= ( ( (i ^ 256 ) & 256) - 1) >> ( 32 - 12 );
 	return MakeVolume( wave, volume );
 }
-static Bits DB_FASTCALL WaveForm4( Bitu i, Bitu volume ) {
+static Bits WaveForm4( Bitu i, Bitu volume ) {
 	//Twice as fast
 	i <<= 1;
 	Bits neg = 0 - (( i >> 9) & 1);//Create ~0 or 0
@@ -253,18 +253,18 @@ static Bits DB_FASTCALL WaveForm4( Bitu i, Bitu volume ) {
 	wave |= ( ( (i ^ 512 ) & 512) - 1) >> ( 32 - 12 );
 	return (MakeVolume( wave, volume ) ^ neg) - neg;
 }
-static Bits DB_FASTCALL WaveForm5( Bitu i, Bitu volume ) {
+static Bits WaveForm5( Bitu i, Bitu volume ) {
 	//Twice as fast
 	i <<= 1;
 	Bitu wave = SinTable[i & 511];
 	wave |= ( ( (i ^ 512 ) & 512) - 1) >> ( 32 - 12 );
 	return MakeVolume( wave, volume );
 }
-static Bits DB_FASTCALL WaveForm6( Bitu i, Bitu volume ) {
+static Bits WaveForm6( Bitu i, Bitu volume ) {
 	Bits neg = 0 - (( i >> 9) & 1);//Create ~0 or 0
 	return (MakeVolume( 0, volume ) ^ neg) - neg;
 }
-static Bits DB_FASTCALL WaveForm7( Bitu i, Bitu volume ) {
+static Bits WaveForm7( Bitu i, Bitu volume ) {
 	//Negative is reversed here
 	Bits neg = (( i >> 9) & 1) - 1;
 	Bitu wave = (i << 3);
@@ -372,7 +372,7 @@ void Operator::UpdateRates( const Chip* chip ) {
 	UpdateRelease( chip );
 }
 
-INLINE Bit32s Operator::RateForward( Bit32u add ) {
+inline Bit32s Operator::RateForward( Bit32u add ) {
 	rateIndex += add;
 	Bit32s ret = rateIndex >> RATE_SH;
 	rateIndex = rateIndex & RATE_MASK;
@@ -400,9 +400,9 @@ Bits Operator::TemplateVolume(  ) {
 		break;
 	case DECAY:
 		vol += RateForward( decayAdd );
-		if ( GCC_UNLIKELY(vol >= sustainLevel) ) {
+		if ( vol >= sustainLevel ) {
 			//Check if we didn't overshoot max attenuation, then just go off
-			if ( GCC_UNLIKELY(vol >= ENV_MAX) ) {
+			if ( vol >= ENV_MAX ) {
 				volume = ENV_MAX;
 				SetState( OFF );
 				return ENV_MAX;
@@ -419,7 +419,7 @@ Bits Operator::TemplateVolume(  ) {
 		//In sustain phase, but not sustaining, do regular release
 	case RELEASE: 
 		vol += RateForward( releaseAdd );;
-		if ( GCC_UNLIKELY(vol >= ENV_MAX) ) {
+		if ( vol >= ENV_MAX ) {
 			volume = ENV_MAX;
 			SetState( OFF );
 			return ENV_MAX;
@@ -438,12 +438,12 @@ static const VolumeHandler VolumeHandlerTable[5] = {
 	&Operator::TemplateVolume< Operator::ATTACK >
 };
 
-INLINE Bitu Operator::ForwardVolume() {
+inline Bitu Operator::ForwardVolume() {
 	return currentLevel + (this->*volHandler)();
 }
 
 
-INLINE Bitu Operator::ForwardWave() {
+inline Bitu Operator::ForwardWave() {
 	waveIndex += waveCurrent;	
 	return waveIndex >> WAVE_SH;
 }
@@ -520,12 +520,12 @@ void Operator::WriteE0( const Chip* chip, Bit8u val ) {
 #endif
 }
 
-INLINE void Operator::SetState( Bit8u s ) {
+inline void Operator::SetState( Bit8u s ) {
 	state = s;
 	volHandler = VolumeHandlerTable[ s ];
 }
 
-INLINE bool Operator::Silent() const {
+inline bool Operator::Silent() const {
 	if ( !ENV_SILENT( totalLevel + volume ) )
 		return false;
 	if ( !(rateZero & ( 1 << state ) ) )
@@ -533,7 +533,7 @@ INLINE bool Operator::Silent() const {
 	return true;
 }
 
-INLINE void Operator::Prepare( const Chip* chip )  {
+inline void Operator::Prepare( const Chip* chip )  {
 	currentLevel = totalLevel + (chip->tremoloValue & tremoloMask);
 	waveCurrent = waveAdd;
 	if ( vibStrength >> chip->vibratoShift ) {
@@ -569,7 +569,7 @@ void Operator::KeyOff( Bit8u mask ) {
 	}
 }
 
-INLINE Bits Operator::GetWave( Bitu index, Bitu vol ) {
+inline Bits Operator::GetWave( Bitu index, Bitu vol ) {
 #if ( DBOPL_WAVE == WAVE_HANDLER )
 	return waveHandler( index, vol << ( 3 - ENV_EXTRA ) );
 #elif ( DBOPL_WAVE == WAVE_TABLEMUL )
@@ -586,7 +586,7 @@ INLINE Bits Operator::GetWave( Bitu index, Bitu vol ) {
 #endif
 }
 
-Bits INLINE Operator::GetSample( Bits modulation ) {
+Bits inline Operator::GetSample( Bits modulation ) {
 	Bitu vol = ForwardVolume();
 	if ( ENV_SILENT( vol ) ) {
 		//Simply forward the wave
@@ -788,7 +788,7 @@ void Channel::UpdateSynth( const Chip* chip ) {
 }
 
 template< bool opl3Mode>
-INLINE void Channel::GeneratePercussion( Chip* chip, Bit32s* output ) {
+inline void Channel::GeneratePercussion( Chip* chip, Bit32s* output ) {
 	Channel* chan = this;
 
 	//BassDrum
@@ -983,7 +983,7 @@ Chip::Chip() {
 	opl3Active = 0;
 }
 
-INLINE Bit32u Chip::ForwardNoise() {
+inline Bit32u Chip::ForwardNoise() {
 	noiseCounter += noiseAdd;
 	Bitu count = noiseCounter >> LFO_SH;
 	noiseCounter &= WAVE_MASK;
@@ -995,7 +995,7 @@ INLINE Bit32u Chip::ForwardNoise() {
 	return noiseValue;
 }
 
-INLINE Bit32u Chip::ForwardLFO( Bit32u samples ) {
+inline Bit32u Chip::ForwardLFO( Bit32u samples ) {
 	//Current vibrato value, runs 4x slower than tremolo
 	vibratoSign = ( VibratoTable[ vibratoIndex >> 2] ) >> 7;
 	vibratoShift = ( VibratoTable[ vibratoIndex >> 2] & 7) + vibratoStrength; 
@@ -1269,7 +1269,7 @@ void Chip::Setup( Bit32u rate ) {
 				count += guessAdd;
 				Bit32s change = count >> RATE_SH;
 				count &= RATE_MASK;
-				if ( GCC_UNLIKELY(change) ) { // less than 1 % 
+				if ( change ) { // less than 1 %
 					volume += ( ~volume * change ) >> 3;
 				}
 				samples++;
@@ -1505,7 +1505,7 @@ void Handler::WriteReg( Bit32u addr, Bit8u val ) {
 
 void Handler::Generate( MixerChannel* chan, Bitu samples ) {
 	Bit32s buffer[ 512 * 2 ];
-	if ( GCC_UNLIKELY(samples > 512) )
+	if ( samples > 512 )
 		samples = 512;
 	if ( !chip.opl3Active ) {
 		chip.GenerateBlock2( samples, buffer );

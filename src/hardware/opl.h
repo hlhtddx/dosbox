@@ -46,7 +46,7 @@ typedef int8_t		Bit8s;
 /*
 	define attribution that inlines/forces inlining of a function (optional)
 */
-#define OPL_INLINE INLINE
+#define OPL_INLINE inline
 
 
 #undef NUM_CHANNELS

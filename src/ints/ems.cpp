@@ -230,7 +230,7 @@ static Bit16u EMM_GetFreePages(void) {
 	return (Bit16u)count;
 }
 
-static bool INLINE ValidHandle(Bit16u handle) {
+static bool inline ValidHandle(Bit16u handle) {
 	if (handle>=EMM_MAX_HANDLES) return false;
 	if (emm_handles[handle].pages==NULL_HANDLE) return false;
 	return true;

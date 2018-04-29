@@ -287,7 +287,7 @@ bool DOS_Drive_Cache::GetShortName(const char* fullname, char* shortname) {
 	CFileInfo* curDir = FindDirInfo(fullname,expand);
 
 	std::vector<CFileInfo*>::size_type filelist_size = curDir->longNameList.size();
-	if (GCC_UNLIKELY(filelist_size<=0)) return false;
+	if (filelist_size<=0) return false;
 
 	Bits low		= 0;
 	Bits high		= (Bits)(filelist_size-1);
@@ -339,7 +339,7 @@ int DOS_Drive_Cache::CompareShortname(const char* compareName, const char* short
 
 Bitu DOS_Drive_Cache::CreateShortNameID(CFileInfo* curDir, const char* name) {
 	std::vector<CFileInfo*>::size_type filelist_size = curDir->longNameList.size();
-	if (GCC_UNLIKELY(filelist_size<=0)) return 1;	// shortener IDs start with 1
+	if (filelist_size<=0) return 1;	// shortener IDs start with 1
 
 	Bitu foundNr	= 0;	
 	Bits low		= 0;
@@ -432,7 +432,7 @@ static Bits wine_hash_short_file_name( char* name, char* buffer )
 
 Bits DOS_Drive_Cache::GetLongName(CFileInfo* curDir, char* shortName) {
 	std::vector<CFileInfo*>::size_type filelist_size = curDir->fileList.size();
-	if (GCC_UNLIKELY(filelist_size<=0)) return -1;
+	if (filelist_size<=0) return -1;
 
 	// Remove dot, if no extension...
 	RemoveTrailingDot(shortName);

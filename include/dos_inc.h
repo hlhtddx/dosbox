@@ -201,18 +201,18 @@ enum {
 };
 
 
-static INLINE Bit16u long2para(Bit32u size) {
+static inline Bit16u long2para(Bit32u size) {
 	if (size>0xFFFF0) return 0xffff;
 	if (size&0xf) return (Bit16u)((size>>4)+1);
 	else return (Bit16u)(size>>4);
 }
 
 
-static INLINE Bit16u DOS_PackTime(Bit16u hour,Bit16u min,Bit16u sec) {
+static inline Bit16u DOS_PackTime(Bit16u hour,Bit16u min,Bit16u sec) {
 	return (hour&0x1f)<<11 | (min&0x3f) << 5 | ((sec/2)&0x1f);
 }
 
-static INLINE Bit16u DOS_PackDate(Bit16u year,Bit16u mon,Bit16u day) {
+static inline Bit16u DOS_PackDate(Bit16u year,Bit16u mon,Bit16u day) {
 	return ((year-1980)&0x7f)<<9 | (mon&0x3f) << 5 | (day&0x1f);
 }
 
@@ -607,7 +607,7 @@ struct DOS_Block {
 
 extern DOS_Block dos;
 
-static INLINE Bit8u RealHandle(Bit16u handle) {
+static inline Bit8u RealHandle(Bit16u handle) {
 	DOS_PSP psp(dos.psp());	
 	return psp.GetFileHandle(handle);
 }

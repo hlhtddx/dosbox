@@ -208,14 +208,14 @@ inline void IO_USEC_write_delay_old() {
 
 inline void IO_USEC_read_delay() {
 	Bits delaycyc = CPU_CycleMax/IODELAY_READ_MICROSk;
-	if(GCC_UNLIKELY(CPU_Cycles < 3*delaycyc)) delaycyc = 0; //Else port acces will set cycles to 0. which might trigger problem with games which read 16 bit values
+	if(CPU_Cycles < 3*delaycyc) delaycyc = 0; //Else port acces will set cycles to 0. which might trigger problem with games which read 16 bit values
 	CPU_Cycles -= delaycyc;
 	CPU_IODelayRemoved += delaycyc;
 }
 
 inline void IO_USEC_write_delay() {
 	Bits delaycyc = CPU_CycleMax/IODELAY_WRITE_MICROSk;
-	if(GCC_UNLIKELY(CPU_Cycles < 3*delaycyc)) delaycyc=0;
+	if(CPU_Cycles < 3*delaycyc) delaycyc=0;
 	CPU_Cycles -= delaycyc;
 	CPU_IODelayRemoved += delaycyc;
 }
@@ -288,7 +288,7 @@ void log_io(Bitu width, bool write, Bitu port, Bitu val) {
 
 void IO_WriteB(Bitu port,Bitu val) {
 	log_io(0, true, port, val);
-	if (GCC_UNLIKELY(GETFLAG(VM) && (CPU_IO_Exception(port,1)))) {
+	if (GETFLAG(VM && (CPU_IO_Exception(port,1)))) {
 		LazyFlags old_lflags;
 		memcpy(&old_lflags,&lflags,sizeof(LazyFlags));
 		CPU_Decoder * old_cpudecoder;
@@ -324,7 +324,7 @@ void IO_WriteB(Bitu port,Bitu val) {
 
 void IO_WriteW(Bitu port,Bitu val) {
 	log_io(1, true, port, val);
-	if (GCC_UNLIKELY(GETFLAG(VM) && (CPU_IO_Exception(port,2)))) {
+	if (GETFLAG(VM && (CPU_IO_Exception(port,2)))) {
 		LazyFlags old_lflags;
 		memcpy(&old_lflags,&lflags,sizeof(LazyFlags));
 		CPU_Decoder * old_cpudecoder;
@@ -360,7 +360,7 @@ void IO_WriteW(Bitu port,Bitu val) {
 
 void IO_WriteD(Bitu port,Bitu val) {
 	log_io(2, true, port, val);
-	if (GCC_UNLIKELY(GETFLAG(VM) && (CPU_IO_Exception(port,4)))) {
+	if (GETFLAG(VM && (CPU_IO_Exception(port,4)))) {
 		LazyFlags old_lflags;
 		memcpy(&old_lflags,&lflags,sizeof(LazyFlags));
 		CPU_Decoder * old_cpudecoder;
@@ -393,7 +393,7 @@ void IO_WriteD(Bitu port,Bitu val) {
 
 Bitu IO_ReadB(Bitu port) {
 	Bitu retval;
-	if (GCC_UNLIKELY(GETFLAG(VM) && (CPU_IO_Exception(port,1)))) {
+	if (GETFLAG(VM && (CPU_IO_Exception(port,1)))) {
 		LazyFlags old_lflags;
 		memcpy(&old_lflags,&lflags,sizeof(LazyFlags));
 		CPU_Decoder * old_cpudecoder;
@@ -432,7 +432,7 @@ Bitu IO_ReadB(Bitu port) {
 
 Bitu IO_ReadW(Bitu port) {
 	Bitu retval;
-	if (GCC_UNLIKELY(GETFLAG(VM) && (CPU_IO_Exception(port,2)))) {
+	if (GETFLAG(VM && (CPU_IO_Exception(port,2)))) {
 		LazyFlags old_lflags;
 		memcpy(&old_lflags,&lflags,sizeof(LazyFlags));
 		CPU_Decoder * old_cpudecoder;
@@ -470,7 +470,7 @@ Bitu IO_ReadW(Bitu port) {
 
 Bitu IO_ReadD(Bitu port) {
 	Bitu retval;
-	if (GCC_UNLIKELY(GETFLAG(VM) && (CPU_IO_Exception(port,4)))) {
+	if (GETFLAG(VM && (CPU_IO_Exception(port,4)))) {
 		LazyFlags old_lflags;
 		memcpy(&old_lflags,&lflags,sizeof(LazyFlags));
 		CPU_Decoder * old_cpudecoder;

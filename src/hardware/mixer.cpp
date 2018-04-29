@@ -65,7 +65,7 @@
 #define TICK_MASK (TICK_NEXT -1)
 
 
-static INLINE Bit16s MIXER_CLIP(Bits SAMP) {
+static inline Bit16s MIXER_CLIP(Bits SAMP) {
 	if (SAMP < MAX_AUDIO) {
 		if (SAMP > MIN_AUDIO)
 			return SAMP;

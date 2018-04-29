@@ -107,8 +107,8 @@ public:
 		return is_current_block;
 	}
 	void writeb(PhysPt addr,Bitu val){
-		if (GCC_UNLIKELY(old_pagehandler->flags&PFLAG_HASROM)) return;
-		if (GCC_UNLIKELY((old_pagehandler->flags&PFLAG_READABLE)!=PFLAG_READABLE)) {
+		if (old_pagehandler->flags&PFLAG_HASROM) return;
+		if ((old_pagehandler->flags&PFLAG_READABLE!=PFLAG_READABLE)) {
 			E_Exit("wb:non-readable code page found that is no ROM page");
 		}
 		addr&=4095;
@@ -127,8 +127,8 @@ public:
 		InvalidateRange(addr,addr);
 	}
 	void writew(PhysPt addr,Bitu val){
-		if (GCC_UNLIKELY(old_pagehandler->flags&PFLAG_HASROM)) return;
-		if (GCC_UNLIKELY((old_pagehandler->flags&PFLAG_READABLE)!=PFLAG_READABLE)) {
+		if (old_pagehandler->flags&PFLAG_HASROM) return;
+		if ((old_pagehandler->flags&PFLAG_READABLE!=PFLAG_READABLE)) {
 			E_Exit("ww:non-readable code page found that is no ROM page");
 		}
 		addr&=4095;
@@ -147,8 +147,8 @@ public:
 		InvalidateRange(addr,addr+1);
 	}
 	void writed(PhysPt addr,Bitu val){
-		if (GCC_UNLIKELY(old_pagehandler->flags&PFLAG_HASROM)) return;
-		if (GCC_UNLIKELY((old_pagehandler->flags&PFLAG_READABLE)!=PFLAG_READABLE)) {
+		if (old_pagehandler->flags&PFLAG_HASROM) return;
+		if ((old_pagehandler->flags&PFLAG_READABLE!=PFLAG_READABLE)) {
 			E_Exit("wd:non-readable code page found that is no ROM page");
 		}
 		addr&=4095;
@@ -167,8 +167,8 @@ public:
 		InvalidateRange(addr,addr+3);
 	}
 	bool writeb_checked(PhysPt addr,Bitu val) {
-		if (GCC_UNLIKELY(old_pagehandler->flags&PFLAG_HASROM)) return false;
-		if (GCC_UNLIKELY((old_pagehandler->flags&PFLAG_READABLE)!=PFLAG_READABLE)) {
+		if (old_pagehandler->flags&PFLAG_HASROM) return false;
+		if ((old_pagehandler->flags&PFLAG_READABLE!=PFLAG_READABLE)) {
 			E_Exit("cb:non-readable code page found that is no ROM page");
 		}
 		addr&=4095;
@@ -193,8 +193,8 @@ public:
 		return false;
 	}
 	bool writew_checked(PhysPt addr,Bitu val) {
-		if (GCC_UNLIKELY(old_pagehandler->flags&PFLAG_HASROM)) return false;
-		if (GCC_UNLIKELY((old_pagehandler->flags&PFLAG_READABLE)!=PFLAG_READABLE)) {
+		if (old_pagehandler->flags&PFLAG_HASROM) return false;
+		if ((old_pagehandler->flags&PFLAG_READABLE!=PFLAG_READABLE)) {
 			E_Exit("cw:non-readable code page found that is no ROM page");
 		}
 		addr&=4095;
@@ -219,8 +219,8 @@ public:
 		return false;
 	}
 	bool writed_checked(PhysPt addr,Bitu val) {
-		if (GCC_UNLIKELY(old_pagehandler->flags&PFLAG_HASROM)) return false;
-		if (GCC_UNLIKELY((old_pagehandler->flags&PFLAG_READABLE)!=PFLAG_READABLE)) {
+		if (old_pagehandler->flags&PFLAG_HASROM) return false;
+		if ((old_pagehandler->flags&PFLAG_READABLE!=PFLAG_READABLE)) {
 			E_Exit("cd:non-readable code page found that is no ROM page");
 		}
 		addr&=4095;
@@ -268,7 +268,7 @@ public:
 			//Will crash if a block isn't found, which should never happen.
 		}
 		*where=block->hash.next;
-		if (GCC_UNLIKELY(block->cache.wmapmask!=NULL)) {
+		if (block->cache.wmapmask!=NULL) {
 			for (Bitu i=block->page.start;i<block->cache.maskstart;i++) {
 				if (write_map[i]) write_map[i]--;
 			}
@@ -338,7 +338,7 @@ private:
 };
 
 
-static INLINE void cache_addunsedblock(CacheBlock * block) {
+static inline void cache_addunsedblock(CacheBlock * block) {
 	block->cache.next=cache.block.free;
 	cache.block.free=block;
 }
@@ -452,16 +452,16 @@ static void cache_closeblock(void) {
 	}
 }
 
-static INLINE void cache_addb(Bit8u val) {
+static inline void cache_addb(Bit8u val) {
 	*cache.pos++=val;
 }
 
-static INLINE void cache_addw(Bit16u val) {
+static inline void cache_addw(Bit16u val) {
 	*(Bit16u*)cache.pos=val;
 	cache.pos+=2;
 }
 
-static INLINE void cache_addd(Bit32u val) {
+static inline void cache_addd(Bit32u val) {
 	*(Bit32u*)cache.pos=val;
 	cache.pos+=4;
 }

@@ -91,7 +91,7 @@ static void gen_mov_reg_qword(HostReg dest_reg,Bit64u imm) {
 
 
 // This function generates an instruction with register addressing and a memory location
-static INLINE void gen_reg_memaddr(HostReg reg,void* data,Bit8u op,Bit8u prefix=0) {
+static inline void gen_reg_memaddr(HostReg reg,void* data,Bit8u op,Bit8u prefix=0) {
 	Bit64s diff = (Bit64s)data-((Bit64s)cache.pos+(prefix?7:6));
 //	if ((diff<0x80000000LL) && (diff>-0x80000000LL)) { //clang messes itself up on this...
 	if ( (diff>>63) == (diff>>31) ) { //signed bit extend, test to see if value fits in a Bit32s
@@ -124,7 +124,7 @@ static INLINE void gen_reg_memaddr(HostReg reg,void* data,Bit8u op,Bit8u prefix=
 }
 
 // Same as above, but with immediate addressing and a memory location
-static INLINE void gen_memaddr(Bitu modreg,void* data,Bitu off,Bitu imm,Bit8u op,Bit8u prefix=0) {
+static inline void gen_memaddr(Bitu modreg,void* data,Bitu off,Bitu imm,Bit8u op,Bit8u prefix=0) {
 	Bit64s diff = (Bit64s)data-((Bit64s)cache.pos+off+(prefix?7:6));
 //	if ((diff<0x80000000LL) && (diff>-0x80000000LL)) {
 	if ( (diff>>63) == (diff>>31) ) {
@@ -278,7 +278,7 @@ static void gen_mov_direct_dword(void* dest,Bit32u imm) {
 
 
 // move an address into memory
-static void INLINE gen_mov_direct_ptr(void* dest,DRC_PTR_SIZE_IM imm) {
+static void inline gen_mov_direct_ptr(void* dest,DRC_PTR_SIZE_IM imm) {
 	gen_mov_reg_qword(HOST_EAX,imm);
 	gen_mov_word_from_reg(HOST_EAX,dest,true,0x48);		// 0x48 prefixes full 64-bit mov
 }
@@ -317,7 +317,7 @@ static void gen_sub_direct_word(void* dest,Bit32u imm,bool dword) {
 // effective address calculation, destination is dest_reg
 // scale_reg is scaled by scale (scale_reg*(2^scale)) and
 // added to dest_reg, then the immediate value is added
-static INLINE void gen_lea(HostReg dest_reg,HostReg scale_reg,Bitu scale,Bits imm) {
+static inline void gen_lea(HostReg dest_reg,HostReg scale_reg,Bitu scale,Bits imm) {
 	Bit8u rm_base;
 	Bitu imm_size;
 	if (!imm) {
@@ -344,7 +344,7 @@ static INLINE void gen_lea(HostReg dest_reg,HostReg scale_reg,Bitu scale,Bits im
 // effective address calculation, destination is dest_reg
 // dest_reg is scaled by scale (dest_reg*(2^scale)),
 // then the immediate value is added
-static INLINE void gen_lea(HostReg dest_reg,Bitu scale,Bits imm) {
+static inline void gen_lea(HostReg dest_reg,Bitu scale,Bits imm) {
 	// ea_reg := ea_reg*(2^scale)+imm
 	// ea_reg :=   op2 *(2^scale)+imm
 	cache_addb(0x48);
@@ -358,7 +358,7 @@ static INLINE void gen_lea(HostReg dest_reg,Bitu scale,Bits imm) {
 
 
 // generate a call to a parameterless function
-static void INLINE gen_call_function_raw(void * func) {
+static void inline gen_call_function_raw(void * func) {
 	cache_addb(0x48); 
 	cache_addw(0xec83); 
 	cache_addb(0x08);	// sub rsp,0x08 (align stack to 16 byte boundary)
@@ -376,7 +376,7 @@ static void INLINE gen_call_function_raw(void * func) {
 // generate a call to a function with paramcount parameters
 // note: the parameters are loaded in the architecture specific way
 // using the gen_load_param_ functions below
-static Bit64u INLINE gen_call_function_setup(void * func,Bitu paramcount,bool fastcall=false) {
+static Bit64u inline gen_call_function_setup(void * func,Bitu paramcount,bool fastcall=false) {
 	// align the stack
 	cache_addb(0x48);
 	cache_addw(0xc48b);		// mov rax,rsp
@@ -416,7 +416,7 @@ static Bit64u INLINE gen_call_function_setup(void * func,Bitu paramcount,bool fa
 
 
 // load an immediate value as param'th function parameter
-static void INLINE gen_load_param_imm(Bitu imm,Bitu param) {
+static void inline gen_load_param_imm(Bitu imm,Bitu param) {
 	// move an immediate 32bit value into a 64bit param reg
 	switch (param) {
 		case 0:			// mov param1,imm32
@@ -449,7 +449,7 @@ static void INLINE gen_load_param_imm(Bitu imm,Bitu param) {
 }
 
 // load an address as param'th function parameter
-static void INLINE gen_load_param_addr(DRC_PTR_SIZE_IM addr,Bitu param) {
+static void inline gen_load_param_addr(DRC_PTR_SIZE_IM addr,Bitu param) {
 	// move an immediate 64bit value into a 64bit param reg
 	switch (param) {
 		case 0:			// mov param1,addr64
@@ -482,7 +482,7 @@ static void INLINE gen_load_param_addr(DRC_PTR_SIZE_IM addr,Bitu param) {
 }
 
 // load a host-register as param'th function parameter
-static void INLINE gen_load_param_reg(Bitu reg,Bitu param) {
+static void inline gen_load_param_reg(Bitu reg,Bitu param) {
 	// move a register into a 64bit param reg, {inputregs}!={outputregs}
 	switch (param) {
 		case 0:		// mov param1,reg&7
@@ -515,7 +515,7 @@ static void INLINE gen_load_param_reg(Bitu reg,Bitu param) {
 }
 
 // load a value from memory as param'th function parameter
-static void INLINE gen_load_param_mem(Bitu mem,Bitu param) {
+static void inline gen_load_param_mem(Bitu mem,Bitu param) {
 	// move memory content into a 64bit param reg
 	switch (param) {
 		case 0:		// mov param1,[mem]

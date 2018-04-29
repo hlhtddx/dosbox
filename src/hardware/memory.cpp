@@ -246,7 +246,7 @@ Bitu MEM_AllocatedPages(MemHandle handle)
 
 //TODO Maybe some protection for this whole allocation scheme
 
-INLINE Bitu BestMatch(Bitu size) {
+inline Bitu BestMatch(Bitu size) {
 	Bitu index=XMS_START;	
 	Bitu first=0;
 	Bitu best=0xfffffff;

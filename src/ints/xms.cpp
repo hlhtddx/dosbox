@@ -115,7 +115,7 @@ static bool umb_available;
 
 static XMS_Block xms_handles[XMS_HANDLES];
 
-static INLINE bool InvalidHandle(Bitu handle) {
+static inline bool InvalidHandle(Bitu handle) {
 	return (!handle || (handle>=XMS_HANDLES) || xms_handles[handle].free);
 }
 
@@ -257,7 +257,7 @@ static bool multiplex_xms(void) {
 
 }
 
-INLINE void SET_RESULT(Bitu res,bool touch_bl_on_succes=true) {
+inline void SET_RESULT(Bitu res,bool touch_bl_on_succes=true) {
 	if(touch_bl_on_succes || res) reg_bl = (Bit8u)res;
 	reg_ax = (res==0);
 }

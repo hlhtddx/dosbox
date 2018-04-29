@@ -16,14 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DOSBOX_DOSBOX_H
-#ifdef _MSC_VER
-#define INLINE __forceinline
-#else
-#define INLINE inline
-#endif
-#endif
-
 #define CODEC_4CC "ZMBV"
 
 typedef enum {
@@ -94,15 +86,15 @@ private:
 	template<class P>
 		void UnXorFrame(void);
 	template<class P>
-		INLINE int PossibleBlock(int vx,int vy,FrameBlock * block);
+		inline int PossibleBlock(int vx,int vy,FrameBlock * block);
 	template<class P>
-		INLINE int CompareBlock(int vx,int vy,FrameBlock * block);
+		inline int CompareBlock(int vx,int vy,FrameBlock * block);
 	template<class P>
-		INLINE void AddXorBlock(int vx,int vy,FrameBlock * block);
+		inline void AddXorBlock(int vx,int vy,FrameBlock * block);
 	template<class P>
-		INLINE void UnXorBlock(int vx,int vy,FrameBlock * block);
+		inline void UnXorBlock(int vx,int vy,FrameBlock * block);
 	template<class P>
-		INLINE void CopyBlock(int vx, int vy,FrameBlock * block);
+		inline void CopyBlock(int vx, int vy,FrameBlock * block);
 public:
 	VideoCodec();
 	bool SetupCompress( int _width, int _height);

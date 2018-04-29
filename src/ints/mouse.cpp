@@ -209,7 +209,7 @@ void MOUSE_Limit_Events(Bitu /*val*/) {
 	}
 }
 
-INLINE void Mouse_AddEvent(Bit8u type) {
+inline void Mouse_AddEvent(Bit8u type) {
 	if (mouse.events<QUEUE_SIZE) {
 		if (mouse.events>0) {
 			/* Skip duplicate events */

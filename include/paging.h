@@ -192,25 +192,25 @@ bool mem_unalignedwrited_checked(PhysPt address,Bit32u val);
 
 #if defined(USE_FULL_TLB)
 
-static INLINE HostPt get_tlb_read(PhysPt address) {
+static inline HostPt get_tlb_read(PhysPt address) {
 	return paging.tlb.read[address>>12];
 }
-static INLINE HostPt get_tlb_write(PhysPt address) {
+static inline HostPt get_tlb_write(PhysPt address) {
 	return paging.tlb.write[address>>12];
 }
-static INLINE PageHandler* get_tlb_readhandler(PhysPt address) {
+static inline PageHandler* get_tlb_readhandler(PhysPt address) {
 	return paging.tlb.readhandler[address>>12];
 }
-static INLINE PageHandler* get_tlb_writehandler(PhysPt address) {
+static inline PageHandler* get_tlb_writehandler(PhysPt address) {
 	return paging.tlb.writehandler[address>>12];
 }
 
 /* Use these helper functions to access linear addresses in readX/writeX functions */
-static INLINE PhysPt PAGING_GetPhysicalPage(PhysPt linePage) {
+static inline PhysPt PAGING_GetPhysicalPage(PhysPt linePage) {
 	return (paging.tlb.phys_page[linePage>>12]<<12);
 }
 
-static INLINE PhysPt PAGING_GetPhysicalAddress(PhysPt linAddr) {
+static inline PhysPt PAGING_GetPhysicalAddress(PhysPt linAddr) {
 	return (paging.tlb.phys_page[linAddr>>12]<<12)|(linAddr&0xfff);
 }
 
@@ -218,7 +218,7 @@ static INLINE PhysPt PAGING_GetPhysicalAddress(PhysPt linAddr) {
 
 void PAGING_InitTLBBank(tlb_entry **bank);
 
-static INLINE tlb_entry *get_tlb_entry(PhysPt address) {
+static inline tlb_entry *get_tlb_entry(PhysPt address) {
 	Bitu index=(address>>12);
 	if (TLB_BANKS && (index > TLB_SIZE)) {
 		Bitu bank=(address>>BANK_SHIFT) - 1;
@@ -229,26 +229,26 @@ static INLINE tlb_entry *get_tlb_entry(PhysPt address) {
 	return &paging.tlbh[index];
 }
 
-static INLINE HostPt get_tlb_read(PhysPt address) {
+static inline HostPt get_tlb_read(PhysPt address) {
 	return get_tlb_entry(address)->read;
 }
-static INLINE HostPt get_tlb_write(PhysPt address) {
+static inline HostPt get_tlb_write(PhysPt address) {
 	return get_tlb_entry(address)->write;
 }
-static INLINE PageHandler* get_tlb_readhandler(PhysPt address) {
+static inline PageHandler* get_tlb_readhandler(PhysPt address) {
 	return get_tlb_entry(address)->readhandler;
 }
-static INLINE PageHandler* get_tlb_writehandler(PhysPt address) {
+static inline PageHandler* get_tlb_writehandler(PhysPt address) {
 	return get_tlb_entry(address)->writehandler;
 }
 
 /* Use these helper functions to access linear addresses in readX/writeX functions */
-static INLINE PhysPt PAGING_GetPhysicalPage(PhysPt linePage) {
+static inline PhysPt PAGING_GetPhysicalPage(PhysPt linePage) {
 	tlb_entry *entry = get_tlb_entry(linePage);
 	return (entry->phys_page<<12);
 }
 
-static INLINE PhysPt PAGING_GetPhysicalAddress(PhysPt linAddr) {
+static inline PhysPt PAGING_GetPhysicalAddress(PhysPt linAddr) {
 	tlb_entry *entry = get_tlb_entry(linAddr);
 	return (entry->phys_page<<12)|(linAddr&0xfff);
 }
@@ -256,13 +256,13 @@ static INLINE PhysPt PAGING_GetPhysicalAddress(PhysPt linAddr) {
 
 /* Special inlined memory reading/writing */
 
-static INLINE Bit8u mem_readb_inline(PhysPt address) {
+static inline Bit8u mem_readb_inline(PhysPt address) {
 	HostPt tlb_addr=get_tlb_read(address);
 	if (tlb_addr) return host_readb(tlb_addr+address);
 	else return (Bit8u)(get_tlb_readhandler(address))->readb(address);
 }
 
-static INLINE Bit16u mem_readw_inline(PhysPt address) {
+static inline Bit16u mem_readw_inline(PhysPt address) {
 	if ((address & 0xfff)<0xfff) {
 		HostPt tlb_addr=get_tlb_read(address);
 		if (tlb_addr) return host_readw(tlb_addr+address);
@@ -270,7 +270,7 @@ static INLINE Bit16u mem_readw_inline(PhysPt address) {
 	} else return mem_unalignedreadw(address);
 }
 
-static INLINE Bit32u mem_readd_inline(PhysPt address) {
+static inline Bit32u mem_readd_inline(PhysPt address) {
 	if ((address & 0xfff)<0xffd) {
 		HostPt tlb_addr=get_tlb_read(address);
 		if (tlb_addr) return host_readd(tlb_addr+address);
@@ -278,13 +278,13 @@ static INLINE Bit32u mem_readd_inline(PhysPt address) {
 	} else return mem_unalignedreadd(address);
 }
 
-static INLINE void mem_writeb_inline(PhysPt address,Bit8u val) {
+static inline void mem_writeb_inline(PhysPt address,Bit8u val) {
 	HostPt tlb_addr=get_tlb_write(address);
 	if (tlb_addr) host_writeb(tlb_addr+address,val);
 	else (get_tlb_writehandler(address))->writeb(address,val);
 }
 
-static INLINE void mem_writew_inline(PhysPt address,Bit16u val) {
+static inline void mem_writew_inline(PhysPt address,Bit16u val) {
 	if ((address & 0xfff)<0xfff) {
 		HostPt tlb_addr=get_tlb_write(address);
 		if (tlb_addr) host_writew(tlb_addr+address,val);
@@ -292,7 +292,7 @@ static INLINE void mem_writew_inline(PhysPt address,Bit16u val) {
 	} else mem_unalignedwritew(address,val);
 }
 
-static INLINE void mem_writed_inline(PhysPt address,Bit32u val) {
+static inline void mem_writed_inline(PhysPt address,Bit32u val) {
 	if ((address & 0xfff)<0xffd) {
 		HostPt tlb_addr=get_tlb_write(address);
 		if (tlb_addr) host_writed(tlb_addr+address,val);
@@ -301,7 +301,7 @@ static INLINE void mem_writed_inline(PhysPt address,Bit32u val) {
 }
 
 
-static INLINE bool mem_readb_checked(PhysPt address, Bit8u * val) {
+static inline bool mem_readb_checked(PhysPt address, Bit8u * val) {
 	HostPt tlb_addr=get_tlb_read(address);
 	if (tlb_addr) {
 		*val=host_readb(tlb_addr+address);
@@ -309,7 +309,7 @@ static INLINE bool mem_readb_checked(PhysPt address, Bit8u * val) {
 	} else return (get_tlb_readhandler(address))->readb_checked(address, val);
 }
 
-static INLINE bool mem_readw_checked(PhysPt address, Bit16u * val) {
+static inline bool mem_readw_checked(PhysPt address, Bit16u * val) {
 	if ((address & 0xfff)<0xfff) {
 		HostPt tlb_addr=get_tlb_read(address);
 		if (tlb_addr) {
@@ -319,7 +319,7 @@ static INLINE bool mem_readw_checked(PhysPt address, Bit16u * val) {
 	} else return mem_unalignedreadw_checked(address, val);
 }
 
-static INLINE bool mem_readd_checked(PhysPt address, Bit32u * val) {
+static inline bool mem_readd_checked(PhysPt address, Bit32u * val) {
 	if ((address & 0xfff)<0xffd) {
 		HostPt tlb_addr=get_tlb_read(address);
 		if (tlb_addr) {
@@ -329,7 +329,7 @@ static INLINE bool mem_readd_checked(PhysPt address, Bit32u * val) {
 	} else return mem_unalignedreadd_checked(address, val);
 }
 
-static INLINE bool mem_writeb_checked(PhysPt address,Bit8u val) {
+static inline bool mem_writeb_checked(PhysPt address,Bit8u val) {
 	HostPt tlb_addr=get_tlb_write(address);
 	if (tlb_addr) {
 		host_writeb(tlb_addr+address,val);
@@ -337,7 +337,7 @@ static INLINE bool mem_writeb_checked(PhysPt address,Bit8u val) {
 	} else return (get_tlb_writehandler(address))->writeb_checked(address,val);
 }
 
-static INLINE bool mem_writew_checked(PhysPt address,Bit16u val) {
+static inline bool mem_writew_checked(PhysPt address,Bit16u val) {
 	if ((address & 0xfff)<0xfff) {
 		HostPt tlb_addr=get_tlb_write(address);
 		if (tlb_addr) {
@@ -347,7 +347,7 @@ static INLINE bool mem_writew_checked(PhysPt address,Bit16u val) {
 	} else return mem_unalignedwritew_checked(address,val);
 }
 
-static INLINE bool mem_writed_checked(PhysPt address,Bit32u val) {
+static inline bool mem_writed_checked(PhysPt address,Bit32u val) {
 	if ((address & 0xfff)<0xffd) {
 		HostPt tlb_addr=get_tlb_write(address);
 		if (tlb_addr) {

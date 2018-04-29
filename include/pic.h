@@ -32,19 +32,19 @@ typedef void (* PIC_EventHandler)(Bitu val);
 extern Bitu PIC_IRQCheck;
 extern Bitu PIC_Ticks;
 
-static INLINE float PIC_TickIndex(void) {
+static inline float PIC_TickIndex(void) {
 	return (CPU_CycleMax-CPU_CycleLeft-CPU_Cycles)/(float)CPU_CycleMax;
 }
 
-static INLINE Bits PIC_TickIndexND(void) {
+static inline Bits PIC_TickIndexND(void) {
 	return CPU_CycleMax-CPU_CycleLeft-CPU_Cycles;
 }
 
-static INLINE Bits PIC_MakeCycles(double amount) {
+static inline Bits PIC_MakeCycles(double amount) {
 	return (Bits)(CPU_CycleMax*amount);
 }
 
-static INLINE double PIC_FullIndex(void) {
+static inline double PIC_FullIndex(void) {
 	return PIC_Ticks+(double)PIC_TickIndex();
 }
 

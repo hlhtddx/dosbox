@@ -313,7 +313,7 @@ public:
 		*bwhere=block->hash.next;
 
 		// remove the cleared block from the write map
-		if (GCC_UNLIKELY(block->cache.wmapmask!=NULL)) {
+		if (block->cache.wmapmask!=NULL) {
 			// first part is not influenced by the mask
 			for (Bitu i=block->page.start;i<block->cache.maskstart;i++) {
 				if (write_map[i]) write_map[i]--;
@@ -397,7 +397,7 @@ private:
 };
 
 
-static INLINE void cache_addunusedblock(CacheBlockDynRec * block) {
+static inline void cache_addunusedblock(CacheBlockDynRec * block) {
 	// block has become unused, add it to the freelist
 	block->cache.next=cache.block.free;
 	cache.block.free=block;
@@ -528,24 +528,24 @@ static void cache_closeblock(void) {
 
 
 // place an 8bit value into the cache
-static INLINE void cache_addb(Bit8u val) {
+static inline void cache_addb(Bit8u val) {
 	*cache.pos++=val;
 }
 
 // place a 16bit value into the cache
-static INLINE void cache_addw(Bit16u val) {
+static inline void cache_addw(Bit16u val) {
 	*(Bit16u*)cache.pos=val;
 	cache.pos+=2;
 }
 
 // place a 32bit value into the cache
-static INLINE void cache_addd(Bit32u val) {
+static inline void cache_addd(Bit32u val) {
 	*(Bit32u*)cache.pos=val;
 	cache.pos+=4;
 }
 
 // place a 64bit value into the cache
-static INLINE void cache_addq(Bit64u val) {
+static inline void cache_addq(Bit64u val) {
 	*(Bit64u*)cache.pos=val;
 	cache.pos+=8;
 }

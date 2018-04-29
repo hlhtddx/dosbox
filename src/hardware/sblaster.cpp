@@ -244,7 +244,7 @@ static void DSP_SetSpeaker(bool how) {
 	}
 }
 
-static INLINE void SB_RaiseIRQ(SB_IRQS type) {
+static inline void SB_RaiseIRQ(SB_IRQS type) {
 	LOG(LOG_SB,LOG_NORMAL)("Raising IRQ");
 	switch (type) {
 	case SB_IRQ_8:
@@ -268,7 +268,7 @@ static INLINE void SB_RaiseIRQ(SB_IRQS type) {
 	}
 }
 
-static INLINE void DSP_FlushData(void) {
+static inline void DSP_FlushData(void) {
 	sb.dsp.out.used=0;
 	sb.dsp.out.pos=0;
 }
@@ -296,7 +296,7 @@ static void DSP_DMA_CallBack(DmaChannel * chan, DMAEvent event) {
 #define MAX_ADAPTIVE_STEP_SIZE 32767
 #define DC_OFFSET_FADE 254
 
-static INLINE Bit8u decode_ADPCM_4_sample(Bit8u sample,Bit8u & reference,Bits& scale) {
+static inline Bit8u decode_ADPCM_4_sample(Bit8u sample,Bit8u & reference,Bits& scale) {
 	static const Bit8s scaleMap[64] = {
 		0,  1,  2,  3,  4,  5,  6,  7,  0,  -1,  -2,  -3,  -4,  -5,  -6,  -7,
 		1,  3,  5,  7,  9, 11, 13, 15, -1,  -3,  -5,  -7,  -9, -11, -13, -15,
@@ -331,7 +331,7 @@ static INLINE Bit8u decode_ADPCM_4_sample(Bit8u sample,Bit8u & reference,Bits& s
 	return reference;
 }
 
-static INLINE Bit8u decode_ADPCM_2_sample(Bit8u sample,Bit8u & reference,Bits& scale) {
+static inline Bit8u decode_ADPCM_2_sample(Bit8u sample,Bit8u & reference,Bits& scale) {
 	static const Bit8s scaleMap[24] = {
 		0,  1,  0,  -1, 1,  3,  -1,  -3,
 		2,  6, -2,  -6, 4, 12,  -4, -12,
@@ -360,7 +360,7 @@ static INLINE Bit8u decode_ADPCM_2_sample(Bit8u sample,Bit8u & reference,Bits& s
 	return reference;
 }
 
-INLINE Bit8u decode_ADPCM_3_sample(Bit8u sample,Bit8u & reference,Bits& scale) {
+inline Bit8u decode_ADPCM_3_sample(Bit8u sample,Bit8u & reference,Bits& scale) {
 	static const Bit8s scaleMap[40] = { 
 		0,  1,  2,  3,  0,  -1,  -2,  -3,
 		1,  3,  5,  7, -1,  -3,  -5,  -7,

@@ -48,11 +48,11 @@ public:
 		d_type(type),
 		d_severity(severity)
 		{}
-	void operator() (char const* buf, ...) GCC_ATTRIBUTE(__format__(__printf__, 2, 3));  //../src/debug/debug_gui.cpp
+	void operator() (char const* buf, ...);  //../src/debug/debug_gui.cpp
 
 };
 
-void DEBUG_ShowMsg(char const* format,...) GCC_ATTRIBUTE(__format__(__printf__, 1, 2));
+void DEBUG_ShowMsg(char const* format,...);
 #define LOG_MSG DEBUG_ShowMsg
 
 #else  //C_DEBUG
@@ -81,7 +81,7 @@ struct LOG
 	void operator()(char const* , double , double , double , char const* )					{ }
 }; //add missing operators to here
 	//try to avoid anything smaller than bit32...
-void GFX_ShowMsg(char const* format,...) GCC_ATTRIBUTE(__format__(__printf__, 1, 2));
+void GFX_ShowMsg(char const* format,...);
 #define LOG_MSG GFX_ShowMsg
 
 #endif //C_DEBUG

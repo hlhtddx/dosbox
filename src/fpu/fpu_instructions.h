@@ -43,7 +43,7 @@ static void FPU_FNOP(void){
 
 static void FPU_PREP_PUSH(void){
 	TOP = (TOP - 1) &7;
-	if (GCC_UNLIKELY(fpu.tags[TOP] != TAG_Empty)) E_Exit("FPU stack overflow");
+	if (fpu.tags[TOP] != TAG_Empty) E_Exit("FPU stack overflow");
 	fpu.tags[TOP] = TAG_Valid;
 }
 
@@ -56,7 +56,7 @@ static void FPU_PUSH(double in){
 
 
 static void FPU_FPOP(void){
-	if (GCC_UNLIKELY(fpu.tags[TOP] == TAG_Empty)) E_Exit("FPU stack underflow");
+	if (fpu.tags[TOP] == TAG_Empty) E_Exit("FPU stack underflow");
 	fpu.tags[TOP]=TAG_Empty;
 	//maybe set zero in it as well
 	TOP = ((TOP+1)&7);
@@ -197,16 +197,16 @@ static void FPU_FBLD(PhysPt addr,Bitu store_to) {
 }
 
 
-static INLINE void FPU_FLD_F32_EA(PhysPt addr) {
+static inline void FPU_FLD_F32_EA(PhysPt addr) {
 	FPU_FLD_F32(addr,8);
 }
-static INLINE void FPU_FLD_F64_EA(PhysPt addr) {
+static inline void FPU_FLD_F64_EA(PhysPt addr) {
 	FPU_FLD_F64(addr,8);
 }
-static INLINE void FPU_FLD_I32_EA(PhysPt addr) {
+static inline void FPU_FLD_I32_EA(PhysPt addr) {
 	FPU_FLD_I32(addr,8);
 }
-static INLINE void FPU_FLD_I16_EA(PhysPt addr) {
+static inline void FPU_FLD_I16_EA(PhysPt addr) {
 	FPU_FLD_I16(addr,8);
 }
 
@@ -581,25 +581,25 @@ static void FPU_FLDZ(void){
 }
 
 
-static INLINE void FPU_FADD_EA(Bitu op1){
+static inline void FPU_FADD_EA(Bitu op1){
 	FPU_FADD(op1,8);
 }
-static INLINE void FPU_FMUL_EA(Bitu op1){
+static inline void FPU_FMUL_EA(Bitu op1){
 	FPU_FMUL(op1,8);
 }
-static INLINE void FPU_FSUB_EA(Bitu op1){
+static inline void FPU_FSUB_EA(Bitu op1){
 	FPU_FSUB(op1,8);
 }
-static INLINE void FPU_FSUBR_EA(Bitu op1){
+static inline void FPU_FSUBR_EA(Bitu op1){
 	FPU_FSUBR(op1,8);
 }
-static INLINE void FPU_FDIV_EA(Bitu op1){
+static inline void FPU_FDIV_EA(Bitu op1){
 	FPU_FDIV(op1,8);
 }
-static INLINE void FPU_FDIVR_EA(Bitu op1){
+static inline void FPU_FDIVR_EA(Bitu op1){
 	FPU_FDIVR(op1,8);
 }
-static INLINE void FPU_FCOM_EA(Bitu op1){
+static inline void FPU_FCOM_EA(Bitu op1){
 	FPU_FCOM(op1,8);
 }
 

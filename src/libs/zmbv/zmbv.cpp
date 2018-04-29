@@ -147,7 +147,7 @@ void VideoCodec::CreateVectorTable(void) {
 }
 
 template<class P>
-INLINE int VideoCodec::PossibleBlock(int vx,int vy,FrameBlock * block) {
+inline int VideoCodec::PossibleBlock(int vx,int vy,FrameBlock * block) {
 	int ret=0;
 	P * pold=((P*)oldframe)+block->start+(vy*pitch)+vx;
 	P * pnew=((P*)newframe)+block->start;;	
@@ -163,7 +163,7 @@ INLINE int VideoCodec::PossibleBlock(int vx,int vy,FrameBlock * block) {
 }
 
 template<class P>
-INLINE int VideoCodec::CompareBlock(int vx,int vy,FrameBlock * block) {
+inline int VideoCodec::CompareBlock(int vx,int vy,FrameBlock * block) {
 	int ret=0;
 	P * pold=((P*)oldframe)+block->start+(vy*pitch)+vx;
 	P * pnew=((P*)newframe)+block->start;;	
@@ -179,7 +179,7 @@ INLINE int VideoCodec::CompareBlock(int vx,int vy,FrameBlock * block) {
 }
 
 template<class P>
-INLINE void VideoCodec::AddXorBlock(int vx,int vy,FrameBlock * block) {
+inline void VideoCodec::AddXorBlock(int vx,int vy,FrameBlock * block) {
 	P * pold=((P*)oldframe)+block->start+(vy*pitch)+vx;
 	P * pnew=((P*)newframe)+block->start;
 	for (int y=0;y<block->dy;y++) {
@@ -365,7 +365,7 @@ int VideoCodec::FinishCompressFrame( void ) {
 }
 
 template<class P>
-INLINE void VideoCodec::UnXorBlock(int vx,int vy,FrameBlock * block) {
+inline void VideoCodec::UnXorBlock(int vx,int vy,FrameBlock * block) {
 	P * pold=((P*)oldframe)+block->start+(vy*pitch)+vx;
 	P * pnew=((P*)newframe)+block->start;
 	for (int y=0;y<block->dy;y++) {
@@ -379,7 +379,7 @@ INLINE void VideoCodec::UnXorBlock(int vx,int vy,FrameBlock * block) {
 }
 
 template<class P>
-INLINE void VideoCodec::CopyBlock(int vx,int vy,FrameBlock * block) {
+inline void VideoCodec::CopyBlock(int vx,int vy,FrameBlock * block) {
 	P * pold=((P*)oldframe)+block->start+(vy*pitch)+vx;
 	P * pnew=((P*)newframe)+block->start;
 	for (int y=0;y<block->dy;y++) {
