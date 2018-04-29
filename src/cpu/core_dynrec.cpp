@@ -62,7 +62,7 @@
 #define DYN_LINKS		(16)
 
 
-//#define DYN_LOG 1 //Turn Logging on.
+ //#define DYN_LOG 1 //Turn Logging on.
 
 
 #if C_FPU
@@ -103,9 +103,9 @@
 
 
 enum BlockReturn {
-	BR_Normal=0,
+	BR_Normal = 0,
 	BR_Cycles,
-	BR_Link1,BR_Link2,
+	BR_Link1, BR_Link2,
 	BR_Opcode,
 #if (C_DEBUG)
 	BR_OpcodeFull,
@@ -120,11 +120,11 @@ enum BlockReturn {
 
 
 static void IllegalOptionDynrec(const char* msg) {
-	E_Exit("DynrecCore: illegal option in %s",msg);
+	E_Exit("DynrecCore: illegal option in %s", msg);
 }
 
 static struct {
-	BlockReturn (*runcode)(Bit8u*);		// points to code that can start a block
+	BlockReturn(*runcode)(Bit8u*);		// points to code that can start a block
 	Bitu callback;				// the occurred callback
 	Bitu readdata;				// spare space used when reading from memory
 	Bit32u protected_regs[8];	// space to save/restore register values
@@ -155,17 +155,17 @@ static struct {
 #include "core_dynrec/decoder.h"
 
 CacheBlockDynRec * LinkBlocks(BlockReturn ret) {
-	CacheBlockDynRec * block=NULL;
+	CacheBlockDynRec * block = NULL;
 	// the last instruction was a control flow modifying instruction
-	Bitu temp_ip=SegPhys(cs)+reg_eip;
-	CodePageHandlerDynRec * temp_handler=(CodePageHandlerDynRec *)get_tlb_readhandler(temp_ip);
+	Bitu temp_ip = SegPhys(cs) + reg_eip;
+	CodePageHandlerDynRec * temp_handler = (CodePageHandlerDynRec *)get_tlb_readhandler(temp_ip);
 	if (temp_handler->flags & PFLAG_HASCODE) {
 		// see if the target is an already translated block
-		block=temp_handler->FindCacheBlock(temp_ip & 4095);
+		block = temp_handler->FindCacheBlock(temp_ip & 4095);
 		if (!block) return NULL;
 
 		// found it, link the current block to
-		cache.block.running->LinkTo(ret==BR_Link2,block);
+		cache.block.running->LinkTo(ret == BR_Link2, block);
 		return block;
 	}
 	return NULL;
@@ -186,16 +186,16 @@ CacheBlockDynRec * LinkBlocks(BlockReturn ret) {
 Bits CPU_Core_Dynrec_Run(void) {
 	for (;;) {
 		// Determine the linear address of CS:EIP
-		PhysPt ip_point=SegPhys(cs)+reg_eip;
-		#if C_HEAVY_DEBUG
-			if (DEBUG_HeavyIsBreakpoint()) return debugCallback;
-		#endif
+		PhysPt ip_point = SegPhys(cs) + reg_eip;
+#if C_HEAVY_DEBUG
+		if (DEBUG_HeavyIsBreakpoint()) return debugCallback;
+#endif
 
-		CodePageHandlerDynRec * chandler=0;
+		CodePageHandlerDynRec * chandler = 0;
 		// see if the current page is present and contains code
-		if (MakeCodePage(ip_point,chandler)) {
+		if (MakeCodePage(ip_point, chandler)) {
 			// page not present, throw the exception
-			CPU_Exception(cpu.exception.which,cpu.exception.error);
+			CPU_Exception(cpu.exception.which, cpu.exception.error);
 			continue;
 		}
 
@@ -203,32 +203,32 @@ Bits CPU_Core_Dynrec_Run(void) {
 		if (!chandler) return CPU_Core_Normal_Run();
 
 		// find correct Dynamic Block to run
-		CacheBlockDynRec * block=chandler->FindCacheBlock(ip_point&4095);
+		CacheBlockDynRec * block = chandler->FindCacheBlock(ip_point & 4095);
 		if (!block) {
 			// no block found, thus translate the instruction stream
 			// unless the instruction is known to be modified
-			if (!chandler->invalidation_map || (chandler->invalidation_map[ip_point&4095]<4)) {
+			if (!chandler->invalidation_map || (chandler->invalidation_map[ip_point & 4095] < 4)) {
 				// translate up to 32 instructions
-				block=CreateCacheBlock(chandler,ip_point,32);
+				block = CreateCacheBlock(chandler, ip_point, 32);
 			} else {
 				// let the normal core handle this instruction to avoid zero-sized blocks
-				Bitu old_cycles=CPU_Cycles;
-				CPU_Cycles=1;
-				Bits nc_retcode=CPU_Core_Normal_Run();
+				Bitu old_cycles = CPU_Cycles;
+				CPU_Cycles = 1;
+				Bits nc_retcode = CPU_Core_Normal_Run();
 				if (!nc_retcode) {
-					CPU_Cycles=old_cycles-1;
+					CPU_Cycles = old_cycles - 1;
 					continue;
 				}
-				CPU_CycleLeft+=old_cycles;
+				CPU_CycleLeft += old_cycles;
 				return nc_retcode;
 			}
 		}
 
-run_block:
-		cache.block.running=0;
+	run_block:
+		cache.block.running = 0;
 		// now we're ready to run the dynamic code block
 //		BlockReturn ret=((BlockReturn (*)(void))(block->cache.start))();
-		BlockReturn ret=core_dynrec.runcode(block->cache.start);
+		BlockReturn ret = core_dynrec.runcode(block->cache.start);
 
 		switch (ret) {
 		case BR_Iret:
@@ -242,7 +242,7 @@ run_block:
 				break;
 			}
 			// trapflag is set, switch to the trap-aware decoder
-			cpudecoder=CPU_Core_Dynrec_Trap_Run;
+			cpudecoder = CPU_Core_Dynrec_Trap_Run;
 			return CBRET_NONE;
 
 		case BR_Normal:
@@ -273,27 +273,27 @@ run_block:
 			return core_dynrec.callback;
 
 		case BR_SMCBlock:
-//			LOG_MSG("selfmodification of running block at %x:%x",SegValue(cs),reg_eip);
-			cpu.exception.which=0;
+			//			LOG_MSG("selfmodification of running block at %x:%x",SegValue(cs),reg_eip);
+			cpu.exception.which = 0;
 			// fallthrough, let the normal core handle the block-modifying instruction
 		case BR_Opcode:
 			// some instruction has been encountered that could not be translated
 			// (thus it is not part of the code block), the normal core will
 			// handle this instruction
-			CPU_CycleLeft+=CPU_Cycles;
-			CPU_Cycles=1;
+			CPU_CycleLeft += CPU_Cycles;
+			CPU_Cycles = 1;
 			return CPU_Core_Normal_Run();
 
 #if (C_DEBUG)
 		case BR_OpcodeFull:
-			CPU_CycleLeft+=CPU_Cycles;
-			CPU_Cycles=1;
+			CPU_CycleLeft += CPU_Cycles;
+			CPU_Cycles = 1;
 			return CPU_Core_Full_Run();
 #endif
 
 		case BR_Link1:
 		case BR_Link2:
-			block=LinkBlocks(ret);
+			block = LinkBlocks(ret);
 			if (block) goto run_block;
 			break;
 
@@ -310,13 +310,13 @@ Bits CPU_Core_Dynrec_Trap_Run(void) {
 	cpu.trap_skip = false;
 
 	// let the normal core execute the next (only one!) instruction
-	Bits ret=CPU_Core_Normal_Run();
+	Bits ret = CPU_Core_Normal_Run();
 
 	// trap to int1 unless the last instruction deferred this
 	// (allows hardware interrupts to be served without interaction)
 	if (!cpu.trap_skip) CPU_HW_Interrupt(1);
 
-	CPU_Cycles = oldCycles-1;
+	CPU_Cycles = oldCycles - 1;
 	// continue (either the trapflag was clear anyways, or the int1 cleared it)
 	cpudecoder = &CPU_Core_Dynrec_Run;
 

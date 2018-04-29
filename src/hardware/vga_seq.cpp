@@ -23,28 +23,28 @@
 
 #define seq(blah) vga.seq.blah
 
-Bitu read_p3c4(Bitu /*port*/,Bitu /*iolen*/) {
+Bitu read_p3c4(Bitu /*port*/, Bitu /*iolen*/) {
 	return seq(index);
 }
 
-void write_p3c4(Bitu /*port*/,Bitu val,Bitu /*iolen*/) {
-	seq(index)=val;
+void write_p3c4(Bitu /*port*/, Bitu val, Bitu /*iolen*/) {
+	seq(index) = val;
 }
 
-void write_p3c5(Bitu /*port*/,Bitu val,Bitu iolen) {
-//	LOG_MSG("SEQ WRITE reg %X val %X",seq(index),val);
-	switch(seq(index)) {
+void write_p3c5(Bitu /*port*/, Bitu val, Bitu iolen) {
+	//	LOG_MSG("SEQ WRITE reg %X val %X",seq(index),val);
+	switch (seq(index)) {
 	case 0:		/* Reset */
-		seq(reset)=val;
+		seq(reset) = val;
 		break;
 	case 1:		/* Clocking Mode */
-		if (val!=seq(clocking_mode)) {
+		if (val != seq(clocking_mode)) {
 			// don't resize if only the screen off bit was changed
-			if ((val&(~0x20))!=(seq(clocking_mode)&(~0x20))) {
-				seq(clocking_mode)=val;
+			if ((val&(~0x20)) != (seq(clocking_mode)&(~0x20))) {
+				seq(clocking_mode) = val;
 				VGA_StartResize();
 			} else {
-				seq(clocking_mode)=val;
+				seq(clocking_mode) = val;
 			}
 			if (val & 0x20) vga.attr.disabled |= 0x2;
 			else vga.attr.disabled &= ~0x2;
@@ -63,9 +63,9 @@ void write_p3c5(Bitu /*port*/,Bitu val,Bitu iolen) {
 		*/
 		break;
 	case 2:		/* Map Mask */
-		seq(map_mask)=val & 15;
-		vga.config.full_map_mask=FillTable[val & 15];
-		vga.config.full_not_map_mask=~vga.config.full_map_mask;
+		seq(map_mask) = val & 15;
+		vga.config.full_map_mask = FillTable[val & 15];
+		vga.config.full_not_map_mask = ~vga.config.full_map_mask;
 		/*
 			0  Enable writes to plane 0 if set
 			1  Enable writes to plane 1 if set
@@ -74,26 +74,26 @@ void write_p3c5(Bitu /*port*/,Bitu val,Bitu iolen) {
 		*/
 		break;
 	case 3:		/* Character Map Select */
-		{
-			seq(character_map_select)=val;
-			Bit8u font1=(val & 0x3) << 1;
-			if (IS_VGA_ARCH) font1|=(val & 0x10) >> 4;
-			vga.draw.font_tables[0]=&vga.draw.font[font1*8*1024];
-			Bit8u font2=((val & 0xc) >> 1);
-			if (IS_VGA_ARCH) font2|=(val & 0x20) >> 5;
-			vga.draw.font_tables[1]=&vga.draw.font[font2*8*1024];
-		}
-		/*
-			0,1,4  Selects VGA Character Map (0..7) if bit 3 of the character
-					attribute is clear.
-			2,3,5  Selects VGA Character Map (0..7) if bit 3 of the character
-					attribute is set.
-			Note: Character Maps are placed as follows:
-			Map 0 at 0k, 1 at 16k, 2 at 32k, 3: 48k, 4: 8k, 5: 24k, 6: 40k, 7: 56k
-		*/
-		break;
+	{
+		seq(character_map_select) = val;
+		Bit8u font1 = (val & 0x3) << 1;
+		if (IS_VGA_ARCH) font1 |= (val & 0x10) >> 4;
+		vga.draw.font_tables[0] = &vga.draw.font[font1 * 8 * 1024];
+		Bit8u font2 = ((val & 0xc) >> 1);
+		if (IS_VGA_ARCH) font2 |= (val & 0x20) >> 5;
+		vga.draw.font_tables[1] = &vga.draw.font[font2 * 8 * 1024];
+	}
+	/*
+		0,1,4  Selects VGA Character Map (0..7) if bit 3 of the character
+				attribute is clear.
+		2,3,5  Selects VGA Character Map (0..7) if bit 3 of the character
+				attribute is set.
+		Note: Character Maps are placed as follows:
+		Map 0 at 0k, 1 at 16k, 2 at 32k, 3: 48k, 4: 8k, 5: 24k, 6: 40k, 7: 56k
+	*/
+	break;
 	case 4:	/* Memory Mode */
-		/* 
+		/*
 			0  Set if in an alphanumeric mode, clear in graphics modes.
 			1  Set if more than 64kbytes on the adapter.
 			2  Enables Odd/Even addressing mode if set. Odd/Even mode places all odd
@@ -101,11 +101,11 @@ void write_p3c5(Bitu /*port*/,Bitu val,Bitu iolen) {
 			3  If set address bit 0-1 selects video memory planes (256 color mode),
 				rather than the Map Mask and Read Map Select Registers.
 		*/
-		seq(memory_mode)=val;
+		seq(memory_mode) = val;
 		if (IS_VGA_ARCH) {
 			/* Changing this means changing the VGA Memory Read/Write Handler */
-			if (val&0x08) vga.config.chained=true;
-			else vga.config.chained=false;
+			if (val & 0x08) vga.config.chained = true;
+			else vga.config.chained = false;
 			VGA_SetupHandlers();
 		}
 		break;
@@ -113,16 +113,16 @@ void write_p3c5(Bitu /*port*/,Bitu val,Bitu iolen) {
 		if (svga.write_p3c5) {
 			svga.write_p3c5(seq(index), val, iolen);
 		} else {
-			LOG(LOG_VGAMISC,LOG_NORMAL)("VGA:SEQ:Write to illegal index %2X",seq(index));
+			LOG(LOG_VGAMISC, LOG_NORMAL)("VGA:SEQ:Write to illegal index %2X", seq(index));
 		}
 		break;
 	}
 }
 
 
-Bitu read_p3c5(Bitu /*port*/,Bitu iolen) {
-//	LOG_MSG("VGA:SEQ:Read from index %2X",seq(index));
-	switch(seq(index)) {
+Bitu read_p3c5(Bitu /*port*/, Bitu iolen) {
+	//	LOG_MSG("VGA:SEQ:Read from index %2X",seq(index));
+	switch (seq(index)) {
 	case 0:			/* Reset */
 		return seq(reset);
 		break;
@@ -149,11 +149,11 @@ Bitu read_p3c5(Bitu /*port*/,Bitu iolen) {
 
 void VGA_SetupSEQ(void) {
 	if (IS_EGAVGA_ARCH) {
-		IO_RegisterWriteHandler(0x3c4,write_p3c4,IO_MB);
-		IO_RegisterWriteHandler(0x3c5,write_p3c5,IO_MB);
+		IO_RegisterWriteHandler(0x3c4, write_p3c4, IO_MB);
+		IO_RegisterWriteHandler(0x3c5, write_p3c5, IO_MB);
 		if (IS_VGA_ARCH) {
-			IO_RegisterReadHandler(0x3c4,read_p3c4,IO_MB);
-			IO_RegisterReadHandler(0x3c5,read_p3c5,IO_MB);
+			IO_RegisterReadHandler(0x3c4, read_p3c4, IO_MB);
+			IO_RegisterReadHandler(0x3c5, read_p3c5, IO_MB);
 		}
 	}
 }

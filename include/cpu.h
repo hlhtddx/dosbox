@@ -47,7 +47,7 @@
 #define CPU_ARCHTYPE_486NEWSLOW		0x45
 #define CPU_ARCHTYPE_PENTIUMSLOW	0x50
 
-/* CPU Cycle Timing */
+ /* CPU Cycle Timing */
 extern Bit32s CPU_Cycles;
 extern Bit32s CPU_CycleLeft;
 extern Bit32s CPU_CycleMax;
@@ -65,7 +65,7 @@ extern Bitu CPU_PrefetchQueueSize;
 
 /* Some common Defines */
 /* A CPU Handler */
-typedef Bits (CPU_Decoder)(void);
+typedef Bits(CPU_Decoder)(void);
 extern CPU_Decoder * cpudecoder;
 
 Bits CPU_Core_Normal_Run(void);
@@ -90,8 +90,8 @@ extern Bit16u parity_lookup[256];
 
 bool CPU_LLDT(Bitu selector);
 bool CPU_LTR(Bitu selector);
-void CPU_LIDT(Bitu limit,Bitu base);
-void CPU_LGDT(Bitu limit,Bitu base);
+void CPU_LIDT(Bitu limit, Bitu base);
+void CPU_LGDT(Bitu limit, Bitu base);
 
 Bitu CPU_STR(void);
 Bitu CPU_SLDT(void);
@@ -100,20 +100,20 @@ Bitu CPU_SIDT_limit(void);
 Bitu CPU_SGDT_base(void);
 Bitu CPU_SGDT_limit(void);
 
-void CPU_ARPL(Bitu & dest_sel,Bitu src_sel);
-void CPU_LAR(Bitu selector,Bitu & ar);
-void CPU_LSL(Bitu selector,Bitu & limit);
+void CPU_ARPL(Bitu & dest_sel, Bitu src_sel);
+void CPU_LAR(Bitu selector, Bitu & ar);
+void CPU_LSL(Bitu selector, Bitu & limit);
 
-void CPU_SET_CRX(Bitu cr,Bitu value);
-bool CPU_WRITE_CRX(Bitu cr,Bitu value);
+void CPU_SET_CRX(Bitu cr, Bitu value);
+bool CPU_WRITE_CRX(Bitu cr, Bitu value);
 Bitu CPU_GET_CRX(Bitu cr);
-bool CPU_READ_CRX(Bitu cr,Bit32u & retvalue);
+bool CPU_READ_CRX(Bitu cr, Bit32u & retvalue);
 
-bool CPU_WRITE_DRX(Bitu dr,Bitu value);
-bool CPU_READ_DRX(Bitu dr,Bit32u & retvalue);
+bool CPU_WRITE_DRX(Bitu dr, Bitu value);
+bool CPU_READ_DRX(Bitu dr, Bit32u & retvalue);
 
-bool CPU_WRITE_TRX(Bitu dr,Bitu value);
-bool CPU_READ_TRX(Bitu dr,Bit32u & retvalue);
+bool CPU_WRITE_TRX(Bitu dr, Bitu value);
+bool CPU_READ_TRX(Bitu dr, Bit32u & retvalue);
 
 Bitu CPU_SMSW(void);
 bool CPU_LMSW(Bitu word);
@@ -121,10 +121,10 @@ bool CPU_LMSW(Bitu word);
 void CPU_VERR(Bitu selector);
 void CPU_VERW(Bitu selector);
 
-void CPU_JMP(bool use32,Bitu selector,Bitu offset,Bitu oldeip);
-void CPU_CALL(bool use32,Bitu selector,Bitu offset,Bitu oldeip);
-void CPU_RET(bool use32,Bitu bytes,Bitu oldeip);
-void CPU_IRET(bool use32,Bitu oldeip);
+void CPU_JMP(bool use32, Bitu selector, Bitu offset, Bitu oldeip);
+void CPU_CALL(bool use32, Bitu selector, Bitu offset, Bitu oldeip);
+void CPU_RET(bool use32, Bitu bytes, Bitu oldeip);
+void CPU_IRET(bool use32, Bitu oldeip);
 void CPU_HLT(Bitu oldeip);
 
 bool CPU_POPF(Bitu use32);
@@ -132,32 +132,32 @@ bool CPU_PUSHF(Bitu use32);
 bool CPU_CLI(void);
 bool CPU_STI(void);
 
-bool CPU_IO_Exception(Bitu port,Bitu size);
+bool CPU_IO_Exception(Bitu port, Bitu size);
 void CPU_RunException(void);
 
-void CPU_ENTER(bool use32,Bitu bytes,Bitu level);
+void CPU_ENTER(bool use32, Bitu bytes, Bitu level);
 
 #define CPU_INT_SOFTWARE		0x1
 #define CPU_INT_EXCEPTION		0x2
 #define CPU_INT_HAS_ERROR		0x4
 #define CPU_INT_NOIOPLCHECK		0x8
 
-void CPU_Interrupt(Bitu num,Bitu type,Bitu oldeip);
+void CPU_Interrupt(Bitu num, Bitu type, Bitu oldeip);
 static inline void CPU_HW_Interrupt(Bitu num) {
-	CPU_Interrupt(num,0,reg_eip);
+	CPU_Interrupt(num, 0, reg_eip);
 }
-static inline void CPU_SW_Interrupt(Bitu num,Bitu oldeip) {
-	CPU_Interrupt(num,CPU_INT_SOFTWARE,oldeip);
+static inline void CPU_SW_Interrupt(Bitu num, Bitu oldeip) {
+	CPU_Interrupt(num, CPU_INT_SOFTWARE, oldeip);
 }
-static inline void CPU_SW_Interrupt_NoIOPLCheck(Bitu num,Bitu oldeip) {
-	CPU_Interrupt(num,CPU_INT_SOFTWARE|CPU_INT_NOIOPLCHECK,oldeip);
+static inline void CPU_SW_Interrupt_NoIOPLCheck(Bitu num, Bitu oldeip) {
+	CPU_Interrupt(num, CPU_INT_SOFTWARE | CPU_INT_NOIOPLCHECK, oldeip);
 }
 
-bool CPU_PrepareException(Bitu which,Bitu error);
-void CPU_Exception(Bitu which,Bitu error=0);
+bool CPU_PrepareException(Bitu which, Bitu error);
+void CPU_Exception(Bitu which, Bitu error = 0);
 
-bool CPU_SetSegGeneral(SegNames seg,Bitu value);
-bool CPU_PopSeg(SegNames seg,bool use32);
+bool CPU_SetSegGeneral(SegNames seg, Bitu value);
+bool CPU_PopSeg(SegNames seg, bool use32);
 
 bool CPU_CPUID(void);
 Bitu CPU_Pop16(void);
@@ -165,7 +165,7 @@ Bitu CPU_Pop32(void);
 void CPU_Push16(Bitu value);
 void CPU_Push32(Bitu value);
 
-void CPU_SetFlags(Bitu word,Bitu mask);
+void CPU_SetFlags(Bitu word, Bitu mask);
 
 
 #define EXCEPTION_UD			6
@@ -226,95 +226,95 @@ void CPU_SetFlags(Bitu word,Bitu mask);
 
 struct S_Descriptor {
 #ifdef WORDS_BIGENDIAN
-	Bit32u base_0_15	:16;
-	Bit32u limit_0_15	:16;
-	Bit32u base_24_31	:8;
-	Bit32u g			:1;
-	Bit32u big			:1;
-	Bit32u r			:1;
-	Bit32u avl			:1;
-	Bit32u limit_16_19	:4;
-	Bit32u p			:1;
-	Bit32u dpl			:2;
-	Bit32u type			:5;
-	Bit32u base_16_23	:8;
+	Bit32u base_0_15 : 16;
+	Bit32u limit_0_15 : 16;
+	Bit32u base_24_31 : 8;
+	Bit32u g : 1;
+	Bit32u big : 1;
+	Bit32u r : 1;
+	Bit32u avl : 1;
+	Bit32u limit_16_19 : 4;
+	Bit32u p : 1;
+	Bit32u dpl : 2;
+	Bit32u type : 5;
+	Bit32u base_16_23 : 8;
 #else
-	Bit32u limit_0_15	:16;
-	Bit32u base_0_15	:16;
-	Bit32u base_16_23	:8;
-	Bit32u type			:5;
-	Bit32u dpl			:2;
-	Bit32u p			:1;
-	Bit32u limit_16_19	:4;
-	Bit32u avl			:1;
-	Bit32u r			:1;
-	Bit32u big			:1;
-	Bit32u g			:1;
-	Bit32u base_24_31	:8;
+	Bit32u limit_0_15 : 16;
+	Bit32u base_0_15 : 16;
+	Bit32u base_16_23 : 8;
+	Bit32u type : 5;
+	Bit32u dpl : 2;
+	Bit32u p : 1;
+	Bit32u limit_16_19 : 4;
+	Bit32u avl : 1;
+	Bit32u r : 1;
+	Bit32u big : 1;
+	Bit32u g : 1;
+	Bit32u base_24_31 : 8;
 #endif
 };
 
 struct G_Descriptor {
 #ifdef WORDS_BIGENDIAN
-	Bit32u selector:	16;
-	Bit32u offset_0_15	:16;
-	Bit32u offset_16_31	:16;
-	Bit32u p			:1;
-	Bit32u dpl			:2;
-	Bit32u type			:5;
-	Bit32u reserved		:3;
-	Bit32u paramcount	:5;
+	Bit32u selector : 16;
+	Bit32u offset_0_15 : 16;
+	Bit32u offset_16_31 : 16;
+	Bit32u p : 1;
+	Bit32u dpl : 2;
+	Bit32u type : 5;
+	Bit32u reserved : 3;
+	Bit32u paramcount : 5;
 #else
-	Bit32u offset_0_15	:16;
-	Bit32u selector		:16;
-	Bit32u paramcount	:5;
-	Bit32u reserved		:3;
-	Bit32u type			:5;
-	Bit32u dpl			:2;
-	Bit32u p			:1;
-	Bit32u offset_16_31	:16;
+	Bit32u offset_0_15 : 16;
+	Bit32u selector : 16;
+	Bit32u paramcount : 5;
+	Bit32u reserved : 3;
+	Bit32u type : 5;
+	Bit32u dpl : 2;
+	Bit32u p : 1;
+	Bit32u offset_16_31 : 16;
 #endif
 };
 
-struct TSS_16 {	
-    Bit16u back;                 /* Back link to other task */
-    Bit16u sp0;				     /* The CK stack pointer */
-    Bit16u ss0;					 /* The CK stack selector */
+struct TSS_16 {
+	Bit16u back;                 /* Back link to other task */
+	Bit16u sp0;				     /* The CK stack pointer */
+	Bit16u ss0;					 /* The CK stack selector */
 	Bit16u sp1;                  /* The parent KL stack pointer */
-    Bit16u ss1;                  /* The parent KL stack selector */
+	Bit16u ss1;                  /* The parent KL stack selector */
 	Bit16u sp2;                  /* Unused */
-    Bit16u ss2;                  /* Unused */
-    Bit16u ip;                   /* The instruction pointer */
-    Bit16u flags;                /* The flags */
-    Bit16u ax, cx, dx, bx;       /* The general purpose registers */
-    Bit16u sp, bp, si, di;       /* The special purpose registers */
-    Bit16u es;                   /* The extra selector */
-    Bit16u cs;                   /* The code selector */
-    Bit16u ss;                   /* The application stack selector */
-    Bit16u ds;                   /* The data selector */
-    Bit16u ldt;                  /* The local descriptor table */
+	Bit16u ss2;                  /* Unused */
+	Bit16u ip;                   /* The instruction pointer */
+	Bit16u flags;                /* The flags */
+	Bit16u ax, cx, dx, bx;       /* The general purpose registers */
+	Bit16u sp, bp, si, di;       /* The special purpose registers */
+	Bit16u es;                   /* The extra selector */
+	Bit16u cs;                   /* The code selector */
+	Bit16u ss;                   /* The application stack selector */
+	Bit16u ds;                   /* The data selector */
+	Bit16u ldt;                  /* The local descriptor table */
 };
 
-struct TSS_32 {	
-    Bit32u back;                /* Back link to other task */
+struct TSS_32 {
+	Bit32u back;                /* Back link to other task */
 	Bit32u esp0;		         /* The CK stack pointer */
-    Bit32u ss0;					 /* The CK stack selector */
+	Bit32u ss0;					 /* The CK stack selector */
 	Bit32u esp1;                 /* The parent KL stack pointer */
-    Bit32u ss1;                  /* The parent KL stack selector */
+	Bit32u ss1;                  /* The parent KL stack selector */
 	Bit32u esp2;                 /* Unused */
-    Bit32u ss2;                  /* Unused */
+	Bit32u ss2;                  /* Unused */
 	Bit32u cr3;                  /* The page directory pointer */
-    Bit32u eip;                  /* The instruction pointer */
-    Bit32u eflags;               /* The flags */
-    Bit32u eax, ecx, edx, ebx;   /* The general purpose registers */
-    Bit32u esp, ebp, esi, edi;   /* The special purpose registers */
-    Bit32u es;                   /* The extra selector */
-    Bit32u cs;                   /* The code selector */
-    Bit32u ss;                   /* The application stack selector */
-    Bit32u ds;                   /* The data selector */
-    Bit32u fs;                   /* And another extra selector */
-    Bit32u gs;                   /* ... and another one */
-    Bit32u ldt;                  /* The local descriptor table */
+	Bit32u eip;                  /* The instruction pointer */
+	Bit32u eflags;               /* The flags */
+	Bit32u eax, ecx, edx, ebx;   /* The general purpose registers */
+	Bit32u esp, ebp, esi, edi;   /* The special purpose registers */
+	Bit32u es;                   /* The extra selector */
+	Bit32u cs;                   /* The code selector */
+	Bit32u ss;                   /* The application stack selector */
+	Bit32u ds;                   /* The data selector */
+	Bit32u fs;                   /* And another extra selector */
+	Bit32u gs;                   /* ... and another one */
+	Bit32u ldt;                  /* The local descriptor table */
 };
 
 #pragma pack()
@@ -322,17 +322,17 @@ struct TSS_32 {
 class Descriptor
 {
 public:
-	Descriptor() { saved.fill[0]=saved.fill[1]=0; }
+	Descriptor() { saved.fill[0] = saved.fill[1] = 0; }
 
 	void Load(PhysPt address);
 	void Save(PhysPt address);
 
-	PhysPt GetBase (void) { 
-		return (saved.seg.base_24_31<<24) | (saved.seg.base_16_23<<16) | saved.seg.base_0_15; 
+	PhysPt GetBase(void) {
+		return (saved.seg.base_24_31 << 24) | (saved.seg.base_16_23 << 16) | saved.seg.base_0_15;
 	}
-	Bitu GetLimit (void) {
-		Bitu limit = (saved.seg.limit_16_19<<16) | saved.seg.limit_0_15;
-		if (saved.seg.g)	return (limit<<12) | 0xFFF;
+	Bitu GetLimit(void) {
+		Bitu limit = (saved.seg.limit_16_19 << 16) | saved.seg.limit_0_15;
+		if (saved.seg.g)	return (limit << 12) | 0xFFF;
 		return limit;
 	}
 	Bitu GetOffset(void) {
@@ -363,15 +363,15 @@ public:
 
 class DescriptorTable {
 public:
-	PhysPt	GetBase			(void)			{ return table_base;	}
-	Bitu	GetLimit		(void)			{ return table_limit;	}
-	void	SetBase			(PhysPt _base)	{ table_base = _base;	}
-	void	SetLimit		(Bitu _limit)	{ table_limit= _limit;	}
+	PhysPt	GetBase(void) { return table_base; }
+	Bitu	GetLimit(void) { return table_limit; }
+	void	SetBase(PhysPt _base) { table_base = _base; }
+	void	SetLimit(Bitu _limit) { table_limit = _limit; }
 
-	bool GetDescriptor	(Bitu selector, Descriptor& desc) {
-		selector&=~7;
-		if (selector>=table_limit) return false;
-		desc.Load(table_base+(selector));
+	bool GetDescriptor(Bitu selector, Descriptor& desc) {
+		selector &= ~7;
+		if (selector >= table_limit) return false;
+		desc.Load(table_base + (selector));
 		return true;
 	}
 protected:
@@ -382,46 +382,46 @@ protected:
 class GDTDescriptorTable : public DescriptorTable {
 public:
 	bool GetDescriptor(Bitu selector, Descriptor& desc) {
-		Bitu address=selector & ~7;
+		Bitu address = selector & ~7;
 		if (selector & 4) {
-			if (address>=ldt_limit) return false;
-			desc.Load(ldt_base+address);
+			if (address >= ldt_limit) return false;
+			desc.Load(ldt_base + address);
 			return true;
 		} else {
-			if (address>=table_limit) return false;
-			desc.Load(table_base+address);
+			if (address >= table_limit) return false;
+			desc.Load(table_base + address);
 			return true;
 		}
 	}
 	bool SetDescriptor(Bitu selector, Descriptor& desc) {
-		Bitu address=selector & ~7;
+		Bitu address = selector & ~7;
 		if (selector & 4) {
-			if (address>=ldt_limit) return false;
-			desc.Save(ldt_base+address);
+			if (address >= ldt_limit) return false;
+			desc.Save(ldt_base + address);
 			return true;
 		} else {
-			if (address>=table_limit) return false;
-			desc.Save(table_base+address);
+			if (address >= table_limit) return false;
+			desc.Save(table_base + address);
 			return true;
 		}
-	} 
-	Bitu SLDT(void)	{
+	}
+	Bitu SLDT(void) {
 		return ldt_value;
 	}
-	bool LLDT(Bitu value)	{
-		if ((value&0xfffc)==0) {
-			ldt_value=0;
-			ldt_base=0;
-			ldt_limit=0;
+	bool LLDT(Bitu value) {
+		if ((value & 0xfffc) == 0) {
+			ldt_value = 0;
+			ldt_base = 0;
+			ldt_limit = 0;
 			return true;
 		}
 		Descriptor desc;
-		if (!GetDescriptor(value,desc)) return !CPU_PrepareException(EXCEPTION_GP,value);
-		if (desc.Type()!=DESC_LDT) return !CPU_PrepareException(EXCEPTION_GP,value);
-		if (!desc.saved.seg.p) return !CPU_PrepareException(EXCEPTION_NP,value);
-		ldt_base=desc.GetBase();
-		ldt_limit=desc.GetLimit();
-		ldt_value=value;
+		if (!GetDescriptor(value, desc)) return !CPU_PrepareException(EXCEPTION_GP, value);
+		if (desc.Type() != DESC_LDT) return !CPU_PrepareException(EXCEPTION_GP, value);
+		if (!desc.saved.seg.p) return !CPU_PrepareException(EXCEPTION_NP, value);
+		ldt_base = desc.GetBase();
+		ldt_limit = desc.GetLimit();
+		ldt_value = value;
 		return true;
 	}
 private:
@@ -439,8 +439,8 @@ public:
 		return saved.seg.type & 8;
 	}
 	void SetBusy(bool busy) {
-		if (busy) saved.seg.type|=2;
-		else saved.seg.type&=~2;
+		if (busy) saved.seg.type |= 2;
+		else saved.seg.type &= ~2;
 	}
 };
 
@@ -453,18 +453,18 @@ struct CPUBlock {
 	GDTDescriptorTable gdt;
 	DescriptorTable idt;
 	struct {
-		Bitu mask,notmask;
+		Bitu mask, notmask;
 		bool big;
 	} stack;
 	struct {
 		bool big;
 	} code;
 	struct {
-		Bitu cs,eip;
+		Bitu cs, eip;
 		CPU_Decoder * old_decoder;
 	} hlt;
 	struct {
-		Bitu which,error;
+		Bitu which, error;
 	} exception;
 	Bits direction;
 	bool trap_skip;
@@ -475,13 +475,13 @@ struct CPUBlock {
 extern CPUBlock cpu;
 
 static inline void CPU_SetFlagsd(Bitu word) {
-	Bitu mask=cpu.cpl ? FMASK_NORMAL : FMASK_ALL;
-	CPU_SetFlags(word,mask);
+	Bitu mask = cpu.cpl ? FMASK_NORMAL : FMASK_ALL;
+	CPU_SetFlags(word, mask);
 }
 
 static inline void CPU_SetFlagsw(Bitu word) {
-	Bitu mask=(cpu.cpl ? FMASK_NORMAL : FMASK_ALL) & 0xffff;
-	CPU_SetFlags(word,mask);
+	Bitu mask = (cpu.cpl ? FMASK_NORMAL : FMASK_ALL) & 0xffff;
+	CPU_SetFlags(word, mask);
 }
 
 

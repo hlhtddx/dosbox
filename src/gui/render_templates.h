@@ -20,7 +20,7 @@
 #define PSIZE 1
 #define PTYPE Bit8u
 #define WC scalerWriteCache.b8
-//#define FC scalerFrameCache.b8
+ //#define FC scalerFrameCache.b8
 #define FC (*(scalerFrameCache_t*)(&scalerSourceCache.b32[400][0])).b8
 #define redMask		0
 #define	greenMask	0
@@ -35,7 +35,7 @@
 #define PSIZE 2
 #define PTYPE Bit16u
 #define WC scalerWriteCache.b16
-//#define FC scalerFrameCache.b16
+ //#define FC scalerFrameCache.b16
 #define FC (*(scalerFrameCache_t*)(&scalerSourceCache.b32[400][0])).b16
 #if DBPP == 15
 #define	redMask		0x7C00
@@ -62,7 +62,7 @@
 #define PSIZE 4
 #define PTYPE Bit32u
 #define WC scalerWriteCache.b32
-//#define FC scalerFrameCache.b32
+ //#define FC scalerFrameCache.b32
 #define FC (*(scalerFrameCache_t*)(&scalerSourceCache.b32[400][0])).b32
 #define redMask		0xff0000
 #define greenMask	0x00ff00
@@ -153,7 +153,7 @@
 
 
 #if RENDER_USE_ADVANCED_SCALERS>1
-static void conc3d(Cache,SBPP,DBPP) (const void * s) {
+static void conc3d(Cache, SBPP, DBPP) (const void * s) {
 #ifdef RENDER_NULL_INPUT
 	if (!s) {
 		render.scale.cacheRead += render.scale.cachePitch;
@@ -163,52 +163,52 @@ static void conc3d(Cache,SBPP,DBPP) (const void * s) {
 	}
 #endif
 	const SRCTYPE * src = (SRCTYPE*)s;
-	PTYPE *fc= &FC[render.scale.inLine+1][1];
+	PTYPE *fc = &FC[render.scale.inLine + 1][1];
 	SRCTYPE *sc = (SRCTYPE*)(render.scale.cacheRead);
 	render.scale.cacheRead += render.scale.cachePitch;
 	Bitu b;
 	bool hadChange = false;
 	/* This should also copy the surrounding pixels but it looks nice enough without */
-	for (b=0;b<render.scale.blocks;b++) {
+	for (b = 0; b < render.scale.blocks; b++) {
 #if (SBPP == 9)
-		for (Bitu x=0;x<SCALER_BLOCKSIZE;x++) {
+		for (Bitu x = 0; x < SCALER_BLOCKSIZE; x++) {
 			PTYPE pixel = PMAKE(src[x]);
 			if (pixel != fc[x]) {
 #else 
-		for (Bitu x=0;x<SCALER_BLOCKSIZE;x+=sizeof(Bitu)/sizeof(SRCTYPE)) {
+		for (Bitu x = 0; x < SCALER_BLOCKSIZE; x += sizeof(Bitu) / sizeof(SRCTYPE)) {
 			if (*(Bitu const*)&src[x] != *(Bitu*)&sc[x]) {
 #endif
 				do {
 					fc[x] = PMAKE(src[x]);
 					sc[x] = src[x];
 					x++;
-				} while (x<SCALER_BLOCKSIZE);
+				} while (x < SCALER_BLOCKSIZE);
 				hadChange = true;
 				/* Change the surrounding blocks */
-				CC[render.scale.inLine+0][1+b-1] |= SCALE_RIGHT;
-				CC[render.scale.inLine+0][1+b+0] |= SCALE_FULL;
-				CC[render.scale.inLine+0][1+b+1] |= SCALE_LEFT;
-				CC[render.scale.inLine+1][1+b-1] |= SCALE_RIGHT;
-				CC[render.scale.inLine+1][1+b+0] |= SCALE_FULL;
-				CC[render.scale.inLine+1][1+b+1] |= SCALE_LEFT;
-				CC[render.scale.inLine+2][1+b-1] |= SCALE_RIGHT;
-				CC[render.scale.inLine+2][1+b+0] |= SCALE_FULL;
-				CC[render.scale.inLine+2][1+b+1] |= SCALE_LEFT;
+				CC[render.scale.inLine + 0][1 + b - 1] |= SCALE_RIGHT;
+				CC[render.scale.inLine + 0][1 + b + 0] |= SCALE_FULL;
+				CC[render.scale.inLine + 0][1 + b + 1] |= SCALE_LEFT;
+				CC[render.scale.inLine + 1][1 + b - 1] |= SCALE_RIGHT;
+				CC[render.scale.inLine + 1][1 + b + 0] |= SCALE_FULL;
+				CC[render.scale.inLine + 1][1 + b + 1] |= SCALE_LEFT;
+				CC[render.scale.inLine + 2][1 + b - 1] |= SCALE_RIGHT;
+				CC[render.scale.inLine + 2][1 + b + 0] |= SCALE_FULL;
+				CC[render.scale.inLine + 2][1 + b + 1] |= SCALE_LEFT;
 				continue;
 			}
 		}
 		fc += SCALER_BLOCKSIZE;
 		sc += SCALER_BLOCKSIZE;
 		src += SCALER_BLOCKSIZE;
-	}
+			}
 	if (hadChange) {
-		CC[render.scale.inLine+0][0] = 1;
-		CC[render.scale.inLine+1][0] = 1;
-		CC[render.scale.inLine+2][0] = 1;
+		CC[render.scale.inLine + 0][0] = 1;
+		CC[render.scale.inLine + 1][0] = 1;
+		CC[render.scale.inLine + 2][0] = 1;
 	}
 	render.scale.inLine++;
 	render.scale.complexHandler();
-}
+		}
 #endif
 
 

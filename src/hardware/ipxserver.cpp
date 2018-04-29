@@ -42,7 +42,7 @@ TIMER_TickHandler* serverTimer;
 Bit8u packetCRC(Bit8u *buffer, Bit16u bufSize) {
 	Bit8u tmpCRC = 0;
 	Bit16u i;
-	for(i=0;i<bufSize;i++) {
+	for (i = 0; i < bufSize; i++) {
 		tmpCRC ^= *buffer;
 		buffer++;
 	}
@@ -81,15 +81,15 @@ static void sendIPXPacket(Bit8u *buffer, Bit16s bufSize) {
 
 	srcport = tmpHeader->src.addr.byIP.port;
 	destport = tmpHeader->dest.addr.byIP.port;
-	
 
-	if(desthost == 0xffffffff) {
+
+	if (desthost == 0xffffffff) {
 		// Broadcast
-		for(i=0;i<SOCKETTABLESIZE;i++) {
-			if(connBuffer[i].connected && ((ipconn[i].host != srchost)||(ipconn[i].port!=srcport))) {
+		for (i = 0; i < SOCKETTABLESIZE; i++) {
+			if (connBuffer[i].connected && ((ipconn[i].host != srchost) || (ipconn[i].port != srcport))) {
 				outPacket.address = ipconn[i];
-				result = SDLNet_UDP_Send(ipxServerSocket,-1,&outPacket);
-				if(result == 0) {
+				result = SDLNet_UDP_Send(ipxServerSocket, -1, &outPacket);
+				if (result == 0) {
 					LOG_MSG("IPXSERVER: %s", SDLNet_GetError());
 					continue;
 				}
@@ -98,11 +98,11 @@ static void sendIPXPacket(Bit8u *buffer, Bit16s bufSize) {
 		}
 	} else {
 		// Specific address
-		for(i=0;i<SOCKETTABLESIZE;i++) {
-			if((connBuffer[i].connected) && (ipconn[i].host == desthost) && (ipconn[i].port == destport)) {
+		for (i = 0; i < SOCKETTABLESIZE; i++) {
+			if ((connBuffer[i].connected) && (ipconn[i].host == desthost) && (ipconn[i].port == destport)) {
 				outPacket.address = ipconn[i];
-				result = SDLNet_UDP_Send(ipxServerSocket,-1,&outPacket);
-				if(result == 0) {
+				result = SDLNet_UDP_Send(ipxServerSocket, -1, &outPacket);
+				if (result == 0) {
 					LOG_MSG("IPXSERVER: %s", SDLNet_GetError());
 					continue;
 				}
@@ -117,7 +117,7 @@ static void sendIPXPacket(Bit8u *buffer, Bit16s bufSize) {
 }
 
 bool IPX_isConnectedToServer(Bits tableNum, IPaddress ** ptrAddr) {
-	if(tableNum >= SOCKETTABLESIZE) return false;
+	if (tableNum >= SOCKETTABLESIZE) return false;
 	*ptrAddr = &ipconn[tableNum];
 	return connBuffer[tableNum].connected;
 }
@@ -129,7 +129,7 @@ static void ackClient(IPaddress clientAddr) {
 
 	SDLNet_Write16(0xffff, regHeader.checkSum);
 	SDLNet_Write16(sizeof(regHeader), regHeader.length);
-	
+
 	SDLNet_Write32(0, regHeader.dest.network);
 	PackIP(clientAddr, &regHeader.dest.addr.byIP);
 	SDLNet_Write16(0x2, regHeader.dest.socket);
@@ -144,7 +144,7 @@ static void ackClient(IPaddress clientAddr) {
 	regPacket.maxlen = sizeof(regHeader);
 	regPacket.address = clientAddr;
 	// Send registration string to client.  If client doesn't get this, client will not be registered
-	result = SDLNet_UDP_Send(ipxServerSocket,-1,&regPacket);
+	result = SDLNet_UDP_Send(ipxServerSocket, -1, &regPacket);
 
 }
 
@@ -169,14 +169,14 @@ static void IPX_ServerLoop() {
 		// For this, I just spoofed the echo protocol packet designation 0x02
 		IPXHeader *tmpHeader;
 		tmpHeader = (IPXHeader *)&inBuffer[0];
-	
+
 		// Check to see if echo packet
-		if(SDLNet_Read16(tmpHeader->dest.socket) == 0x2) {
+		if (SDLNet_Read16(tmpHeader->dest.socket) == 0x2) {
 			// Null destination node means its a server registration packet
-			if(tmpHeader->dest.addr.byIP.host == 0x0) {
+			if (tmpHeader->dest.addr.byIP.host == 0x0) {
 				UnpackIP(tmpHeader->src.addr.byIP, &tmpAddr);
-				for(i=0;i<SOCKETTABLESIZE;i++) {
-					if(!connBuffer[i].connected) {
+				for (i = 0; i < SOCKETTABLESIZE; i++) {
+					if (!connBuffer[i].connected) {
 						// Use prefered host IP rather than the reported source IP
 						// It may be better to use the reported source
 						ipconn[i] = inPacket.address;
@@ -187,7 +187,7 @@ static void IPX_ServerLoop() {
 						ackClient(inPacket.address);
 						return;
 					} else {
-						if((ipconn[i].host == tmpAddr.host) && (ipconn[i].port == tmpAddr.port)) {
+						if ((ipconn[i].host == tmpAddr.host) && (ipconn[i].port == tmpAddr.port)) {
 
 							LOG_MSG("IPXSERVER: Reconnect from %d.%d.%d.%d", CONVIP(tmpAddr.host));
 							// Update anonymous port number if changed
@@ -196,7 +196,7 @@ static void IPX_ServerLoop() {
 							return;
 						}
 					}
-					
+
 				}
 			}
 		}
@@ -214,13 +214,13 @@ void IPX_StopServer() {
 bool IPX_StartServer(Bit16u portnum) {
 	Bit16u i;
 
-	if(!SDLNet_ResolveHost(&ipxServerIp, NULL, portnum)) {
-	
+	if (!SDLNet_ResolveHost(&ipxServerIp, NULL, portnum)) {
+
 		//serverSocketSet = SDLNet_AllocSocketSet(SOCKETTABLESIZE);
 		ipxServerSocket = SDLNet_UDP_Open(portnum);
-		if(!ipxServerSocket) return false;
+		if (!ipxServerSocket) return false;
 
-		for(i=0;i<SOCKETTABLESIZE;i++) connBuffer[i].connected = false;
+		for (i = 0; i < SOCKETTABLESIZE; i++) connBuffer[i].connected = false;
 
 		TIMER_AddTickHandler(&IPX_ServerLoop);
 		return true;

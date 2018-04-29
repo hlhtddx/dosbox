@@ -29,7 +29,7 @@ extern Bit32u * lookupRMEAregd[256];
 #define Getrb												\
 	Bit8u * rmrb;											\
 	rmrb=lookupRMregb[rm];			
-	
+
 #define Getrw												\
 	Bit16u * rmrw;											\
 	rmrw=lookupRMregw[rm];			

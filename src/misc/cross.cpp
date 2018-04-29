@@ -36,19 +36,19 @@
 #endif
 
 #ifdef WIN32
-static void W32_ConfDir(std::string& in,bool create) {
-	int c = create?1:0;
+static void W32_ConfDir(std::string& in, bool create) {
+	int c = create ? 1 : 0;
 	char result[MAX_PATH] = { 0 };
-	BOOL r = SHGetSpecialFolderPath(NULL,result,CSIDL_LOCAL_APPDATA,c);
-	if(!r || result[0] == 0) r = SHGetSpecialFolderPath(NULL,result,CSIDL_APPDATA,c);
-	if(!r || result[0] == 0) {
+	BOOL r = SHGetSpecialFolderPath(NULL, result, CSIDL_LOCAL_APPDATA, c);
+	if (!r || result[0] == 0) r = SHGetSpecialFolderPath(NULL, result, CSIDL_APPDATA, c);
+	if (!r || result[0] == 0) {
 		char const * windir = getenv("windir");
-		if(!windir) windir = "c:\\windows";
-		safe_strncpy(result,windir,MAX_PATH);
+		if (!windir) windir = "c:\\windows";
+		safe_strncpy(result, windir, MAX_PATH);
 		char const* appdata = "\\Application Data";
 		size_t len = strlen(result);
-		if(len + strlen(appdata) < MAX_PATH) strcat(result,appdata);
-		if(create) mkdir(result);
+		if (len + strlen(appdata) < MAX_PATH) strcat(result, appdata);
+		if (create) mkdir(result);
 	}
 	in = result;
 }
@@ -56,7 +56,7 @@ static void W32_ConfDir(std::string& in,bool create) {
 
 void Cross::GetPlatformConfigDir(std::string& in) {
 #ifdef WIN32
-	W32_ConfDir(in,false);
+	W32_ConfDir(in, false);
 	in += "\\DOSBox";
 #elif defined(MACOSX)
 	in = "~/Library/Preferences";
@@ -81,7 +81,7 @@ void Cross::GetPlatformConfigName(std::string& in) {
 
 void Cross::CreatePlatformConfigDir(std::string& in) {
 #ifdef WIN32
-	W32_ConfDir(in,true);
+	W32_ConfDir(in, true);
 	in += "\\DOSBox";
 	mkdir(in.c_str());
 #elif defined(MACOSX)
@@ -91,24 +91,24 @@ void Cross::CreatePlatformConfigDir(std::string& in) {
 #else
 	in = "~/.dosbox";
 	ResolveHomedir(in);
-	mkdir(in.c_str(),0700);
+	mkdir(in.c_str(), 0700);
 #endif
 	in += CROSS_FILESPLIT;
 }
 
 void Cross::ResolveHomedir(std::string & temp_line) {
-	if(!temp_line.size() || temp_line[0] != '~') return; //No ~
+	if (!temp_line.size() || temp_line[0] != '~') return; //No ~
 
-	if(temp_line.size() == 1 || temp_line[1] == CROSS_FILESPLIT) { //The ~ and ~/ variant
+	if (temp_line.size() == 1 || temp_line[1] == CROSS_FILESPLIT) { //The ~ and ~/ variant
 		char * home = getenv("HOME");
-		if(home) temp_line.replace(0,1,std::string(home));
+		if (home) temp_line.replace(0, 1, std::string(home));
 #if defined HAVE_SYS_TYPES_H && defined HAVE_PWD_H
 	} else { // The ~username variant
 		std::string::size_type namelen = temp_line.find(CROSS_FILESPLIT);
-		if(namelen == std::string::npos) namelen = temp_line.size();
-		std::string username = temp_line.substr(1,namelen - 1);
+		if (namelen == std::string::npos) namelen = temp_line.size();
+		std::string username = temp_line.substr(1, namelen - 1);
 		struct passwd* pass = getpwnam(username.c_str());
-		if(pass) temp_line.replace(0,namelen,pass->pw_dir); //namelen -1 +1(for the ~)
+		if (pass) temp_line.replace(0, namelen, pass->pw_dir); //namelen -1 +1(for the ~)
 #endif // USERNAME lookup code
 	}
 }
@@ -117,7 +117,7 @@ void Cross::CreateDir(std::string const& in) {
 #ifdef WIN32
 	mkdir(in.c_str());
 #else
-	mkdir(in.c_str(),0700);
+	mkdir(in.c_str(), 0700);
 #endif
 }
 
@@ -125,11 +125,11 @@ bool Cross::IsPathAbsolute(std::string const& in) {
 	// Absolute paths
 #if defined (WIN32) || defined(OS2)
 	// drive letter
-	if (in.size() > 2 && in[1] == ':' ) return true;
+	if (in.size() > 2 && in[1] == ':') return true;
 	// UNC path
-	else if (in.size() > 2 && in[0]=='\\' && in[1]=='\\') return true;
+	else if (in.size() > 2 && in[0] == '\\' && in[1] == '\\') return true;
 #else
-	if (in.size() > 1 && in[0] == '/' ) return true;
+	if (in.size() > 1 && in[0] == '/') return true;
 #endif
 	return false;
 }
@@ -144,14 +144,14 @@ dir_information* open_directory(const char* dirname) {
 
 	static dir_information dir;
 
-	safe_strncpy(dir.base_path,dirname,MAX_PATH);
+	safe_strncpy(dir.base_path, dirname, MAX_PATH);
 
-	if (dirname[len-1] == '\\') strcat(dir.base_path,"*.*");
-	else                        strcat(dir.base_path,"\\*.*");
+	if (dirname[len - 1] == '\\') strcat(dir.base_path, "*.*");
+	else                        strcat(dir.base_path, "\\*.*");
 
 	dir.handle = INVALID_HANDLE_VALUE;
 
-	return (access(dirname,0) ? NULL : &dir);
+	return (access(dirname, 0) ? NULL : &dir);
 }
 
 bool read_directory_first(dir_information* dirp, char* entry_name, bool& is_directory) {
@@ -160,7 +160,7 @@ bool read_directory_first(dir_information* dirp, char* entry_name, bool& is_dire
 		return false;
 	}
 
-	safe_strncpy(entry_name,dirp->search_data.cFileName,(MAX_PATH<CROSS_LEN)?MAX_PATH:CROSS_LEN);
+	safe_strncpy(entry_name, dirp->search_data.cFileName, (MAX_PATH < CROSS_LEN) ? MAX_PATH : CROSS_LEN);
 
 	if (dirp->search_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) is_directory = true;
 	else is_directory = false;
@@ -170,9 +170,9 @@ bool read_directory_first(dir_information* dirp, char* entry_name, bool& is_dire
 
 bool read_directory_next(dir_information* dirp, char* entry_name, bool& is_directory) {
 	int result = FindNextFile(dirp->handle, &dirp->search_data);
-	if (result==0) return false;
+	if (result == 0) return false;
 
-	safe_strncpy(entry_name,dirp->search_data.cFileName,(MAX_PATH<CROSS_LEN)?MAX_PATH:CROSS_LEN);
+	safe_strncpy(entry_name, dirp->search_data.cFileName, (MAX_PATH < CROSS_LEN) ? MAX_PATH : CROSS_LEN);
 
 	if (dirp->search_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) is_directory = true;
 	else is_directory = false;
@@ -191,37 +191,37 @@ void close_directory(dir_information* dirp) {
 
 dir_information* open_directory(const char* dirname) {
 	static dir_information dir;
-	dir.dir=opendir(dirname);
-	safe_strncpy(dir.base_path,dirname,CROSS_LEN);
-	return dir.dir?&dir:NULL;
+	dir.dir = opendir(dirname);
+	safe_strncpy(dir.base_path, dirname, CROSS_LEN);
+	return dir.dir ? &dir : NULL;
 }
 
 bool read_directory_first(dir_information* dirp, char* entry_name, bool& is_directory) {
 	struct dirent* dentry = readdir(dirp->dir);
-	if (dentry==NULL) {
+	if (dentry == NULL) {
 		return false;
 	}
 
-//	safe_strncpy(entry_name,dentry->d_name,(FILENAME_MAX<MAX_PATH)?FILENAME_MAX:MAX_PATH);	// [include stdio.h], maybe pathconf()
-	safe_strncpy(entry_name,dentry->d_name,CROSS_LEN);
+	//	safe_strncpy(entry_name,dentry->d_name,(FILENAME_MAX<MAX_PATH)?FILENAME_MAX:MAX_PATH);	// [include stdio.h], maybe pathconf()
+	safe_strncpy(entry_name, dentry->d_name, CROSS_LEN);
 
 #ifdef DIRENT_HAS_D_TYPE
-	if(dentry->d_type == DT_DIR) {
+	if (dentry->d_type == DT_DIR) {
 		is_directory = true;
 		return true;
-	} else if(dentry->d_type == DT_REG) {
+	} else if (dentry->d_type == DT_REG) {
 		is_directory = false;
 		return true;
 	}
 #endif
 
 	// probably use d_type here instead of a full stat()
-	static char buffer[2*CROSS_LEN] = { 0 };
+	static char buffer[2 * CROSS_LEN] = { 0 };
 	buffer[0] = 0;
-	strcpy(buffer,dirp->base_path);
-	strcat(buffer,entry_name);
+	strcpy(buffer, dirp->base_path);
+	strcat(buffer, entry_name);
 	struct stat status;
-	if (stat(buffer,&status)==0) is_directory = (S_ISDIR(status.st_mode)>0);
+	if (stat(buffer, &status) == 0) is_directory = (S_ISDIR(status.st_mode) > 0);
 	else is_directory = false;
 
 	return true;
@@ -229,31 +229,31 @@ bool read_directory_first(dir_information* dirp, char* entry_name, bool& is_dire
 
 bool read_directory_next(dir_information* dirp, char* entry_name, bool& is_directory) {
 	struct dirent* dentry = readdir(dirp->dir);
-	if (dentry==NULL) {
+	if (dentry == NULL) {
 		return false;
 	}
 
-//	safe_strncpy(entry_name,dentry->d_name,(FILENAME_MAX<MAX_PATH)?FILENAME_MAX:MAX_PATH);	// [include stdio.h], maybe pathconf()
-	safe_strncpy(entry_name,dentry->d_name,CROSS_LEN);
+	//	safe_strncpy(entry_name,dentry->d_name,(FILENAME_MAX<MAX_PATH)?FILENAME_MAX:MAX_PATH);	// [include stdio.h], maybe pathconf()
+	safe_strncpy(entry_name, dentry->d_name, CROSS_LEN);
 
 #ifdef DIRENT_HAS_D_TYPE
-	if(dentry->d_type == DT_DIR) {
+	if (dentry->d_type == DT_DIR) {
 		is_directory = true;
 		return true;
-	} else if(dentry->d_type == DT_REG) {
+	} else if (dentry->d_type == DT_REG) {
 		is_directory = false;
 		return true;
 	}
 #endif
 
 	// probably use d_type here instead of a full stat()
-	static char buffer[2*CROSS_LEN] = { 0 };
+	static char buffer[2 * CROSS_LEN] = { 0 };
 	buffer[0] = 0;
-	strcpy(buffer,dirp->base_path);
-	strcat(buffer,entry_name);
+	strcpy(buffer, dirp->base_path);
+	strcat(buffer, entry_name);
 	struct stat status;
 
-	if (stat(buffer,&status)==0) is_directory = (S_ISDIR(status.st_mode)>0);
+	if (stat(buffer, &status) == 0) is_directory = (S_ISDIR(status.st_mode) > 0);
 	else is_directory = false;
 
 	return true;

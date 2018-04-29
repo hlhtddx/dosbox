@@ -20,7 +20,7 @@
 #include <AudioToolbox/AUGraph.h>
 #include <CoreServices/CoreServices.h>
 
-// A macro to simplify error handling a bit.
+ // A macro to simplify error handling a bit.
 #define RequireNoErr(error)                                         \
 do {                                                                \
 	err = error;                                                    \
@@ -57,7 +57,7 @@ class MidiHandler_coreaudio : public MidiHandler {
 private:
 	AUGraph m_auGraph;
 	AudioUnit m_synth;
-        const char *soundfont;
+	const char *soundfont;
 public:
 	MidiHandler_coreaudio() : m_auGraph(0), m_synth(0) {}
 	const char * GetName(void) { return "coreaudio"; }
@@ -123,42 +123,42 @@ public:
 			err = FSPathMakeRef((const UInt8*)soundfont, &soundfontRef, NULL);
 			if (!err) {
 				err = AudioUnitSetProperty(
-				                           m_synth,
-				                           kMusicDeviceProperty_SoundBankFSRef,
-				                           kAudioUnitScope_Global,
-				                           0,
-				                           &soundfontRef,
-				                           sizeof(soundfontRef)
-				                          );
-					}
+					m_synth,
+					kMusicDeviceProperty_SoundBankFSRef,
+					kAudioUnitScope_Global,
+					0,
+					&soundfontRef,
+					sizeof(soundfontRef)
+				);
+			}
 #else
-					// kMusicDeviceProperty_SoundBankFSRef is present on 10.6+, but
-					// kMusicDeviceProperty_SoundBankURL was added in 10.5 as a future prooof replacement
-					CFURLRef url = CFURLCreateFromFileSystemRepresentation(
-					                                                       kCFAllocatorDefault,
-					                                                       (const UInt8*)soundfont,
-					                                                       strlen(soundfont), false
-					                                                      );
-					if (url) {
-						err = AudioUnitSetProperty(
-						                           m_synth, kMusicDeviceProperty_SoundBankURL,
-						                           kAudioUnitScope_Global, 0, &url, sizeof(url)
-						                          );
-						CFRelease(url);
-					} else {
-						LOG_MSG("Failed to allocate CFURLRef from  %s",soundfont);
-					}
+			// kMusicDeviceProperty_SoundBankFSRef is present on 10.6+, but
+			// kMusicDeviceProperty_SoundBankURL was added in 10.5 as a future prooof replacement
+			CFURLRef url = CFURLCreateFromFileSystemRepresentation(
+				kCFAllocatorDefault,
+				(const UInt8*)soundfont,
+				strlen(soundfont), false
+			);
+			if (url) {
+				err = AudioUnitSetProperty(
+					m_synth, kMusicDeviceProperty_SoundBankURL,
+					kAudioUnitScope_Global, 0, &url, sizeof(url)
+				);
+				CFRelease(url);
+			} else {
+				LOG_MSG("Failed to allocate CFURLRef from  %s", soundfont);
+			}
 #endif
-					if (!err) {
-						LOG_MSG("MIDI:coreaudio: loaded soundfont: %s",soundfont);
-					} else {
-						LOG_MSG("Error loading CoreAudio SoundFont %s",soundfont);
-						// after trying and failing to load a soundfont it's better
-						// to fail initializing the CoreAudio driver or it might crash
-						return false;
-					}
-				}
-		
+			if (!err) {
+				LOG_MSG("MIDI:coreaudio: loaded soundfont: %s", soundfont);
+			} else {
+				LOG_MSG("Error loading CoreAudio SoundFont %s", soundfont);
+				// after trying and failing to load a soundfont it's better
+				// to fail initializing the CoreAudio driver or it might crash
+				return false;
+			}
+		}
+
 		// Finally: Start the graph!
 		RequireNoErr(AUGraphStart(m_auGraph));
 
@@ -183,7 +183,7 @@ public:
 
 	void PlayMsg(Bit8u * msg) {
 		MusicDeviceMIDIEvent(m_synth, msg[0], msg[1], msg[2], 0);
-	}	
+	}
 
 	void PlaySysex(Bit8u * sysex, Bitu len) {
 		MusicDeviceSysEx(m_synth, sysex, len);

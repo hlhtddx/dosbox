@@ -30,32 +30,32 @@
 #include "support.h"
 #endif
 
-// Netwrapper Capabilities
+ // Netwrapper Capabilities
 #define NETWRAPPER_TCP 1
 #define NETWRAPPER_TCP_NATIVESOCKET 2
 
 #if defined WIN32
- #define NATIVESOCKETS
- #include <winsock2.h>
- #include <ws2tcpip.h> //for socklen_t
- //typedef int  socklen_t;
+#define NATIVESOCKETS
+#include <winsock2.h>
+#include <ws2tcpip.h> //for socklen_t
+//typedef int  socklen_t;
 
 //Tests for BSD/OS2/LINUX
 #elif defined HAVE_STDLIB_H && defined HAVE_SYS_TYPES_H && defined HAVE_SYS_SOCKET_H && defined HAVE_NETINET_IN_H
- #define NATIVESOCKETS
- #define SOCKET int
- #include <stdio.h> //darwin
- #include <stdlib.h> //darwin
- #include <sys/types.h>
- #include <sys/socket.h>
- #include <netinet/in.h>
- //socklen_t should be handled by configure
+#define NATIVESOCKETS
+#define SOCKET int
+#include <stdio.h> //darwin
+#include <stdlib.h> //darwin
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+//socklen_t should be handled by configure
 #endif
 
 #ifdef NATIVESOCKETS
- #define CAPWORD (NETWRAPPER_TCP|NETWRAPPER_TCP_NATIVESOCKET)
+#define CAPWORD (NETWRAPPER_TCP|NETWRAPPER_TCP_NATIVESOCKET)
 #else
- #define CAPWORD NETWRAPPER_TCP
+#define CAPWORD NETWRAPPER_TCP
 #endif
 
 #include "SDL_net.h"
@@ -66,7 +66,7 @@ Bit32u Netwrapper_GetCapabilities();
 
 
 class TCPClientSocket {
-	public:
+public:
 	TCPClientSocket(TCPsocket source);
 	TCPClientSocket(const char* destination, Bit16u port);
 #ifdef NATIVESOCKETS
@@ -74,14 +74,14 @@ class TCPClientSocket {
 	TCPClientSocket(int platformsocket);
 #endif
 	~TCPClientSocket();
-	
+
 	// return:
 	// -1: no data
 	// -2: socket closed
 	// >0: data char
 	Bits GetcharNonBlock();
-	
-	
+
+
 	bool Putchar(Bit8u data);
 	bool SendArray(Bit8u* data, Bitu bufsize);
 	bool ReceiveArray(Bit8u* data, Bitu* size);
@@ -91,24 +91,24 @@ class TCPClientSocket {
 
 	void FlushBuffer();
 	void SetSendBufferSize(Bitu bufsize);
-	
+
 	// buffered send functions
 	bool SendByteBuffered(Bit8u data);
 	bool SendArrayBuffered(Bit8u* data, Bitu bufsize);
 
-	private:
+private:
 	TCPsocket mysock;
 	SDLNet_SocketSet listensocketset;
 
 	// Items for send buffering
 	Bitu sendbuffersize;
 	Bitu sendbufferindex;
-	
+
 	Bit8u* sendbuffer;
 };
 
 class TCPServerSocket {
-	public:
+public:
 	bool isopen;
 	TCPsocket mysock;
 	TCPServerSocket(Bit16u port);

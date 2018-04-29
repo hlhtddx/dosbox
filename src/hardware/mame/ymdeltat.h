@@ -6,7 +6,7 @@
 #pragma once
 
 
-typedef void (*STATUS_CHANGE_HANDLER)(void *chip, uint8_t status_bits);
+typedef void(*STATUS_CHANGE_HANDLER)(void *chip, uint8_t status_bits);
 
 
 /* DELTA-T (adpcm type B) struct */
@@ -43,12 +43,12 @@ struct YM_DELTAT {     /* AT: rearranged and tightened structure */
 	uint8_t   portstate;      /* port status          */
 	uint8_t   control2;       /* control reg: SAMPLE, DA/AD, RAM TYPE (x8bit / x1bit), ROM/RAM */
 	uint8_t   portshift;      /* address bits shift-left:
-	                        ** 8 for YM2610,
-	                        ** 5 for Y8950 and YM2608 */
+							** 8 for YM2610,
+							** 5 for Y8950 and YM2608 */
 
 	uint8_t   DRAMportshift;  /* address bits shift-right:
-	                        ** 0 for ROM and x8bit DRAMs,
-	                        ** 3 for x1 DRAMs */
+							** 0 for ROM and x8bit DRAMs,
+							** 3 for x1 DRAMs */
 
 	uint8_t   memread;        /* needed for reading/writing external memory */
 

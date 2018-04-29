@@ -16,11 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-/*
- * The HQ3x high quality 3x graphics filter.
- * Original author Maxim Stepin (see http://www.hiend3d.com/hq3x.html).
- * Adapted for DOSBox from ScummVM and HiEnd3D code by Kronuz.
- */
+ /*
+  * The HQ3x high quality 3x graphics filter.
+  * Original author Maxim Stepin (see http://www.hiend3d.com/hq3x.html).
+  * Adapted for DOSBox from ScummVM and HiEnd3D code by Kronuz.
+  */
 
 #include <stdlib.h>
 
@@ -33,9 +33,9 @@ static inline bool diffYUV(Bit32u yuv1, Bit32u yuv2)
 	static const Bit32u Ymask = 0x00FF0000;
 	static const Bit32u Umask = 0x0000FF00;
 	static const Bit32u Vmask = 0x000000FF;
-	static const Bit32u trY   = 0x00300000;
-	static const Bit32u trU   = 0x00000700;
-	static const Bit32u trV   = 0x00000006;
+	static const Bit32u trY = 0x00300000;
+	static const Bit32u trU = 0x00000700;
+	static const Bit32u trV = 0x00000006;
 
 	Bit32u diff;
 	Bit32u mask;
@@ -60,7 +60,7 @@ static inline bool diffYUV(Bit32u yuv1, Bit32u yuv2)
 
 #endif
 
-static inline void conc2d(InitLUTs,SBPP)(void)
+static inline void conc2d(InitLUTs, SBPP)(void)
 {
 	int r, g, b;
 	int Y, u, v;

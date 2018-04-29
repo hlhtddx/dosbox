@@ -62,8 +62,8 @@ typedef PhysPt EAPoint;
 	}
 
 Bits CPU_Core_Full_Run(void) {
-	FullData inst;	
-	while (CPU_Cycles-->0) {
+	FullData inst;
+	while (CPU_Cycles-- > 0) {
 #if C_DEBUG
 		cycle_count++;
 #if C_HEAVY_DEBUG
@@ -74,20 +74,20 @@ Bits CPU_Core_Full_Run(void) {
 #endif
 #endif
 		LoadIP();
-		inst.entry=cpu.code.big*0x200;
-		inst.prefix=cpu.code.big;
-restartopcode:
-		inst.entry=(inst.entry & 0xffffff00) | Fetchb();
-		inst.code=OpCodeTable[inst.entry];
-		#include "core_full/load.h"
-		#include "core_full/op.h"
-		#include "core_full/save.h"
-nextopcode:;
-		SaveIP();
-		continue;
-illegalopcode:
-		LOG(LOG_CPU,LOG_NORMAL)("Illegal opcode");
-		CPU_Exception(0x6,0);
+		inst.entry = cpu.code.big * 0x200;
+		inst.prefix = cpu.code.big;
+	restartopcode:
+		inst.entry = (inst.entry & 0xffffff00) | Fetchb();
+		inst.code = OpCodeTable[inst.entry];
+#include "core_full/load.h"
+#include "core_full/op.h"
+#include "core_full/save.h"
+		nextopcode:;
+				   SaveIP();
+				   continue;
+			   illegalopcode:
+				   LOG(LOG_CPU, LOG_NORMAL)("Illegal opcode");
+				   CPU_Exception(0x6, 0);
 	}
 	FillFlags();
 	return CBRET_NONE;

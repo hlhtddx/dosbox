@@ -30,11 +30,11 @@ typedef int8_t OPLSAMPLE;
 #endif
 */
 
-typedef void (*OPL_TIMERHANDLER)(device_t *device,int timer,const attotime &period);
-typedef void (*OPL_IRQHANDLER)(device_t *device,int irq);
-typedef void (*OPL_UPDATEHANDLER)(device_t *device,int min_interval_us);
-typedef void (*OPL_PORTHANDLER_W)(device_t *device,unsigned char data);
-typedef unsigned char (*OPL_PORTHANDLER_R)(device_t *device);
+typedef void(*OPL_TIMERHANDLER)(device_t *device, int timer, const attotime &period);
+typedef void(*OPL_IRQHANDLER)(device_t *device, int irq);
+typedef void(*OPL_UPDATEHANDLER)(device_t *device, int min_interval_us);
+typedef void(*OPL_PORTHANDLER_W)(device_t *device, unsigned char data);
+typedef unsigned char(*OPL_PORTHANDLER_R)(device_t *device);
 
 
 #if BUILD_YM3812
@@ -93,13 +93,13 @@ void ym3526_set_update_handler(void *chip, OPL_UPDATEHANDLER UpdateHandler, devi
 /* Y8950 port handlers */
 void y8950_set_port_handler(void *chip, OPL_PORTHANDLER_W PortHandler_w, OPL_PORTHANDLER_R PortHandler_r, device_t *device);
 void y8950_set_keyboard_handler(void *chip, OPL_PORTHANDLER_W KeyboardHandler_w, OPL_PORTHANDLER_R KeyboardHandler_r, device_t *device);
-void y8950_set_delta_t_memory(void *chip, void * deltat_mem_ptr, int deltat_mem_size );
+void y8950_set_delta_t_memory(void *chip, void * deltat_mem_ptr, int deltat_mem_size);
 
 void * y8950_init(device_t *device, uint32_t clock, uint32_t rate);
 void y8950_shutdown(void *chip);
 void y8950_reset_chip(void *chip);
 int  y8950_write(void *chip, int a, int v);
-unsigned char y8950_read (void *chip, int a);
+unsigned char y8950_read(void *chip, int a);
 int  y8950_timer_over(void *chip, int c);
 void y8950_update_one(void *chip, OPLSAMPLE *buffer, int length);
 

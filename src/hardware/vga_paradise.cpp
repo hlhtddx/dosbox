@@ -32,7 +32,7 @@ typedef struct {
 	Bitu PR4;
 	Bitu PR5;
 
-	inline bool locked() { return (PR5&7)!=5; }
+	inline bool locked() { return (PR5 & 7) != 5; }
 
 	Bitu clockFreq[4];
 	Bitu biosMode;
@@ -42,23 +42,23 @@ static SVGA_PVGA1A_DATA pvga1a = { 0,0, 0,0,0,0,0, {0,0,0,0}, 0 };
 
 
 static void bank_setup_pvga1a() {
-// Note: There is some inconsistency in available documentation. Most sources tell that PVGA1A used
-//       only 7 bits of bank index (VGADOC and Ferraro agree on that) but also point that there are
-//       implementations with 1M of RAM which is simply not possible with 7-bit banks. This implementation
-//       assumes that the eighth bit was actually wired and could be used. This does not conflict with
-//       anything and actually works in WHATVGA just fine.
+	// Note: There is some inconsistency in available documentation. Most sources tell that PVGA1A used
+	//       only 7 bits of bank index (VGADOC and Ferraro agree on that) but also point that there are
+	//       implementations with 1M of RAM which is simply not possible with 7-bit banks. This implementation
+	//       assumes that the eighth bit was actually wired and could be used. This does not conflict with
+	//       anything and actually works in WHATVGA just fine.
 	if (pvga1a.PR1 & 0x08) {
 		// TODO: Dual bank function is not supported yet
 		// TODO: Requirements are not compatible with vga_memory implementation.
 	} else {
 		// Single bank config is straightforward
 		vga.svga.bank_read = vga.svga.bank_write = pvga1a.PR0A;
-		vga.svga.bank_size = 4*1024;
+		vga.svga.bank_size = 4 * 1024;
 		VGA_SetupHandlers();
 	}
 }
 
-void write_p3cf_pvga1a(Bitu reg,Bitu val,Bitu iolen) {
+void write_p3cf_pvga1a(Bitu reg, Bitu val, Bitu iolen) {
 	if (pvga1a.locked() && reg >= 0x09 && reg <= 0x0e)
 		return;
 
@@ -90,8 +90,8 @@ void write_p3cf_pvga1a(Bitu reg,Bitu val,Bitu iolen) {
 		// TODO: Implement bit 2 (CRT address doubling - this mechanism is present in other chipsets as well,
 		// but not implemented in DosBox core)
 		pvga1a.PR3 = val;
-		vga.config.display_start = (vga.config.display_start & 0xffff) | ((val & 0x18)<<13);
-		vga.config.cursor_start = (vga.config.cursor_start & 0xffff) | ((val & 0x18)<<13);
+		vga.config.display_start = (vga.config.display_start & 0xffff) | ((val & 0x18) << 13);
+		vga.config.cursor_start = (vga.config.cursor_start & 0xffff) | ((val & 0x18) << 13);
 		break;
 	case 0x0e:
 		// Video control
@@ -103,12 +103,12 @@ void write_p3cf_pvga1a(Bitu reg,Bitu val,Bitu iolen) {
 		pvga1a.PR5 = val;
 		break;
 	default:
-		LOG(LOG_VGAMISC,LOG_NORMAL)("VGA:GFX:PVGA1A:Write to illegal index %2X", reg);
+		LOG(LOG_VGAMISC, LOG_NORMAL)("VGA:GFX:PVGA1A:Write to illegal index %2X", reg);
 		break;
 	}
 }
 
-Bitu read_p3cf_pvga1a(Bitu reg,Bitu iolen) {
+Bitu read_p3cf_pvga1a(Bitu reg, Bitu iolen) {
 	if (pvga1a.locked() && reg >= 0x09 && reg <= 0x0e)
 		return 0x0;
 
@@ -128,7 +128,7 @@ Bitu read_p3cf_pvga1a(Bitu reg,Bitu iolen) {
 	case 0x0f:
 		return pvga1a.PR5;
 	default:
-		LOG(LOG_VGAMISC,LOG_NORMAL)("VGA:GFX:PVGA1A:Read from illegal index %2X", reg);
+		LOG(LOG_VGAMISC, LOG_NORMAL)("VGA:GFX:PVGA1A:Read from illegal index %2X", reg);
 		break;
 	}
 
@@ -138,7 +138,7 @@ Bitu read_p3cf_pvga1a(Bitu reg,Bitu iolen) {
 void FinishSetMode_PVGA1A(Bitu /*crtc_base*/, VGA_ModeExtraData* modeData) {
 	pvga1a.biosMode = modeData->modeNo;
 
-// Reset to single bank and set it to 0. May need to unlock first (DPaint locks on exit)
+	// Reset to single bank and set it to 0. May need to unlock first (DPaint locks on exit)
 	IO_Write(0x3ce, 0x0f);
 	Bitu oldlock = IO_Read(0x3cf);
 	IO_Write(0x3cf, 0x05);
@@ -161,12 +161,12 @@ void FinishSetMode_PVGA1A(Bitu /*crtc_base*/, VGA_ModeExtraData* modeData) {
 	if (svga.determine_mode)
 		svga.determine_mode();
 
-	if(vga.mode != M_VGA) {
+	if (vga.mode != M_VGA) {
 		vga.config.compatible_chain4 = false;
 		vga.vmemwrap = vga.vmemsize;
 	} else {
 		vga.config.compatible_chain4 = true;
-		vga.vmemwrap = 256*1024;
+		vga.vmemwrap = 256 * 1024;
 	}
 
 	VGA_SetupHandlers();
@@ -177,18 +177,18 @@ void DetermineMode_PVGA1A() {
 	// until I figure a way to either distinguish M_VGA and M_LIN8 or
 	// merge them.
 	if (vga.attr.mode_control & 1) {
-		if (vga.gfx.mode & 0x40) VGA_SetMode((pvga1a.biosMode<=0x13)?M_VGA:M_LIN8);
+		if (vga.gfx.mode & 0x40) VGA_SetMode((pvga1a.biosMode <= 0x13) ? M_VGA : M_LIN8);
 		else if (vga.gfx.mode & 0x20) VGA_SetMode(M_CGA4);
-		else if ((vga.gfx.miscellaneous & 0x0c)==0x0c) VGA_SetMode(M_CGA2);
-		else VGA_SetMode((pvga1a.biosMode<=0x13)?M_EGA:M_LIN4);
+		else if ((vga.gfx.miscellaneous & 0x0c) == 0x0c) VGA_SetMode(M_CGA2);
+		else VGA_SetMode((pvga1a.biosMode <= 0x13) ? M_EGA : M_LIN4);
 	} else {
 		VGA_SetMode(M_TEXT);
 	}
 }
 
-void SetClock_PVGA1A(Bitu which,Bitu target) {
+void SetClock_PVGA1A(Bitu which, Bitu target) {
 	if (which < 4) {
-		pvga1a.clockFreq[which]=1000*target;
+		pvga1a.clockFreq[which] = 1000 * target;
 		VGA_StartResize();
 	}
 }
@@ -211,31 +211,31 @@ void SVGA_Setup_ParadisePVGA1A(void) {
 	svga.get_clock = &GetClock_PVGA1A;
 	svga.accepts_mode = &AcceptsMode_PVGA1A;
 
-	VGA_SetClock(0,CLK_25);
-	VGA_SetClock(1,CLK_28);
-	VGA_SetClock(2,32400); // could not find documentation
-	VGA_SetClock(3,35900);
+	VGA_SetClock(0, CLK_25);
+	VGA_SetClock(1, CLK_28);
+	VGA_SetClock(2, 32400); // could not find documentation
+	VGA_SetClock(3, 35900);
 
 	// Adjust memory, default to 512K
 	if (vga.vmemsize == 0)
-		vga.vmemsize = 512*1024;
+		vga.vmemsize = 512 * 1024;
 
-	if (vga.vmemsize < 512*1024)	{
-		vga.vmemsize = 256*1024;
-		pvga1a.PR1 = 1<<6;
-	} else if (vga.vmemsize > 512*1024) {
-		vga.vmemsize = 1024*1024;
-		pvga1a.PR1 = 3<<6;
+	if (vga.vmemsize < 512 * 1024) {
+		vga.vmemsize = 256 * 1024;
+		pvga1a.PR1 = 1 << 6;
+	} else if (vga.vmemsize > 512 * 1024) {
+		vga.vmemsize = 1024 * 1024;
+		pvga1a.PR1 = 3 << 6;
 	} else {
-		pvga1a.PR1 = 2<<6;
+		pvga1a.PR1 = 2 << 6;
 	}
 
 	// Paradise ROM signature
-	PhysPt rom_base=PhysMake(0xc000,0);
-	phys_writeb(rom_base+0x007d,'V');
-	phys_writeb(rom_base+0x007e,'G');
-	phys_writeb(rom_base+0x007f,'A');
-	phys_writeb(rom_base+0x0080,'=');
+	PhysPt rom_base = PhysMake(0xc000, 0);
+	phys_writeb(rom_base + 0x007d, 'V');
+	phys_writeb(rom_base + 0x007e, 'G');
+	phys_writeb(rom_base + 0x007f, 'A');
+	phys_writeb(rom_base + 0x0080, '=');
 
 	IO_Write(0x3cf, 0x05); // Enable!
 }

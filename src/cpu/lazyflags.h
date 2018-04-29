@@ -19,7 +19,7 @@
 #ifndef DOSBOX_LAZYFLAGS_H
 #define DOSBOX_LAZYFLAGS_H
 
-//Flag Handling
+ //Flag Handling
 Bit32u get_CF(void);
 Bit32u get_AF(void);
 Bit32u get_ZF(void);
@@ -36,7 +36,7 @@ void DestroyConditionFlags(void);
 #endif
 
 struct LazyFlags {
-    GenReg32 var1,var2,res;
+	GenReg32 var1, var2, res;
 	Bitu type;
 	Bitu prev_type;
 	Bitu oldcf;
@@ -103,30 +103,30 @@ extern LazyFlags lflags;
 
 //Types of Flag changing instructions
 enum {
-	t_UNKNOWN=0,
-	t_ADDb,t_ADDw,t_ADDd, 
-	t_ORb,t_ORw,t_ORd, 
-	t_ADCb,t_ADCw,t_ADCd,
-	t_SBBb,t_SBBw,t_SBBd,
-	t_ANDb,t_ANDw,t_ANDd,
-	t_SUBb,t_SUBw,t_SUBd,
-	t_XORb,t_XORw,t_XORd,
-	t_CMPb,t_CMPw,t_CMPd,
-	t_INCb,t_INCw,t_INCd,
-	t_DECb,t_DECw,t_DECd,
-	t_TESTb,t_TESTw,t_TESTd,
-	t_SHLb,t_SHLw,t_SHLd,
-	t_SHRb,t_SHRw,t_SHRd,
-	t_SARb,t_SARw,t_SARd,
-	t_ROLb,t_ROLw,t_ROLd,
-	t_RORb,t_RORw,t_RORd,
-	t_RCLb,t_RCLw,t_RCLd,
-	t_RCRb,t_RCRw,t_RCRd,
-	t_NEGb,t_NEGw,t_NEGd,
-	
-	t_DSHLw,t_DSHLd,
-	t_DSHRw,t_DSHRd,
-	t_MUL,t_DIV,
+	t_UNKNOWN = 0,
+	t_ADDb, t_ADDw, t_ADDd,
+	t_ORb, t_ORw, t_ORd,
+	t_ADCb, t_ADCw, t_ADCd,
+	t_SBBb, t_SBBw, t_SBBd,
+	t_ANDb, t_ANDw, t_ANDd,
+	t_SUBb, t_SUBw, t_SUBd,
+	t_XORb, t_XORw, t_XORd,
+	t_CMPb, t_CMPw, t_CMPd,
+	t_INCb, t_INCw, t_INCd,
+	t_DECb, t_DECw, t_DECd,
+	t_TESTb, t_TESTw, t_TESTd,
+	t_SHLb, t_SHLw, t_SHLd,
+	t_SHRb, t_SHRw, t_SHRd,
+	t_SARb, t_SARw, t_SARd,
+	t_ROLb, t_ROLw, t_ROLd,
+	t_RORb, t_RORw, t_RORd,
+	t_RCLb, t_RCLw, t_RCLd,
+	t_RCRb, t_RCRw, t_RCRd,
+	t_NEGb, t_NEGw, t_NEGd,
+
+	t_DSHLw, t_DSHLd,
+	t_DSHRw, t_DSHRd,
+	t_MUL, t_DIV,
 	t_NOTDONE,
 	t_LASTFLAG
 };

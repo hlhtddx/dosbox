@@ -18,9 +18,9 @@ typedef int8_t OPL3SAMPLE;
 #endif
 */
 
-typedef void (*OPL3_TIMERHANDLER)(device_t *device,int timer,const attotime &period);
-typedef void (*OPL3_IRQHANDLER)(device_t *device,int irq);
-typedef void (*OPL3_UPDATEHANDLER)(device_t *device,int min_interval_us);
+typedef void(*OPL3_TIMERHANDLER)(device_t *device, int timer, const attotime &period);
+typedef void(*OPL3_IRQHANDLER)(device_t *device, int irq);
+typedef void(*OPL3_UPDATEHANDLER)(device_t *device, int min_interval_us);
 
 
 void *ymf262_init(device_t *device, int clock, int rate);

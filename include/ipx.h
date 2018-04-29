@@ -20,8 +20,8 @@
 #ifndef DOSBOX_IPX_H
 #define DOSBOX_IPX_H
 
-// Uncomment this for a lot of debug messages:
-//#define IPX_DEBUGMSG 
+ // Uncomment this for a lot of debug messages:
+ //#define IPX_DEBUGMSG 
 
 #ifdef IPX_DEBUGMSG
 #define LOG_IPX LOG_MSG
@@ -89,7 +89,7 @@ struct IPXHeader {
 		Uint8 network[4];
 		union addrtype {
 			nodeType byNode;
-			PackedIP byIP ;
+			PackedIP byIP;
 		} addr;
 		Uint8 socket[2];
 	} dest, src;
@@ -107,9 +107,9 @@ class ECBClass {
 public:
 	RealPt ECBAddr;
 	bool isInESRList;
-   	ECBClass *prevECB;	// Linked List
+	ECBClass *prevECB;	// Linked List
 	ECBClass *nextECB;
-	
+
 	Bit8u iuflag;		// Need to save data since we are not always in
 	Bit16u mysocket;	// real mode
 

@@ -38,14 +38,14 @@
 #include <strings.h>
 #endif
 
-void strreplace(char * str,char o,char n);
+void strreplace(char * str, char o, char n);
 char *ltrim(char *str);
 char *rtrim(char *str);
 char *trim(char * str);
 char * upcase(char * str);
 char * lowcase(char * str);
 
-bool ScanCMDBool(char * cmd,char const * const check);
+bool ScanCMDBool(char * cmd, char const * const check);
 char * ScanCMDRemain(char * cmd);
 char * StripWord(char *&cmd);
 bool IsDecWord(char * word);

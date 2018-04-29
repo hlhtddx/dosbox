@@ -6,16 +6,16 @@
 #pragma once
 
 
-DECLARE_DEVICE_TYPE(SN76496,  sn76496_device)
-DECLARE_DEVICE_TYPE(U8106,    u8106_device)
-DECLARE_DEVICE_TYPE(Y2404,    y2404_device)
-DECLARE_DEVICE_TYPE(SN76489,  sn76489_device)
+DECLARE_DEVICE_TYPE(SN76496, sn76496_device)
+DECLARE_DEVICE_TYPE(U8106, u8106_device)
+DECLARE_DEVICE_TYPE(Y2404, y2404_device)
+DECLARE_DEVICE_TYPE(SN76489, sn76489_device)
 DECLARE_DEVICE_TYPE(SN76489A, sn76489a_device)
-DECLARE_DEVICE_TYPE(SN76494,  sn76494_device)
-DECLARE_DEVICE_TYPE(SN94624,  sn94624_device)
-DECLARE_DEVICE_TYPE(NCR7496,  ncr7496_device)
+DECLARE_DEVICE_TYPE(SN76494, sn76494_device)
+DECLARE_DEVICE_TYPE(SN94624, sn94624_device)
+DECLARE_DEVICE_TYPE(NCR7496, ncr7496_device)
 DECLARE_DEVICE_TYPE(GAMEGEAR, gamegear_device)
-DECLARE_DEVICE_TYPE(SEGAPSG,  segapsg_device)
+DECLARE_DEVICE_TYPE(SEGAPSG, segapsg_device)
 
 #if 0
 
@@ -31,26 +31,26 @@ public:
 	// static configuration helpers
 //	template <class Object> static devcb_base &set_ready_handler(device_t &device, Object &&cb) { return downcast<sn76496_base_device &>(device).m_ready_handler.set_callback(std::forward<Object>(cb)); }
 
-	DECLARE_WRITE8_MEMBER( stereo_w );
+	DECLARE_WRITE8_MEMBER(stereo_w);
 	void write(uint8_t data);
-	DECLARE_WRITE8_MEMBER( write );
-//	DECLARE_READ_LINE_MEMBER( ready_r ) { return m_ready_state ? 1 : 0; }
+	DECLARE_WRITE8_MEMBER(write);
+	//	DECLARE_READ_LINE_MEMBER( ready_r ) { return m_ready_state ? 1 : 0; }
 
 	void			convert_samplerate(int32_t target_rate);
 protected:
 	sn76496_base_device(
-			const machine_config &mconfig,
-			device_type type,
-			const char *tag,
-			int feedbackmask,
-			int noisetap1,
-			int noisetap2,
-			bool negate,
-			bool stereo,
-			int clockdivider,
-			bool sega,
-			device_t *owner,
-			uint32_t clock);
+		const machine_config &mconfig,
+		device_type type,
+		const char *tag,
+		int feedbackmask,
+		int noisetap1,
+		int noisetap2,
+		bool negate,
+		bool stereo,
+		int clockdivider,
+		bool sega,
+		device_t *owner,
+		uint32_t clock);
 
 	virtual void    device_start();
 	virtual void    sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);

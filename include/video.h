@@ -28,7 +28,7 @@ typedef enum {
 	GFX_CallBackRedraw
 } GFX_CallBackFunctions_t;
 
-typedef void (*GFX_CallBack_t)( GFX_CallBackFunctions_t function );
+typedef void(*GFX_CallBack_t)(GFX_CallBackFunctions_t function);
 
 struct GFX_PalEntry {
 	Bit8u r;
@@ -55,17 +55,17 @@ struct GFX_PalEntry {
 #define GFX_CAN_RANDOM	0x4000		//If the interface can also do random access surface
 
 void GFX_Events(void);
-void GFX_SetPalette(Bitu start,Bitu count,GFX_PalEntry * entries);
+void GFX_SetPalette(Bitu start, Bitu count, GFX_PalEntry * entries);
 Bitu GFX_GetBestMode(Bitu flags);
-Bitu GFX_GetRGB(Bit8u red,Bit8u green,Bit8u blue);
-Bitu GFX_SetSize(Bitu width,Bitu height,Bitu flags,double scalex,double scaley,GFX_CallBack_t cb);
+Bitu GFX_GetRGB(Bit8u red, Bit8u green, Bit8u blue);
+Bitu GFX_SetSize(Bitu width, Bitu height, Bitu flags, double scalex, double scaley, GFX_CallBack_t cb);
 
 void GFX_ResetScreen(void);
 void GFX_Start(void);
 void GFX_Stop(void);
 void GFX_SwitchFullScreen(void);
-bool GFX_StartUpdate(Bit8u * & pixels,Bitu & pitch);
-void GFX_EndUpdate( const Bit16u *changedLines );
+bool GFX_StartUpdate(Bit8u * & pixels, Bitu & pitch);
+void GFX_EndUpdate(const Bit16u *changedLines);
 void GFX_GetSize(int &width, int &height, bool &fullscreen);
 void GFX_LosingFocus(void);
 

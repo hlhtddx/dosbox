@@ -16,9 +16,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-/* Jumps */
+ /* Jumps */
 
-/* All Byte general instructions */
+ /* All Byte general instructions */
 #define ADDB(op1,op2,load,save)								\
 	lf_var1b=load(op1);lf_var2b=op2;					\
 	lf_resb=lf_var1b+lf_var2b;					\
@@ -759,7 +759,7 @@
 		SETFLAGBIT(CF,true);SETFLAGBIT(OF,true);			\
 	}														\
 }
-	
+
 
 #define IMULW(op1,load,save)								\
 {															\

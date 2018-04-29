@@ -200,25 +200,25 @@
 //***************************************************************************
 typedef struct {
 
-    BYTE    ErrorCode;          // Error Code (70H or 71H)
-    BYTE    SegmentNum;         // Number of current segment descriptor
-    BYTE    SenseKey;           // Sense Key(See bit definitions too)
-    BYTE    InfoByte0;          // Information MSB
-    BYTE    InfoByte1;          // Information MID
-    BYTE    InfoByte2;          // Information MID
-    BYTE    InfoByte3;          // Information LSB
-    BYTE    AddSenLen;          // Additional Sense Length
-    BYTE    ComSpecInf0;        // Command Specific Information MSB
-    BYTE    ComSpecInf1;        // Command Specific Information MID
-    BYTE    ComSpecInf2;        // Command Specific Information MID
-    BYTE    ComSpecInf3;        // Command Specific Information LSB
-    BYTE    AddSenseCode;       // Additional Sense Code
-    BYTE    AddSenQual;         // Additional Sense Code Qualifier
-    BYTE    FieldRepUCode;      // Field Replaceable Unit Code
-    BYTE    SenKeySpec15;       // Sense Key Specific 15th byte
-    BYTE    SenKeySpec16;       // Sense Key Specific 16th byte
-    BYTE    SenKeySpec17;       // Sense Key Specific 17th byte
-    BYTE    AddSenseBytes;      // Additional Sense Bytes
+	BYTE    ErrorCode;          // Error Code (70H or 71H)
+	BYTE    SegmentNum;         // Number of current segment descriptor
+	BYTE    SenseKey;           // Sense Key(See bit definitions too)
+	BYTE    InfoByte0;          // Information MSB
+	BYTE    InfoByte1;          // Information MID
+	BYTE    InfoByte2;          // Information MID
+	BYTE    InfoByte3;          // Information LSB
+	BYTE    AddSenLen;          // Additional Sense Length
+	BYTE    ComSpecInf0;        // Command Specific Information MSB
+	BYTE    ComSpecInf1;        // Command Specific Information MID
+	BYTE    ComSpecInf2;        // Command Specific Information MID
+	BYTE    ComSpecInf3;        // Command Specific Information LSB
+	BYTE    AddSenseCode;       // Additional Sense Code
+	BYTE    AddSenQual;         // Additional Sense Code Qualifier
+	BYTE    FieldRepUCode;      // Field Replaceable Unit Code
+	BYTE    SenKeySpec15;       // Sense Key Specific 15th byte
+	BYTE    SenKeySpec16;       // Sense Key Specific 16th byte
+	BYTE    SenKeySpec17;       // Sense Key Specific 17th byte
+	BYTE    AddSenseBytes;      // Additional Sense Bytes
 
 } SENSE_DATA_FMT;
 

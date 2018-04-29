@@ -6,46 +6,46 @@
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 
-/*
- * Originally based on ADLIBEMU.C, an AdLib/OPL2 emulation library by Ken Silverman
- * Copyright (C) 1998-2001 Ken Silverman
- * Ken Silverman's official web site: "http://www.advsys.net/ken"
- */
+ /*
+  * Originally based on ADLIBEMU.C, an AdLib/OPL2 emulation library by Ken Silverman
+  * Copyright (C) 1998-2001 Ken Silverman
+  * Ken Silverman's official web site: "http://www.advsys.net/ken"
+  */
 
 
 #define fltype double
 
-/*
-	define Bits, Bitu, Bit32s, Bit32u, Bit16s, Bit16u, Bit8s, Bit8u here
-*/
-/*
-#include <stdint.h>
-typedef uintptr_t	Bitu;
-typedef intptr_t	Bits;
-typedef uint32_t	Bit32u;
-typedef int32_t		Bit32s;
-typedef uint16_t	Bit16u;
-typedef int16_t		Bit16s;
-typedef uint8_t		Bit8u;
-typedef int8_t		Bit8s;
-*/
+  /*
+	  define Bits, Bitu, Bit32s, Bit32u, Bit16s, Bit16u, Bit8s, Bit8u here
+  */
+  /*
+  #include <stdint.h>
+  typedef uintptr_t	Bitu;
+  typedef intptr_t	Bits;
+  typedef uint32_t	Bit32u;
+  typedef int32_t		Bit32s;
+  typedef uint16_t	Bit16u;
+  typedef int16_t		Bit16s;
+  typedef uint8_t		Bit8u;
+  typedef int8_t		Bit8s;
+  */
 
 
-/*
-	define attribution that inlines/forces inlining of a function (optional)
-*/
+  /*
+	  define attribution that inlines/forces inlining of a function (optional)
+  */
 #define OPL_INLINE inline
 
 
@@ -100,7 +100,7 @@ typedef int8_t		Bit8s;
 #define BLOCKBUF_SIZE		512
 
 
-// vibrato constants
+  // vibrato constants
 #define VIBTAB_SIZE			8
 #define VIBFAC				70/50000		// no braces, integer mul/div
 
@@ -110,15 +110,15 @@ typedef int8_t		Bit8s;
 
 
 /* operator struct definition
-     For OPL2 all 9 channels consist of two operators each, carrier and modulator.
-     Channel x has operators x as modulator and operators (9+x) as carrier.
-     For OPL3 all 18 channels consist either of two operators (2op mode) or four
-     operators (4op mode) which is determined through register4 of the second
-     adlib register set.
-     Only the channels 0,1,2 (first set) and 9,10,11 (second set) can act as
-     4op channels. The two additional operators for a channel y come from the
-     2op channel y+3 so the operatorss y, (9+y), y+3, (9+y)+3 make up a 4op
-     channel.
+	 For OPL2 all 9 channels consist of two operators each, carrier and modulator.
+	 Channel x has operators x as modulator and operators (9+x) as carrier.
+	 For OPL3 all 18 channels consist either of two operators (2op mode) or four
+	 operators (4op mode) which is determined through register4 of the second
+	 adlib register set.
+	 Only the channels 0,1,2 (first set) and 9,10,11 (second set) can act as
+	 4op channels. The two additional operators for a channel y come from the
+	 2op channel y+3 so the operatorss y, (9+y), y+3, (9+y)+3 make up a 4op
+	 channel.
 */
 typedef struct operator_struct {
 	Bit32s cval, lastcval;			// current output/last output (used for feedback)
@@ -136,18 +136,18 @@ typedef struct operator_struct {
 	Bit32u cur_wmask;				// mask for selected waveform
 	Bit32u act_state;				// activity state (regular, percussion)
 	bool sus_keep;					// keep sustain level when decay finished
-	bool vibrato,tremolo;			// vibrato/tremolo enable bits
-	
+	bool vibrato, tremolo;			// vibrato/tremolo enable bits
+
 	// variables used to provide non-continuous envelopes
 	Bit32u generator_pos;			// for non-standard sample rates we need to determine how many samples have passed
 	Bits cur_env_step;				// current (standardized) sample position
-	Bits env_step_a,env_step_d,env_step_r;	// number of std samples of one step (for attack/decay/release mode)
+	Bits env_step_a, env_step_d, env_step_r;	// number of std samples of one step (for attack/decay/release mode)
 	Bit8u step_skip_pos_a;			// position of 8-cyclic step skipping (always 2^x to check against mask)
 	Bits env_step_skip_a;			// bitmask that determines if a step is skipped (respective bit is zero then)
 
 #if defined(OPLTYPE_IS_OPL3)
-	bool is_4op,is_4op_attached;	// base of a 4op channel/part of a 4op channel
-	Bit32s left_pan,right_pan;		// opl3 stereo panning amount
+	bool is_4op, is_4op_attached;	// base of a 4op channel/part of a 4op channel
+	Bit32s left_pan, right_pan;		// opl3 stereo panning amount
 #endif
 } op_type;
 
@@ -156,7 +156,7 @@ Bitu chip_num;
 op_type op[MAXOPERATORS];
 
 Bits int_samplerate;
-	
+
 Bit8u status;
 Bit32u opl_index;
 #if defined(OPLTYPE_IS_OPL3)

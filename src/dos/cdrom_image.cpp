@@ -72,7 +72,7 @@ int CDROM_Interface_Image::BinaryFile::getLength()
 #if defined(C_SDL_SOUND)
 CDROM_Interface_Image::AudioFile::AudioFile(const char *filename, bool &error)
 {
-	Sound_AudioInfo desired = {AUDIO_S16, 2, 44100};
+	Sound_AudioInfo desired = { AUDIO_S16, 2, 44100 };
 	sample = Sound_NewSampleFromFile(filename, &desired, RAW_SECTOR_SIZE);
 	lastCount = RAW_SECTOR_SIZE;
 	lastSeek = 0;
@@ -102,7 +102,7 @@ bool CDROM_Interface_Image::AudioFile::read(Bit8u *buffer, int seek, int count)
 	} else {
 		memcpy(buffer, sample->buffer, count);
 	}
-	
+
 	return !(sample->flags & SOUND_SAMPLEFLAG_ERROR);
 }
 
@@ -111,7 +111,7 @@ int CDROM_Interface_Image::AudioFile::getLength()
 	int time = 1;
 	int shift = 0;
 	if (!(sample->flags & SOUND_SAMPLEFLAG_CANSEEK)) return -1;
-	
+
 	while (true) {
 		int success = Sound_Seek(sample, (unsigned int)(shift + time));
 		if (!success) {
@@ -132,7 +132,7 @@ CDROM_Interface_Image* CDROM_Interface_Image::images[26];
 CDROM_Interface_Image::imagePlayer CDROM_Interface_Image::player = {
 	NULL, NULL, NULL, {0}, 0, 0, 0, false, false, false, {0} };
 
-	
+
 CDROM_Interface_Image::CDROM_Interface_Image(Bit8u subUnit)
 {
 	images[subUnit] = this;
@@ -165,7 +165,7 @@ bool CDROM_Interface_Image::SetDevice(char* path, int forceCD)
 {
 	if (LoadCueSheet(path)) return true;
 	if (LoadIsoFile(path)) return true;
-	
+
 	// print error message on dosbox console
 	char buf[MAX_LINE_LENGTH];
 	snprintf(buf, MAX_LINE_LENGTH, "Could not load image file: %s\n", path);
@@ -191,7 +191,7 @@ bool CDROM_Interface_Image::GetAudioTracks(int& stTrack, int& end, TMSF& leadOut
 
 bool CDROM_Interface_Image::GetAudioTrackInfo(int track, TMSF& start, unsigned char& attr)
 {
-	if (track < 1 || track > (int)tracks.size()) return false;
+	if (track < 1 || track >(int)tracks.size()) return false;
 	FRAMES_TO_MSF(tracks[track - 1].start + 150, &start.min, &start.sec, &start.fr);
 	attr = tracks[track - 1].attr;
 	return true;
@@ -224,7 +224,7 @@ bool CDROM_Interface_Image::GetMediaTrayStatus(bool& mediaPresent, bool& mediaCh
 	return true;
 }
 
-bool CDROM_Interface_Image::PlayAudioSector(unsigned long start,unsigned long len)
+bool CDROM_Interface_Image::PlayAudioSector(unsigned long start, unsigned long len)
 {
 	// We might want to do some more checks. E.g valid start and length
 	SDL_mutexP(player.mutex);
@@ -232,8 +232,8 @@ bool CDROM_Interface_Image::PlayAudioSector(unsigned long start,unsigned long le
 	player.currFrame = start;
 	player.targetFrame = start + len;
 	int track = GetTrack(start) - 1;
-	if(track >= 0 && tracks[track].attr == 0x40) {
-		LOG(LOG_MISC,LOG_WARN)("Game tries to play the data track. Not doing this");
+	if (track >= 0 && tracks[track].attr == 0x40) {
+		LOG(LOG_MISC, LOG_WARN)("Game tries to play the data track. Not doing this");
 		player.isPlaying = false;
 		//Unclear wether return false should be here. 
 		//specs say that this function returns at once and games should check the status wether the audio is actually playing
@@ -259,7 +259,7 @@ bool CDROM_Interface_Image::StopAudio(void)
 
 void CDROM_Interface_Image::ChannelControl(TCtrl ctrl)
 {
-	player.ctrlUsed = (ctrl.out[0]!=0 || ctrl.out[1]!=1 || ctrl.vol[0]<0xfe || ctrl.vol[1]<0xfe);
+	player.ctrlUsed = (ctrl.out[0] != 0 || ctrl.out[1] != 1 || ctrl.vol[0] < 0xfe || ctrl.vol[1] < 0xfe);
 	player.ctrlData = ctrl;
 }
 
@@ -268,9 +268,9 @@ bool CDROM_Interface_Image::ReadSectors(PhysPt buffer, bool raw, unsigned long s
 	int sectorSize = raw ? RAW_SECTOR_SIZE : COOKED_SECTOR_SIZE;
 	Bitu buflen = num * sectorSize;
 	Bit8u* buf = new Bit8u[buflen];
-	
+
 	bool success = true; //Gobliiins reads 0 sectors
-	for(unsigned long i = 0; i < num; i++) {
+	for (unsigned long i = 0; i < num; i++) {
 		success = ReadSector(&buf[i * sectorSize], raw, sector + i);
 		if (!success) break;
 	}
@@ -290,8 +290,8 @@ int CDROM_Interface_Image::GetTrack(int sector)
 {
 	vector<Track>::iterator i = tracks.begin();
 	vector<Track>::iterator end = tracks.end() - 1;
-	
-	while(i != end) {
+
+	while (i != end) {
 		Track &curr = *i;
 		Track &next = *(i + 1);
 		if (curr.start <= sector && sector < next.start) return curr.number;
@@ -304,7 +304,7 @@ bool CDROM_Interface_Image::ReadSector(Bit8u *buffer, bool raw, unsigned long se
 {
 	int track = GetTrack(sector) - 1;
 	if (track < 0) return false;
-	
+
 	int seek = tracks[track].skip + (sector - tracks[track].start) * tracks[track].sectorSize;
 	int length = (raw ? RAW_SECTOR_SIZE : COOKED_SECTOR_SIZE);
 	if (tracks[track].sectorSize != RAW_SECTOR_SIZE && raw) return false;
@@ -322,14 +322,14 @@ void CDROM_Interface_Image::CDAudioCallBack(Bitu len)
 		player.channel->AddSilence();
 		return;
 	}
-	
+
 	SDL_mutexP(player.mutex);
 	while (player.bufLen < (Bits)len) {
 		bool success;
 		if (player.targetFrame > player.currFrame)
 			success = player.cd->ReadSector(&player.buffer[player.bufLen], true, player.currFrame);
 		else success = false;
-		
+
 		if (success) {
 			player.currFrame++;
 			player.bufLen += RAW_SECTOR_SIZE;
@@ -341,25 +341,25 @@ void CDROM_Interface_Image::CDAudioCallBack(Bitu len)
 	}
 	SDL_mutexV(player.mutex);
 	if (player.ctrlUsed) {
-		Bit16s sample0,sample1;
-		Bit16s * samples=(Bit16s *)&player.buffer;
-		for (Bitu pos=0;pos<len/4;pos++) {
+		Bit16s sample0, sample1;
+		Bit16s * samples = (Bit16s *)&player.buffer;
+		for (Bitu pos = 0; pos < len / 4; pos++) {
 #if defined(WORDS_BIGENDIAN)
-			sample0=(Bit16s)host_readw((HostPt)&samples[pos*2+player.ctrlData.out[0]]);
-			sample1=(Bit16s)host_readw((HostPt)&samples[pos*2+player.ctrlData.out[1]]);
+			sample0 = (Bit16s)host_readw((HostPt)&samples[pos * 2 + player.ctrlData.out[0]]);
+			sample1 = (Bit16s)host_readw((HostPt)&samples[pos * 2 + player.ctrlData.out[1]]);
 #else
-			sample0=samples[pos*2+player.ctrlData.out[0]];
-			sample1=samples[pos*2+player.ctrlData.out[1]];
+			sample0 = samples[pos * 2 + player.ctrlData.out[0]];
+			sample1 = samples[pos * 2 + player.ctrlData.out[1]];
 #endif
-			samples[pos*2+0]=(Bit16s)(sample0*player.ctrlData.vol[0]/255.0);
-			samples[pos*2+1]=(Bit16s)(sample1*player.ctrlData.vol[1]/255.0);
+			samples[pos * 2 + 0] = (Bit16s)(sample0*player.ctrlData.vol[0] / 255.0);
+			samples[pos * 2 + 1] = (Bit16s)(sample1*player.ctrlData.vol[1] / 255.0);
 		}
 #if defined(WORDS_BIGENDIAN)
-		player.channel->AddSamples_s16(len/4,(Bit16s *)player.buffer);
-	} else	player.channel->AddSamples_s16_nonnative(len/4,(Bit16s *)player.buffer);
+		player.channel->AddSamples_s16(len / 4, (Bit16s *)player.buffer);
+	} else	player.channel->AddSamples_s16_nonnative(len / 4, (Bit16s *)player.buffer);
 #else
 	}
-	player.channel->AddSamples_s16(len/4,(Bit16s *)player.buffer);
+	player.channel->AddSamples_s16(len / 4, (Bit16s *)player.buffer);
 #endif
 	memmove(player.buffer, &player.buffer[len], player.bufLen - len);
 	player.bufLen -= len;
@@ -368,9 +368,9 @@ void CDROM_Interface_Image::CDAudioCallBack(Bitu len)
 bool CDROM_Interface_Image::LoadIsoFile(char* filename)
 {
 	tracks.clear();
-	
+
 	// data track
-	Track track = {0, 0, 0, 0, 0, 0, false, NULL};
+	Track track = { 0, 0, 0, 0, 0, 0, false, NULL };
 	bool error;
 	track.file = new BinaryFile(filename, error);
 	if (error) {
@@ -379,25 +379,25 @@ bool CDROM_Interface_Image::LoadIsoFile(char* filename)
 	}
 	track.number = 1;
 	track.attr = 0x40;//data
-	
+
 	// try to detect iso type
 	if (CanReadPVD(track.file, COOKED_SECTOR_SIZE, false)) {
 		track.sectorSize = COOKED_SECTOR_SIZE;
 		track.mode2 = false;
 	} else if (CanReadPVD(track.file, RAW_SECTOR_SIZE, false)) {
 		track.sectorSize = RAW_SECTOR_SIZE;
-		track.mode2 = false;		
+		track.mode2 = false;
 	} else if (CanReadPVD(track.file, 2336, true)) {
 		track.sectorSize = 2336;
-		track.mode2 = true;		
+		track.mode2 = true;
 	} else if (CanReadPVD(track.file, RAW_SECTOR_SIZE, true)) {
 		track.sectorSize = RAW_SECTOR_SIZE;
-		track.mode2 = true;		
+		track.mode2 = true;
 	} else return false;
-	
+
 	track.length = track.file->getLength() / track.sectorSize;
 	tracks.push_back(track);
-	
+
 	// leadout track
 	track.number = 2;
 	track.attr = 0;
@@ -418,7 +418,7 @@ bool CDROM_Interface_Image::CanReadPVD(TrackFile *file, int sectorSize, bool mod
 	file->read(pvd, seek, COOKED_SECTOR_SIZE);
 	// pvd[0] = descriptor type, pvd[1..5] = standard identifier, pvd[6] = iso version (+8 for High Sierra)
 	return ((pvd[0] == 1 && !strncmp((char*)(&pvd[1]), "CD001", 5) && pvd[6] == 1) ||
-			(pvd[8] == 1 && !strncmp((char*)(&pvd[9]), "CDROM", 5) && pvd[14] == 1));
+		(pvd[8] == 1 && !strncmp((char*)(&pvd[9]), "CDROM", 5) && pvd[14] == 1));
 }
 
 #if defined(WIN32)
@@ -431,7 +431,7 @@ static string dirname(char * file) {
 	else {
 		int len = (int)(sep - file);
 		char tmp[MAX_FILENAME_LENGTH];
-		safe_strncpy(tmp, file, len+1);
+		safe_strncpy(tmp, file, len + 1);
 		return tmp;
 	}
 }
@@ -439,7 +439,7 @@ static string dirname(char * file) {
 
 bool CDROM_Interface_Image::LoadCueSheet(char *cuefile)
 {
-	Track track = {0, 0, 0, 0, 0, 0, false, NULL};
+	Track track = { 0, 0, 0, 0, 0, 0, false, NULL };
 	tracks.clear();
 	int shift = 0;
 	int currPregap = 0;
@@ -453,30 +453,30 @@ bool CDROM_Interface_Image::LoadCueSheet(char *cuefile)
 	ifstream in;
 	in.open(cuefile, ios::in);
 	if (in.fail()) return false;
-	
-	while(!in.eof()) {
+
+	while (!in.eof()) {
 		// get next line
 		char buf[MAX_LINE_LENGTH];
 		in.getline(buf, MAX_LINE_LENGTH);
 		if (in.fail() && !in.eof()) return false;  // probably a binary file
 		istringstream line(buf);
-		
+
 		string command;
 		GetCueKeyword(command, line);
-		
+
 		if (command == "TRACK") {
 			if (canAddTrack) success = AddTrack(track, shift, prestart, totalPregap, currPregap);
 			else success = true;
-			
+
 			track.start = 0;
 			track.skip = 0;
 			currPregap = 0;
 			prestart = 0;
-	
+
 			line >> track.number;
 			string type;
 			GetCueKeyword(type, line);
-			
+
 			if (type == "AUDIO") {
 				track.sectorSize = RAW_SECTOR_SIZE;
 				track.attr = 0;
@@ -498,24 +498,22 @@ bool CDROM_Interface_Image::LoadCueSheet(char *cuefile)
 				track.attr = 0x40;
 				track.mode2 = true;
 			} else success = false;
-			
+
 			canAddTrack = true;
-		}
-		else if (command == "INDEX") {
+		} else if (command == "INDEX") {
 			int index;
 			line >> index;
 			int frame;
 			success = GetCueFrame(frame, line);
-			
+
 			if (index == 1) track.start = frame;
 			else if (index == 0) prestart = frame;
 			// ignore other indices
-		}
-		else if (command == "FILE") {
+		} else if (command == "FILE") {
 			if (canAddTrack) success = AddTrack(track, shift, prestart, totalPregap, currPregap);
 			else success = true;
 			canAddTrack = false;
-			
+
 			string filename;
 			GetCueString(filename, line);
 			GetRealFileName(filename, pathname);
@@ -532,7 +530,7 @@ bool CDROM_Interface_Image::LoadCueSheet(char *cuefile)
 			//to break existing cue sheets that depend on this.(mine with OGG tracks specifying MP3 as type)
 			else if (type == "WAVE" || type == "AIFF" || type == "MP3") {
 				track.file = new AudioFile(filename.c_str(), error);
-			} else { 
+			} else {
 				const Sound_DecoderInfo **i;
 				for (i = Sound_AvailableDecoders(); *i != NULL; i++) {
 					if (*(*i)->extensions == type) {
@@ -546,8 +544,7 @@ bool CDROM_Interface_Image::LoadCueSheet(char *cuefile)
 				delete track.file;
 				success = false;
 			}
-		}
-		else if (command == "PREGAP") success = GetCueFrame(currPregap, line);
+		} else if (command == "PREGAP") success = GetCueFrame(currPregap, line);
 		else if (command == "CATALOG") success = GetCueString(mcn, line);
 		// ignored commands
 		else if (command == "CDTEXTFILE" || command == "FLAGS" || command == "ISRC"
@@ -560,14 +557,14 @@ bool CDROM_Interface_Image::LoadCueSheet(char *cuefile)
 	}
 	// add last track
 	if (!AddTrack(track, shift, prestart, totalPregap, currPregap)) return false;
-	
+
 	// add leadout track
 	track.number++;
 	track.attr = 0;//sync with load iso
 	track.start = 0;
 	track.length = 0;
 	track.file = NULL;
-	if(!AddTrack(track, shift, 0, totalPregap, 0)) return false;
+	if (!AddTrack(track, shift, 0, totalPregap, 0)) return false;
 
 	return true;
 }
@@ -580,7 +577,7 @@ bool CDROM_Interface_Image::AddTrack(Track &curr, int &shift, int prestart, int 
 		if (prestart > curr.start) return false;
 		skip = curr.start - prestart;
 	} else skip = 0;
-	
+
 	// first track (track number must be 1)
 	if (tracks.empty()) {
 		if (curr.number != 1) return false;
@@ -590,34 +587,34 @@ bool CDROM_Interface_Image::AddTrack(Track &curr, int &shift, int prestart, int 
 		tracks.push_back(curr);
 		return true;
 	}
-	
+
 	Track &prev = *(tracks.end() - 1);
-	
+
 	// current track consumes data from the same file as the previous
 	if (prev.file == curr.file) {
 		curr.start += shift;
 		prev.length = curr.start + totalPregap - prev.start - skip;
-		curr.skip += prev.skip + prev.length * prev.sectorSize + skip * curr.sectorSize;		
+		curr.skip += prev.skip + prev.length * prev.sectorSize + skip * curr.sectorSize;
 		totalPregap += currPregap;
 		curr.start += totalPregap;
-	// current track uses a different file as the previous track
+		// current track uses a different file as the previous track
 	} else {
 		int tmp = prev.file->getLength() - prev.skip;
 		prev.length = tmp / prev.sectorSize;
 		if (tmp % prev.sectorSize != 0) prev.length++; // padding
-		
+
 		curr.start += prev.start + prev.length + currPregap;
 		curr.skip = skip * curr.sectorSize;
 		shift += prev.start + prev.length;
 		totalPregap = currPregap;
 	}
-	
+
 	// error checks
 	if (curr.number <= 1) return false;
 	if (prev.number + 1 != curr.number) return false;
 	if (curr.start < prev.start + prev.length) return false;
 	if (curr.length < 0) return false;
-	
+
 	tracks.push_back(curr);
 	return true;
 }
@@ -625,7 +622,7 @@ bool CDROM_Interface_Image::AddTrack(Track &curr, int &shift, int prestart, int 
 bool CDROM_Interface_Image::HasDataTrack(void)
 {
 	//Data track has attribute 0x40
-	for(track_it it = tracks.begin(); it != tracks.end(); it++) {
+	for (track_it it = tracks.begin(); it != tracks.end(); it++) {
 		if ((*it).attr == 0x40) return true;
 	}
 	return false;
@@ -637,7 +634,7 @@ bool CDROM_Interface_Image::GetRealFileName(string &filename, string &pathname)
 	// check if file exists
 	struct stat test;
 	if (stat(filename.c_str(), &test) == 0) return true;
-	
+
 	// check if file with path relative to cue file exists
 	string tmpstr(pathname + "/" + filename);
 	if (stat(tmpstr.c_str(), &test) == 0) {
@@ -650,7 +647,7 @@ bool CDROM_Interface_Image::GetRealFileName(string &filename, string &pathname)
 	safe_strncpy(tmp, filename.c_str(), CROSS_LEN);
 	Bit8u drive;
 	if (!DOS_MakeName(tmp, fullname, &drive)) return false;
-	
+
 	localDrive *ldp = dynamic_cast<localDrive*>(Drives[drive]);
 	if (ldp) {
 		ldp->GetSystemFilename(tmp, fullname);
@@ -667,8 +664,8 @@ bool CDROM_Interface_Image::GetRealFileName(string &filename, string &pathname)
 
 	string copy = filename;
 	size_t l = copy.size();
-	for (size_t i = 0; i < l;i++) {
-		if(copy[i] == '\\') copy[i] = '/';
+	for (size_t i = 0; i < l; i++) {
+		if (copy[i] == '\\') copy[i] = '/';
 	}
 
 	if (stat(copy.c_str(), &test) == 0) {
@@ -689,8 +686,8 @@ bool CDROM_Interface_Image::GetRealFileName(string &filename, string &pathname)
 bool CDROM_Interface_Image::GetCueKeyword(string &keyword, istream &in)
 {
 	in >> keyword;
-	for(Bitu i = 0; i < keyword.size(); i++) keyword[i] = toupper(keyword[i]);
-	
+	for (Bitu i = 0; i < keyword.size(); i++) keyword[i] = toupper(keyword[i]);
+
 	return true;
 }
 
@@ -701,7 +698,7 @@ bool CDROM_Interface_Image::GetCueFrame(int &frames, istream &in)
 	int min, sec, fr;
 	bool success = sscanf(msf.c_str(), "%d:%d:%d", &min, &sec, &fr) == 3;
 	frames = MSF_TO_FRAMES(min, sec, fr);
-	
+
 	return success;
 }
 
@@ -728,8 +725,8 @@ void CDROM_Interface_Image::ClearTracks()
 	vector<Track>::iterator i = tracks.begin();
 	vector<Track>::iterator end = tracks.end();
 
-	TrackFile* last = NULL;	
-	while(i != end) {
+	TrackFile* last = NULL;
+	while (i != end) {
 		Track &curr = *i;
 		if (curr.file != last) {
 			delete curr.file;

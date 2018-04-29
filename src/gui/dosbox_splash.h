@@ -17,10 +17,10 @@
                __ip += __l; __rd += __l; } } \
   } } while (0)
 static const struct {
-  unsigned int 	 width;
-  unsigned int 	 height;
-  unsigned int 	 bytes_per_pixel; /* 3:RGB, 4:RGBA */ 
-  unsigned char	 rle_pixel_data[24875 + 1];
+	unsigned int 	 width;
+	unsigned int 	 height;
+	unsigned int 	 bytes_per_pixel; /* 3:RGB, 4:RGBA */
+	unsigned char	 rle_pixel_data[24875 + 1];
 } gimp_image = {
   640, 400, 3,
   "\377\272=\0\377\272=\0\377\272=\0\377\272=\0\377\272=\0\377\272=\0\377\272"

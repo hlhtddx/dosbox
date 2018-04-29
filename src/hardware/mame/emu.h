@@ -43,7 +43,7 @@ struct machine_config;
 
 
 class device_sound_interface {
-public:			
+public:
 	struct sound_stream {
 		void update() {
 		}
@@ -53,7 +53,7 @@ public:
 	sound_stream* stream_alloc(int whatever, int channels, int size) {
 		return &temp;
 	};
-	
+
 
 	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples) = 0;
 
@@ -104,10 +104,10 @@ public:
 	virtual void device_start() {
 	}
 
-	void save_item(int wtf, int blah= 0) {
+	void save_item(int wtf, int blah = 0) {
 	}
 
-	device_t(const machine_config &mconfig, device_type type, const char *tag, device_t *owner, u32 _clock) : clockRate( _clock ) {
+	device_t(const machine_config &mconfig, device_type type, const char *tag, device_t *owner, u32 _clock) : clockRate(_clock) {
 	}
 
 };

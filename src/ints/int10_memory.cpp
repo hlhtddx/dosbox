@@ -23,250 +23,250 @@
 #include "int10.h"
 
 
-static Bit8u static_functionality[0x10]=
+static Bit8u static_functionality[0x10] =
 {
- /* 0 */ 0xff,  // All modes supported #1
- /* 1 */ 0xff,  // All modes supported #2
- /* 2 */ 0x0f,  // All modes supported #3
- /* 3 */ 0x00, 0x00, 0x00, 0x00,  // reserved
- /* 7 */ 0x07,  // 200, 350, 400 scan lines
- /* 8 */ 0x04,  // total number of character blocks available in text modes
- /* 9 */ 0x02,  // maximum number of active character blocks in text modes
- /* a */ 0xff,  // Misc Flags Everthing supported 
- /* b */ 0x0e,  // Support for Display combination, intensity/blinking and video state saving/restoring
- /* c */ 0x00,  // reserved
- /* d */ 0x00,  // reserved
- /* e */ 0x00,  // Change to add new functions
- /* f */ 0x00   // reserved
+	/* 0 */ 0xff,  // All modes supported #1
+	/* 1 */ 0xff,  // All modes supported #2
+	/* 2 */ 0x0f,  // All modes supported #3
+	/* 3 */ 0x00, 0x00, 0x00, 0x00,  // reserved
+	/* 7 */ 0x07,  // 200, 350, 400 scan lines
+	/* 8 */ 0x04,  // total number of character blocks available in text modes
+	/* 9 */ 0x02,  // maximum number of active character blocks in text modes
+	/* a */ 0xff,  // Misc Flags Everthing supported 
+	/* b */ 0x0e,  // Support for Display combination, intensity/blinking and video state saving/restoring
+	/* c */ 0x00,  // reserved
+	/* d */ 0x00,  // reserved
+	/* e */ 0x00,  // Change to add new functions
+	/* f */ 0x00   // reserved
 };
 
-static Bit16u map_offset[8]={
+static Bit16u map_offset[8] = {
 	0x0000,0x4000,0x8000,0xc000,
 	0x2000,0x6000,0xa000,0xe000
 };
 
-void INT10_LoadFont(PhysPt font,bool reload,Bitu count,Bitu offset,Bitu map,Bitu height) {
-	PhysPt ftwhere=PhysMake(0xa000,map_offset[map & 0x7]+(Bit16u)(offset*32));
-	Bit16u base=real_readw(BIOSMEM_SEG,BIOSMEM_CRTC_ADDRESS);
-	bool mono=(base==VGAREG_MDA_CRTC_ADDRESS);
+void INT10_LoadFont(PhysPt font, bool reload, Bitu count, Bitu offset, Bitu map, Bitu height) {
+	PhysPt ftwhere = PhysMake(0xa000, map_offset[map & 0x7] + (Bit16u)(offset * 32));
+	Bit16u base = real_readw(BIOSMEM_SEG, BIOSMEM_CRTC_ADDRESS);
+	bool mono = (base == VGAREG_MDA_CRTC_ADDRESS);
 
 	//Put video adapter in planar mode
-	IO_Write(0x3c4,0x02);IO_Write(0x3c5,0x04); // select plane 2 for writing
-	IO_Write(0x3c4,0x04);IO_Write(0x3c5,0x07); // odd/even off in SEQ
-	IO_Write(0x3ce,0x04);IO_Write(0x3cf,0x02); // select plane 2 for reading
-	IO_Write(0x3ce,0x05);IO_Write(0x3cf,0x00); // write mode 0, odd/even off in GFX
-	IO_Write(0x3ce,0x06);IO_Write(0x3cf,0x04); // CPU memory window A0000-AFFFF
+	IO_Write(0x3c4, 0x02); IO_Write(0x3c5, 0x04); // select plane 2 for writing
+	IO_Write(0x3c4, 0x04); IO_Write(0x3c5, 0x07); // odd/even off in SEQ
+	IO_Write(0x3ce, 0x04); IO_Write(0x3cf, 0x02); // select plane 2 for reading
+	IO_Write(0x3ce, 0x05); IO_Write(0x3cf, 0x00); // write mode 0, odd/even off in GFX
+	IO_Write(0x3ce, 0x06); IO_Write(0x3cf, 0x04); // CPU memory window A0000-AFFFF
 
 	//Load character patterns
-	for (Bitu i=0;i<count;i++) {
-		MEM_BlockCopy(ftwhere+i*32,font,height);
-		font+=height;
+	for (Bitu i = 0; i < count; i++) {
+		MEM_BlockCopy(ftwhere + i * 32, font, height);
+		font += height;
 	}
 	//Load alternate character patterns
 	if (map & 0x80) {
-		while (Bitu chr=(Bitu)mem_readb(font++)) {
-			MEM_BlockCopy(ftwhere+chr*32,font,height);
-			font+=height;
+		while (Bitu chr = (Bitu)mem_readb(font++)) {
+			MEM_BlockCopy(ftwhere + chr * 32, font, height);
+			font += height;
 		}
 	}
 
 	//Return to normal text mode
-	IO_Write(0x3c4,0x02);IO_Write(0x3c5,0x03); // select planes 0&1 for writing
-	IO_Write(0x3c4,0x04);IO_Write(0x3c5,0x03); // odd/even on in SEQ
-	IO_Write(0x3ce,0x04);IO_Write(0x3cf,0x00); // select plane 0 for reading
-	IO_Write(0x3ce,0x05);IO_Write(0x3cf,0x10); // write mode 0, odd/even on in GFX
-	IO_Write(0x3ce,0x06);IO_Write(0x3cf,mono?0x0a:0x0e); // Bx000-BxFFF, odd/even on
+	IO_Write(0x3c4, 0x02); IO_Write(0x3c5, 0x03); // select planes 0&1 for writing
+	IO_Write(0x3c4, 0x04); IO_Write(0x3c5, 0x03); // odd/even on in SEQ
+	IO_Write(0x3ce, 0x04); IO_Write(0x3cf, 0x00); // select plane 0 for reading
+	IO_Write(0x3ce, 0x05); IO_Write(0x3cf, 0x10); // write mode 0, odd/even on in GFX
+	IO_Write(0x3ce, 0x06); IO_Write(0x3cf, mono ? 0x0a : 0x0e); // Bx000-BxFFF, odd/even on
 
 	/* Reload tables and registers with new values based on this height */
 	if (reload) {
 		//Max scanline 
-		IO_Write(base,0x9);
-		IO_Write(base+1,(IO_Read(base+1) & 0xe0)|(height-1));
+		IO_Write(base, 0x9);
+		IO_Write(base + 1, (IO_Read(base + 1) & 0xe0) | (height - 1));
 		//Vertical display end
-		Bitu rows=CurMode->sheight/height;
-		Bitu vdend=rows*height*((CurMode->sheight==200)?2:1)-1;
-		IO_Write(base,0x12);
-		IO_Write(base+1,(Bit8u)vdend);
+		Bitu rows = CurMode->sheight / height;
+		Bitu vdend = rows * height*((CurMode->sheight == 200) ? 2 : 1) - 1;
+		IO_Write(base, 0x12);
+		IO_Write(base + 1, (Bit8u)vdend);
 		//Underline location
-		if (CurMode->mode==7) {
-			IO_Write(base,0x14);
-			IO_Write(base+1,(IO_Read(base+1) & ~0x1f)|(height-1));
+		if (CurMode->mode == 7) {
+			IO_Write(base, 0x14);
+			IO_Write(base + 1, (IO_Read(base + 1) & ~0x1f) | (height - 1));
 		}
 		//Rows setting in bios segment
-		real_writeb(BIOSMEM_SEG,BIOSMEM_NB_ROWS,rows-1);
-		real_writeb(BIOSMEM_SEG,BIOSMEM_CHAR_HEIGHT,(Bit8u)height);
+		real_writeb(BIOSMEM_SEG, BIOSMEM_NB_ROWS, rows - 1);
+		real_writeb(BIOSMEM_SEG, BIOSMEM_CHAR_HEIGHT, (Bit8u)height);
 		//Page size
-		Bitu pagesize=rows*real_readb(BIOSMEM_SEG,BIOSMEM_NB_COLS)*2;
-		pagesize+=0x100; // bios adds extra on reload
-		real_writew(BIOSMEM_SEG,BIOSMEM_PAGE_SIZE,pagesize);
+		Bitu pagesize = rows * real_readb(BIOSMEM_SEG, BIOSMEM_NB_COLS) * 2;
+		pagesize += 0x100; // bios adds extra on reload
+		real_writew(BIOSMEM_SEG, BIOSMEM_PAGE_SIZE, pagesize);
 		//Cursor shape
-		if (height>=14) height--; // move up one line on 14+ line fonts
-		INT10_SetCursorShape(height-2,height-1);
+		if (height >= 14) height--; // move up one line on 14+ line fonts
+		INT10_SetCursorShape(height - 2, height - 1);
 	}
 }
 
 void INT10_ReloadFont(void) {
-	Bitu map=0;
-	switch(CurMode->cheight) {
+	Bitu map = 0;
+	switch (CurMode->cheight) {
 	case 8:
-		INT10_LoadFont(Real2Phys(int10.rom.font_8_first),false,256,0,map,8);
+		INT10_LoadFont(Real2Phys(int10.rom.font_8_first), false, 256, 0, map, 8);
 		break;
 	case 14:
-		if (IS_VGA_ARCH && svgaCard==SVGA_None && CurMode->mode==7) map=0x80;
-		INT10_LoadFont(Real2Phys(int10.rom.font_14),false,256,0,map,14);
+		if (IS_VGA_ARCH && svgaCard == SVGA_None && CurMode->mode == 7) map = 0x80;
+		INT10_LoadFont(Real2Phys(int10.rom.font_14), false, 256, 0, map, 14);
 		break;
 	case 16:
 	default:
-		if (IS_VGA_ARCH && svgaCard==SVGA_None) map=0x80;
-		INT10_LoadFont(Real2Phys(int10.rom.font_16),false,256,0,map,16);
+		if (IS_VGA_ARCH && svgaCard == SVGA_None) map = 0x80;
+		INT10_LoadFont(Real2Phys(int10.rom.font_16), false, 256, 0, map, 16);
 		break;
 	}
 }
 
 
 void INT10_SetupRomMemory(void) {
-/* This should fill up certain structures inside the Video Bios Rom Area */
-	PhysPt rom_base=PhysMake(0xc000,0);
+	/* This should fill up certain structures inside the Video Bios Rom Area */
+	PhysPt rom_base = PhysMake(0xc000, 0);
 	Bitu i;
-	int10.rom.used=3;
+	int10.rom.used = 3;
 	if (IS_EGAVGA_ARCH) {
 		// set up the start of the ROM
-		phys_writew(rom_base+0,0xaa55);
-		phys_writeb(rom_base+2,0x40);		// Size of ROM: 64 512-blocks = 32KB
+		phys_writew(rom_base + 0, 0xaa55);
+		phys_writeb(rom_base + 2, 0x40);		// Size of ROM: 64 512-blocks = 32KB
 		if (IS_VGA_ARCH) {
-			phys_writeb(rom_base+0x1e,0x49);	// IBM string
-			phys_writeb(rom_base+0x1f,0x42);
-			phys_writeb(rom_base+0x20,0x4d);
-			phys_writeb(rom_base+0x21,0x00);
+			phys_writeb(rom_base + 0x1e, 0x49);	// IBM string
+			phys_writeb(rom_base + 0x1f, 0x42);
+			phys_writeb(rom_base + 0x20, 0x4d);
+			phys_writeb(rom_base + 0x21, 0x00);
 		}
-		int10.rom.used=0x100;
+		int10.rom.used = 0x100;
 	}
 
-	if (IS_VGA_ARCH && svgaCard==SVGA_S3Trio) INT10_SetupVESA();
+	if (IS_VGA_ARCH && svgaCard == SVGA_S3Trio) INT10_SetupVESA();
 
-	int10.rom.font_8_first=RealMake(0xC000,int10.rom.used);
-	for (i=0;i<128*8;i++) {
-		phys_writeb(rom_base+int10.rom.used++,int10_font_08[i]);
+	int10.rom.font_8_first = RealMake(0xC000, int10.rom.used);
+	for (i = 0; i < 128 * 8; i++) {
+		phys_writeb(rom_base + int10.rom.used++, int10_font_08[i]);
 	}
-	int10.rom.font_8_second=RealMake(0xC000,int10.rom.used);
-	for (i=0;i<128*8;i++) {
-		phys_writeb(rom_base+int10.rom.used++,int10_font_08[i+128*8]);
+	int10.rom.font_8_second = RealMake(0xC000, int10.rom.used);
+	for (i = 0; i < 128 * 8; i++) {
+		phys_writeb(rom_base + int10.rom.used++, int10_font_08[i + 128 * 8]);
 	}
-	int10.rom.font_14=RealMake(0xC000,int10.rom.used);
-	for (i=0;i<256*14;i++) {
-		phys_writeb(rom_base+int10.rom.used++,int10_font_14[i]);
+	int10.rom.font_14 = RealMake(0xC000, int10.rom.used);
+	for (i = 0; i < 256 * 14; i++) {
+		phys_writeb(rom_base + int10.rom.used++, int10_font_14[i]);
 	}
-	int10.rom.font_14_alternate=RealMake(0xC000,int10.rom.used);
-	for (i=0;i<20*15+1;i++) {
-		phys_writeb(rom_base+int10.rom.used++,int10_font_14_alternate[i]);
+	int10.rom.font_14_alternate = RealMake(0xC000, int10.rom.used);
+	for (i = 0; i < 20 * 15 + 1; i++) {
+		phys_writeb(rom_base + int10.rom.used++, int10_font_14_alternate[i]);
 	}
-	int10.rom.font_16=RealMake(0xC000,int10.rom.used);
-	for (i=0;i<256*16;i++) {
-		phys_writeb(rom_base+int10.rom.used++,int10_font_16[i]);
+	int10.rom.font_16 = RealMake(0xC000, int10.rom.used);
+	for (i = 0; i < 256 * 16; i++) {
+		phys_writeb(rom_base + int10.rom.used++, int10_font_16[i]);
 	}
-	int10.rom.font_16_alternate=RealMake(0xC000,int10.rom.used);
-	for (i=0;i<19*17+1;i++) {
-		phys_writeb(rom_base+int10.rom.used++,int10_font_16_alternate[i]);
+	int10.rom.font_16_alternate = RealMake(0xC000, int10.rom.used);
+	for (i = 0; i < 19 * 17 + 1; i++) {
+		phys_writeb(rom_base + int10.rom.used++, int10_font_16_alternate[i]);
 	}
-	int10.rom.static_state=RealMake(0xC000,int10.rom.used);
-	for (i=0;i<0x10;i++) {
-		phys_writeb(rom_base+int10.rom.used++,static_functionality[i]);
+	int10.rom.static_state = RealMake(0xC000, int10.rom.used);
+	for (i = 0; i < 0x10; i++) {
+		phys_writeb(rom_base + int10.rom.used++, static_functionality[i]);
 	}
-	for (i=0;i<128*8;i++) {
-		phys_writeb(PhysMake(0xf000,0xfa6e)+i,int10_font_08[i]);
+	for (i = 0; i < 128 * 8; i++) {
+		phys_writeb(PhysMake(0xf000, 0xfa6e) + i, int10_font_08[i]);
 	}
-	RealSetVec(0x1F,int10.rom.font_8_second);
+	RealSetVec(0x1F, int10.rom.font_8_second);
 
 	if (IS_EGAVGA_ARCH) {
-		int10.rom.video_parameter_table=RealMake(0xC000,int10.rom.used);
-		int10.rom.used+=INT10_SetupVideoParameterTable(rom_base+int10.rom.used);
+		int10.rom.video_parameter_table = RealMake(0xC000, int10.rom.used);
+		int10.rom.used += INT10_SetupVideoParameterTable(rom_base + int10.rom.used);
 
 		if (IS_VGA_ARCH) {
-			int10.rom.video_dcc_table=RealMake(0xC000,int10.rom.used);
-			phys_writeb(rom_base+int10.rom.used++,0x10);	// number of entries
-			phys_writeb(rom_base+int10.rom.used++,1);		// version number
-			phys_writeb(rom_base+int10.rom.used++,8);		// maximum display code
-			phys_writeb(rom_base+int10.rom.used++,0);		// reserved
+			int10.rom.video_dcc_table = RealMake(0xC000, int10.rom.used);
+			phys_writeb(rom_base + int10.rom.used++, 0x10);	// number of entries
+			phys_writeb(rom_base + int10.rom.used++, 1);		// version number
+			phys_writeb(rom_base + int10.rom.used++, 8);		// maximum display code
+			phys_writeb(rom_base + int10.rom.used++, 0);		// reserved
 			// display combination codes
-			phys_writew(rom_base+int10.rom.used,0x0000);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0100);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0200);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0102);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0400);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0104);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0500);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0502);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0600);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0601);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0605);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0800);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0801);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0700);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0702);	int10.rom.used+=2;
-			phys_writew(rom_base+int10.rom.used,0x0706);	int10.rom.used+=2;
+			phys_writew(rom_base + int10.rom.used, 0x0000);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0100);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0200);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0102);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0400);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0104);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0500);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0502);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0600);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0601);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0605);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0800);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0801);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0700);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0702);	int10.rom.used += 2;
+			phys_writew(rom_base + int10.rom.used, 0x0706);	int10.rom.used += 2;
 
-			int10.rom.video_save_pointer_table=RealMake(0xC000,int10.rom.used);
-			phys_writew(rom_base+int10.rom.used,0x1a);	// length of table
-			int10.rom.used+=2;
-			phys_writed(rom_base+int10.rom.used,int10.rom.video_dcc_table);
-			int10.rom.used+=4;
-			phys_writed(rom_base+int10.rom.used,0);		// alphanumeric charset override
-			int10.rom.used+=4;
-			phys_writed(rom_base+int10.rom.used,0);		// user palette table
-			int10.rom.used+=4;
-			phys_writed(rom_base+int10.rom.used,0);		int10.rom.used+=4;
-			phys_writed(rom_base+int10.rom.used,0);		int10.rom.used+=4;
-			phys_writed(rom_base+int10.rom.used,0);		int10.rom.used+=4;
+			int10.rom.video_save_pointer_table = RealMake(0xC000, int10.rom.used);
+			phys_writew(rom_base + int10.rom.used, 0x1a);	// length of table
+			int10.rom.used += 2;
+			phys_writed(rom_base + int10.rom.used, int10.rom.video_dcc_table);
+			int10.rom.used += 4;
+			phys_writed(rom_base + int10.rom.used, 0);		// alphanumeric charset override
+			int10.rom.used += 4;
+			phys_writed(rom_base + int10.rom.used, 0);		// user palette table
+			int10.rom.used += 4;
+			phys_writed(rom_base + int10.rom.used, 0);		int10.rom.used += 4;
+			phys_writed(rom_base + int10.rom.used, 0);		int10.rom.used += 4;
+			phys_writed(rom_base + int10.rom.used, 0);		int10.rom.used += 4;
 		}
 
-		int10.rom.video_save_pointers=RealMake(0xC000,int10.rom.used);
-		phys_writed(rom_base+int10.rom.used,int10.rom.video_parameter_table);
-		int10.rom.used+=4;
-		phys_writed(rom_base+int10.rom.used,0);		// dynamic save area pointer
-		int10.rom.used+=4;
-		phys_writed(rom_base+int10.rom.used,0);		// alphanumeric character set override
-		int10.rom.used+=4;
-		phys_writed(rom_base+int10.rom.used,0);		// graphics character set override
-		int10.rom.used+=4;
+		int10.rom.video_save_pointers = RealMake(0xC000, int10.rom.used);
+		phys_writed(rom_base + int10.rom.used, int10.rom.video_parameter_table);
+		int10.rom.used += 4;
+		phys_writed(rom_base + int10.rom.used, 0);		// dynamic save area pointer
+		int10.rom.used += 4;
+		phys_writed(rom_base + int10.rom.used, 0);		// alphanumeric character set override
+		int10.rom.used += 4;
+		phys_writed(rom_base + int10.rom.used, 0);		// graphics character set override
+		int10.rom.used += 4;
 		if (IS_VGA_ARCH) {
-			phys_writed(rom_base+int10.rom.used,int10.rom.video_save_pointer_table);
+			phys_writed(rom_base + int10.rom.used, int10.rom.video_save_pointer_table);
 		} else {
-			phys_writed(rom_base+int10.rom.used,0);		// secondary save pointer table
+			phys_writed(rom_base + int10.rom.used, 0);		// secondary save pointer table
 		}
-		int10.rom.used+=4;
-		phys_writed(rom_base+int10.rom.used,0);		int10.rom.used+=4;
-		phys_writed(rom_base+int10.rom.used,0);		int10.rom.used+=4;
+		int10.rom.used += 4;
+		phys_writed(rom_base + int10.rom.used, 0);		int10.rom.used += 4;
+		phys_writed(rom_base + int10.rom.used, 0);		int10.rom.used += 4;
 	}
 
 	INT10_SetupBasicVideoParameterTable();
 	INT10_SetupRomMemoryChecksum();
 
 	if (IS_TANDY_ARCH) {
-		RealSetVec(0x44,RealMake(0xf000,0xfa6e));
+		RealSetVec(0x44, RealMake(0xf000, 0xfa6e));
 	}
 }
 
 void INT10_ReloadRomFonts(void) {
 	// 16x8 font
-	PhysPt font16pt=Real2Phys(int10.rom.font_16);
-	for (Bitu i=0;i<256*16;i++) {
-		phys_writeb(font16pt+i,int10_font_16[i]);
+	PhysPt font16pt = Real2Phys(int10.rom.font_16);
+	for (Bitu i = 0; i < 256 * 16; i++) {
+		phys_writeb(font16pt + i, int10_font_16[i]);
 	}
-	phys_writeb(Real2Phys(int10.rom.font_16_alternate),0x1d);
+	phys_writeb(Real2Phys(int10.rom.font_16_alternate), 0x1d);
 	// 14x8 font
-	PhysPt font14pt=Real2Phys(int10.rom.font_14);
-	for (Bitu i=0;i<256*14;i++) {
-		phys_writeb(font14pt+i,int10_font_14[i]);
+	PhysPt font14pt = Real2Phys(int10.rom.font_14);
+	for (Bitu i = 0; i < 256 * 14; i++) {
+		phys_writeb(font14pt + i, int10_font_14[i]);
 	}
-	phys_writeb(Real2Phys(int10.rom.font_14_alternate),0x1d);
+	phys_writeb(Real2Phys(int10.rom.font_14_alternate), 0x1d);
 	// 8x8 fonts
-	PhysPt font8pt=Real2Phys(int10.rom.font_8_first);
-	for (Bitu i=0;i<128*8;i++) {
-		phys_writeb(font8pt+i,int10_font_08[i]);
+	PhysPt font8pt = Real2Phys(int10.rom.font_8_first);
+	for (Bitu i = 0; i < 128 * 8; i++) {
+		phys_writeb(font8pt + i, int10_font_08[i]);
 	}
-	font8pt=Real2Phys(int10.rom.font_8_second);
-	for (Bitu i=0;i<128*8;i++) {
-		phys_writeb(font8pt+i,int10_font_08[i+128*8]);
+	font8pt = Real2Phys(int10.rom.font_8_second);
+	for (Bitu i = 0; i < 128 * 8; i++) {
+		phys_writeb(font8pt + i, int10_font_08[i + 128 * 8]);
 	}
 	INT10_SetupRomMemoryChecksum();
 }
@@ -275,12 +275,12 @@ void INT10_SetupRomMemoryChecksum(void) {
 	if (IS_EGAVGA_ARCH) { //EGA/VGA. Just to be safe
 		/* Sum of all bytes in rom module 256 should be 0 */
 		Bit8u sum = 0;
-		PhysPt rom_base = PhysMake(0xc000,0);
-		Bitu last_rombyte = 32*1024 - 1;		//32 KB romsize
-		for (Bitu i = 0;i < last_rombyte;i++)
+		PhysPt rom_base = PhysMake(0xc000, 0);
+		Bitu last_rombyte = 32 * 1024 - 1;		//32 KB romsize
+		for (Bitu i = 0; i < last_rombyte; i++)
 			sum += phys_readb(rom_base + i);	//OVERFLOW IS OKAY
-		sum = (Bit8u)((256 - (Bitu)sum)&0xff);
-		phys_writeb(rom_base + last_rombyte,sum);
+		sum = (Bit8u)((256 - (Bitu)sum) & 0xff);
+		phys_writeb(rom_base + last_rombyte, sum);
 	}
 }
 
