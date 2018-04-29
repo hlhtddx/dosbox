@@ -22,7 +22,7 @@
 
 #include "serialport.h"
 
-//#define CHECKIT_TESTPLUG
+ //#define CHECKIT_TESTPLUG
 
 class CSerialDummy : public CSerial {
 public:

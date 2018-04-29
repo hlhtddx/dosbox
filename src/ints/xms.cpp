@@ -82,7 +82,7 @@ struct XMS_Block {
 };
 
 #pragma pack(1)
-struct XMS_MemMove{
+struct XMS_MemMove {
 	Bit32u length;
 	Bit16u src_handle;
 	union {
@@ -100,14 +100,14 @@ struct XMS_MemMove{
 
 
 Bitu XMS_EnableA20(bool enable) {
-	Bit8u val = IO_Read	(0x92);
-	if (enable) IO_Write(0x92,val | 2);
-	else		IO_Write(0x92,val & ~2);
+	Bit8u val = IO_Read(0x92);
+	if (enable) IO_Write(0x92, val | 2);
+	else		IO_Write(0x92, val & ~2);
 	return 0;
 }
 
 Bitu XMS_GetEnabledA20(void) {
-	return (IO_Read(0x92)&2)>0;
+	return (IO_Read(0x92) & 2) > 0;
 }
 
 static RealPt xms_callback;
@@ -116,103 +116,103 @@ static bool umb_available;
 static XMS_Block xms_handles[XMS_HANDLES];
 
 static inline bool InvalidHandle(Bitu handle) {
-	return (!handle || (handle>=XMS_HANDLES) || xms_handles[handle].free);
+	return (!handle || (handle >= XMS_HANDLES) || xms_handles[handle].free);
 }
 
 Bitu XMS_QueryFreeMemory(Bit16u& largestFree, Bit16u& totalFree) {
 	/* Scan the tree for free memory and find largest free block */
-	totalFree=(Bit16u)(MEM_FreeTotal()*4);
-	largestFree=(Bit16u)(MEM_FreeLargest()*4);
+	totalFree = (Bit16u)(MEM_FreeTotal() * 4);
+	largestFree = (Bit16u)(MEM_FreeLargest() * 4);
 	if (!totalFree) return XMS_OUT_OF_SPACE;
 	return 0;
 }
 
 Bitu XMS_AllocateMemory(Bitu size, Bit16u& handle) {	// size = kb
 	/* Find free handle */
-	Bit16u index=1;
+	Bit16u index = 1;
 	while (!xms_handles[index].free) {
-		if (++index>=XMS_HANDLES) return XMS_OUT_OF_HANDLES;
+		if (++index >= XMS_HANDLES) return XMS_OUT_OF_HANDLES;
 	}
 	MemHandle mem;
-	if (size!=0) {
-		Bitu pages=(size/4) + ((size & 3) ? 1 : 0);
-		mem=MEM_AllocatePages(pages,true);
+	if (size != 0) {
+		Bitu pages = (size / 4) + ((size & 3) ? 1 : 0);
+		mem = MEM_AllocatePages(pages, true);
 		if (!mem) return XMS_OUT_OF_SPACE;
 	} else {
-		mem=MEM_GetNextFreePage();
-		if (mem==0) LOG(LOG_MISC,LOG_ERROR)("XMS:Allocate zero pages with no memory left");
+		mem = MEM_GetNextFreePage();
+		if (mem == 0) LOG(LOG_MISC, LOG_ERROR)("XMS:Allocate zero pages with no memory left");
 	}
-	xms_handles[index].free=false;
-	xms_handles[index].mem=mem;
-	xms_handles[index].locked=0;
-	xms_handles[index].size=size;
-	handle=index;
+	xms_handles[index].free = false;
+	xms_handles[index].mem = mem;
+	xms_handles[index].locked = 0;
+	xms_handles[index].size = size;
+	handle = index;
 	return 0;
 }
 
 Bitu XMS_FreeMemory(Bitu handle) {
 	if (InvalidHandle(handle)) return XMS_INVALID_HANDLE;
 	MEM_ReleasePages(xms_handles[handle].mem);
-	xms_handles[handle].mem=-1;
-	xms_handles[handle].size=0;
-	xms_handles[handle].free=true;
+	xms_handles[handle].mem = -1;
+	xms_handles[handle].size = 0;
+	xms_handles[handle].free = true;
 	return 0;
 }
 
 Bitu XMS_MoveMemory(PhysPt bpt) {
 	/* Read the block with mem_read's */
-	Bitu length=mem_readd(bpt+offsetof(XMS_MemMove,length));
-	Bitu src_handle=mem_readw(bpt+offsetof(XMS_MemMove,src_handle));
+	Bitu length = mem_readd(bpt + offsetof(XMS_MemMove, length));
+	Bitu src_handle = mem_readw(bpt + offsetof(XMS_MemMove, src_handle));
 	union {
 		RealPt realpt;
 		Bit32u offset;
-	} src,dest;
-	src.offset=mem_readd(bpt+offsetof(XMS_MemMove,src.offset));
-	Bitu dest_handle=mem_readw(bpt+offsetof(XMS_MemMove,dest_handle));
-	dest.offset=mem_readd(bpt+offsetof(XMS_MemMove,dest.offset));
-	PhysPt srcpt,destpt;
+	} src, dest;
+	src.offset = mem_readd(bpt + offsetof(XMS_MemMove, src.offset));
+	Bitu dest_handle = mem_readw(bpt + offsetof(XMS_MemMove, dest_handle));
+	dest.offset = mem_readd(bpt + offsetof(XMS_MemMove, dest.offset));
+	PhysPt srcpt, destpt;
 	if (src_handle) {
 		if (InvalidHandle(src_handle)) {
 			return XMS_INVALID_SOURCE_HANDLE;
 		}
-		if (src.offset>=(xms_handles[src_handle].size*1024U)) {
+		if (src.offset >= (xms_handles[src_handle].size * 1024U)) {
 			return XMS_INVALID_SOURCE_OFFSET;
 		}
-		if (length>xms_handles[src_handle].size*1024U-src.offset) {
+		if (length > xms_handles[src_handle].size * 1024U - src.offset) {
 			return XMS_INVALID_LENGTH;
 		}
-		srcpt=(xms_handles[src_handle].mem*4096)+src.offset;
+		srcpt = (xms_handles[src_handle].mem * 4096) + src.offset;
 	} else {
-		srcpt=Real2Phys(src.realpt);
+		srcpt = Real2Phys(src.realpt);
 	}
 	if (dest_handle) {
 		if (InvalidHandle(dest_handle)) {
 			return XMS_INVALID_DEST_HANDLE;
 		}
-		if (dest.offset>=(xms_handles[dest_handle].size*1024U)) {
+		if (dest.offset >= (xms_handles[dest_handle].size * 1024U)) {
 			return XMS_INVALID_DEST_OFFSET;
 		}
-		if (length>xms_handles[dest_handle].size*1024U-dest.offset) {
+		if (length > xms_handles[dest_handle].size * 1024U - dest.offset) {
 			return XMS_INVALID_LENGTH;
 		}
-		destpt=(xms_handles[dest_handle].mem*4096)+dest.offset;
+		destpt = (xms_handles[dest_handle].mem * 4096) + dest.offset;
 	} else {
-		destpt=Real2Phys(dest.realpt);
+		destpt = Real2Phys(dest.realpt);
 	}
-//	LOG_MSG("XMS move src %X dest %X length %X",srcpt,destpt,length);
-	mem_memcpy(destpt,srcpt,length);
+	//	LOG_MSG("XMS move src %X dest %X length %X",srcpt,destpt,length);
+	mem_memcpy(destpt, srcpt, length);
 	return 0;
 }
 
 Bitu XMS_LockMemory(Bitu handle, Bit32u& address) {
 	if (InvalidHandle(handle)) return XMS_INVALID_HANDLE;
-	if (xms_handles[handle].locked<255) xms_handles[handle].locked++;
-	address = xms_handles[handle].mem*4096;
+	if (xms_handles[handle].locked < 255) xms_handles[handle].locked++;
+	address = xms_handles[handle].mem * 4096;
 	return 0;
 }
 
 Bitu XMS_UnlockMemory(Bitu handle) {
- 	if (InvalidHandle(handle)) return XMS_INVALID_HANDLE;
+	if (InvalidHandle(handle)) return XMS_INVALID_HANDLE;
 	if (xms_handles[handle].locked) {
 		xms_handles[handle].locked--;
 		return 0;
@@ -224,20 +224,20 @@ Bitu XMS_GetHandleInformation(Bitu handle, Bit8u& lockCount, Bit8u& numFree, Bit
 	if (InvalidHandle(handle)) return XMS_INVALID_HANDLE;
 	lockCount = xms_handles[handle].locked;
 	/* Find available blocks */
-	numFree=0;
-	for (Bitu i=1;i<XMS_HANDLES;i++) {
+	numFree = 0;
+	for (Bitu i = 1; i < XMS_HANDLES; i++) {
 		if (xms_handles[i].free) numFree++;
 	}
-	size=(Bit16u)(xms_handles[handle].size);
+	size = (Bit16u)(xms_handles[handle].size);
 	return 0;
 }
 
 Bitu XMS_ResizeMemory(Bitu handle, Bitu newSize) {
-	if (InvalidHandle(handle)) return XMS_INVALID_HANDLE;	
+	if (InvalidHandle(handle)) return XMS_INVALID_HANDLE;
 	// Block has to be unlocked
-	if (xms_handles[handle].locked>0) return XMS_BLOCK_LOCKED;
-	Bitu pages=newSize/4 + ((newSize & 3) ? 1 : 0);
-	if (MEM_ReAllocatePages(xms_handles[handle].mem,pages,true)) {
+	if (xms_handles[handle].locked > 0) return XMS_BLOCK_LOCKED;
+	Bitu pages = newSize / 4 + ((newSize & 3) ? 1 : 0);
+	if (MEM_ReAllocatePages(xms_handles[handle].mem, pages, true)) {
 		xms_handles[handle].size = newSize;
 		return 0;
 	} else return XMS_OUT_OF_SPACE;
@@ -246,39 +246,39 @@ Bitu XMS_ResizeMemory(Bitu handle, Bitu newSize) {
 static bool multiplex_xms(void) {
 	switch (reg_ax) {
 	case 0x4300:					/* XMS installed check */
-			reg_al=0x80;
-			return true;
+		reg_al = 0x80;
+		return true;
 	case 0x4310:					/* XMS handler seg:offset */
-			SegSet16(es,RealSeg(xms_callback));
-			reg_bx=RealOff(xms_callback);
-			return true;			
+		SegSet16(es, RealSeg(xms_callback));
+		reg_bx = RealOff(xms_callback);
+		return true;
 	}
 	return false;
 
 }
 
-inline void SET_RESULT(Bitu res,bool touch_bl_on_succes=true) {
-	if(touch_bl_on_succes || res) reg_bl = (Bit8u)res;
-	reg_ax = (res==0);
+inline void SET_RESULT(Bitu res, bool touch_bl_on_succes = true) {
+	if (touch_bl_on_succes || res) reg_bl = (Bit8u)res;
+	reg_ax = (res == 0);
 }
 
 Bitu XMS_Handler(void) {
-//	LOG(LOG_MISC,LOG_ERROR)("XMS: CALL %02X",reg_ah);
+	//	LOG(LOG_MISC,LOG_ERROR)("XMS: CALL %02X",reg_ah);
 	switch (reg_ah) {
 	case XMS_GET_VERSION:										/* 00 */
-		reg_ax=XMS_VERSION;
-		reg_bx=XMS_DRIVER_VERSION;
-		reg_dx=0;	/* No we don't have HMA */
+		reg_ax = XMS_VERSION;
+		reg_bx = XMS_DRIVER_VERSION;
+		reg_dx = 0;	/* No we don't have HMA */
 		break;
 	case XMS_ALLOCATE_HIGH_MEMORY:								/* 01 */
-		reg_ax=0;
-		reg_bl=HIGH_MEMORY_NOT_EXIST;
+		reg_ax = 0;
+		reg_bl = HIGH_MEMORY_NOT_EXIST;
 		break;
 	case XMS_FREE_HIGH_MEMORY:									/* 02 */
-		reg_ax=0;
-		reg_bl=HIGH_MEMORY_NOT_EXIST;
+		reg_ax = 0;
+		reg_bl = HIGH_MEMORY_NOT_EXIST;
 		break;
-		
+
 	case XMS_GLOBAL_ENABLE_A20:									/* 03 */
 	case XMS_LOCAL_ENABLE_A20:									/* 05 */
 		SET_RESULT(XMS_EnableA20(true));
@@ -286,174 +286,174 @@ Bitu XMS_Handler(void) {
 	case XMS_GLOBAL_DISABLE_A20:								/* 04 */
 	case XMS_LOCAL_DISABLE_A20:									/* 06 */
 		SET_RESULT(XMS_EnableA20(false));
-		break;	
+		break;
 	case XMS_QUERY_A20:											/* 07 */
 		reg_ax = XMS_GetEnabledA20();
 		reg_bl = 0;
 		break;
 	case XMS_QUERY_FREE_EXTENDED_MEMORY:						/* 08 */
-		reg_bl = XMS_QueryFreeMemory(reg_ax,reg_dx);
+		reg_bl = XMS_QueryFreeMemory(reg_ax, reg_dx);
 		break;
 	case XMS_ALLOCATE_ANY_MEMORY:								/* 89 */
 		reg_edx &= 0xffff;
 		// fall through
 	case XMS_ALLOCATE_EXTENDED_MEMORY:							/* 09 */
-		{
+	{
 		Bit16u handle = 0;
-		SET_RESULT(XMS_AllocateMemory(reg_dx,handle));
+		SET_RESULT(XMS_AllocateMemory(reg_dx, handle));
 		reg_dx = handle;
-		}; break;
+	}; break;
 	case XMS_FREE_EXTENDED_MEMORY:								/* 0a */
 		SET_RESULT(XMS_FreeMemory(reg_dx));
 		break;
 	case XMS_MOVE_EXTENDED_MEMORY_BLOCK:						/* 0b */
-		SET_RESULT(XMS_MoveMemory(SegPhys(ds)+reg_si),false);
+		SET_RESULT(XMS_MoveMemory(SegPhys(ds) + reg_si), false);
 		break;
 	case XMS_LOCK_EXTENDED_MEMORY_BLOCK: {						/* 0c */
 		Bit32u address;
 		Bitu res = XMS_LockMemory(reg_dx, address);
-		if(res) reg_bl = (Bit8u)res;
-		reg_ax = (res==0);
-		if (res==0) { // success
-			reg_bx=(Bit16u)(address & 0xFFFF);
-			reg_dx=(Bit16u)(address >> 16);
+		if (res) reg_bl = (Bit8u)res;
+		reg_ax = (res == 0);
+		if (res == 0) { // success
+			reg_bx = (Bit16u)(address & 0xFFFF);
+			reg_dx = (Bit16u)(address >> 16);
 		};
-		}; break;
+	}; break;
 	case XMS_UNLOCK_EXTENDED_MEMORY_BLOCK:						/* 0d */
 		SET_RESULT(XMS_UnlockMemory(reg_dx));
 		break;
 	case XMS_GET_EMB_HANDLE_INFORMATION:  						/* 0e */
-		SET_RESULT(XMS_GetHandleInformation(reg_dx,reg_bh,reg_bl,reg_dx),false);
+		SET_RESULT(XMS_GetHandleInformation(reg_dx, reg_bh, reg_bl, reg_dx), false);
 		break;
 	case XMS_RESIZE_ANY_EXTENDED_MEMORY_BLOCK:					/* 0x8f */
-		if(reg_ebx > reg_bx) LOG_MSG("64MB memory limit!");
+		if (reg_ebx > reg_bx) LOG_MSG("64MB memory limit!");
 		//fall through
 	case XMS_RESIZE_EXTENDED_MEMORY_BLOCK:						/* 0f */
 		SET_RESULT(XMS_ResizeMemory(reg_dx, reg_bx));
 		break;
 	case XMS_ALLOCATE_UMB: {									/* 10 */
 		if (!umb_available) {
-			reg_ax=0;
-			reg_bl=XMS_FUNCTION_NOT_IMPLEMENTED;
+			reg_ax = 0;
+			reg_bl = XMS_FUNCTION_NOT_IMPLEMENTED;
 			break;
 		}
-		Bit16u umb_start=dos_infoblock.GetStartOfUMBChain();
-		if (umb_start==0xffff) {
-			reg_ax=0;
-			reg_bl=UMB_NO_BLOCKS_AVAILABLE;
-			reg_dx=0;	// no upper memory available
+		Bit16u umb_start = dos_infoblock.GetStartOfUMBChain();
+		if (umb_start == 0xffff) {
+			reg_ax = 0;
+			reg_bl = UMB_NO_BLOCKS_AVAILABLE;
+			reg_dx = 0;	// no upper memory available
 			break;
 		}
 		/* Save status and linkage of upper UMB chain and link upper
 		   memory to the regular MCB chain */
-		Bit8u umb_flag=dos_infoblock.GetUMBChainState();
-		if ((umb_flag&1)==0) DOS_LinkUMBsToMemChain(1);
-		Bit8u old_memstrat=DOS_GetMemAllocStrategy()&0xff;
+		Bit8u umb_flag = dos_infoblock.GetUMBChainState();
+		if ((umb_flag & 1) == 0) DOS_LinkUMBsToMemChain(1);
+		Bit8u old_memstrat = DOS_GetMemAllocStrategy() & 0xff;
 		DOS_SetMemAllocStrategy(0x40);	// search in UMBs only
 
-		Bit16u size=reg_dx;Bit16u seg;
-		if (DOS_AllocateMemory(&seg,&size)) {
-			reg_ax=1;
-			reg_bx=seg;
+		Bit16u size = reg_dx; Bit16u seg;
+		if (DOS_AllocateMemory(&seg, &size)) {
+			reg_ax = 1;
+			reg_bx = seg;
 		} else {
-			reg_ax=0;
-			if (size==0) reg_bl=UMB_NO_BLOCKS_AVAILABLE;
-			else reg_bl=UMB_ONLY_SMALLER_BLOCK;
-			reg_dx=size;	// size of largest available UMB
+			reg_ax = 0;
+			if (size == 0) reg_bl = UMB_NO_BLOCKS_AVAILABLE;
+			else reg_bl = UMB_ONLY_SMALLER_BLOCK;
+			reg_dx = size;	// size of largest available UMB
 		}
 
 		/* Restore status and linkage of upper UMB chain */
-		Bit8u current_umb_flag=dos_infoblock.GetUMBChainState();
-		if ((current_umb_flag&1)!=(umb_flag&1)) DOS_LinkUMBsToMemChain(umb_flag);
+		Bit8u current_umb_flag = dos_infoblock.GetUMBChainState();
+		if ((current_umb_flag & 1) != (umb_flag & 1)) DOS_LinkUMBsToMemChain(umb_flag);
 		DOS_SetMemAllocStrategy(old_memstrat);
-		}
-		break;
+	}
+						   break;
 	case XMS_DEALLOCATE_UMB:									/* 11 */
 		if (!umb_available) {
-			reg_ax=0;
-			reg_bl=XMS_FUNCTION_NOT_IMPLEMENTED;
+			reg_ax = 0;
+			reg_bl = XMS_FUNCTION_NOT_IMPLEMENTED;
 			break;
 		}
-		if (dos_infoblock.GetStartOfUMBChain()!=0xffff) {
+		if (dos_infoblock.GetStartOfUMBChain() != 0xffff) {
 			if (DOS_FreeMemory(reg_dx)) {
-				reg_ax=0x0001;
+				reg_ax = 0x0001;
 				break;
 			}
 		}
-		reg_ax=0x0000;
-		reg_bl=UMB_NO_BLOCKS_AVAILABLE;
+		reg_ax = 0x0000;
+		reg_bl = UMB_NO_BLOCKS_AVAILABLE;
 		break;
 	case XMS_QUERY_ANY_FREE_MEMORY:								/* 88 */
-		reg_bl = XMS_QueryFreeMemory(reg_ax,reg_dx);
+		reg_bl = XMS_QueryFreeMemory(reg_ax, reg_dx);
 		reg_eax &= 0xffff;
 		reg_edx &= 0xffff;
-		reg_ecx = (MEM_TotalPages()*MEM_PAGESIZE)-1;			// highest known physical memory address
+		reg_ecx = (MEM_TotalPages()*MEM_PAGESIZE) - 1;			// highest known physical memory address
 		break;
 	case XMS_GET_EMB_HANDLE_INFORMATION_EXT: {					/* 8e */
 		Bit8u free_handles;
-		Bitu result = XMS_GetHandleInformation(reg_dx,reg_bh,free_handles,reg_dx);
+		Bitu result = XMS_GetHandleInformation(reg_dx, reg_bh, free_handles, reg_dx);
 		if (result != 0) reg_bl = result;
 		else {
 			reg_edx &= 0xffff;
 			reg_cx = free_handles;
 		}
-		reg_ax = (result==0);
-		} break;
+		reg_ax = (result == 0);
+	} break;
 	default:
-		LOG(LOG_MISC,LOG_ERROR)("XMS: unknown function %02X",reg_ah);
-		reg_ax=0;
-		reg_bl=XMS_FUNCTION_NOT_IMPLEMENTED;
+		LOG(LOG_MISC, LOG_ERROR)("XMS: unknown function %02X", reg_ah);
+		reg_ax = 0;
+		reg_bl = XMS_FUNCTION_NOT_IMPLEMENTED;
 	}
-//	LOG(LOG_MISC,LOG_ERROR)("XMS: CALL Result: %02X",reg_bl);
+	//	LOG(LOG_MISC,LOG_ERROR)("XMS: CALL Result: %02X",reg_bl);
 	return CBRET_NONE;
 }
 
 Bitu GetEMSType(Section_prop * section);
 
-class XMS: public Module_base {
+class XMS : public Module_base {
 private:
 	CALLBACK_HandlerObject callbackhandler;
 public:
-	XMS(Section* configuration):Module_base(configuration){
-		Section_prop * section=static_cast<Section_prop *>(configuration);
-		umb_available=false;
+	XMS(Section* configuration) :Module_base(configuration) {
+		Section_prop * section = static_cast<Section_prop *>(configuration);
+		umb_available = false;
 		if (!section->Get_bool("xms")) return;
 		Bitu i;
 		BIOS_ZeroExtendedSize(true);
 		DOS_AddMultiplexHandler(multiplex_xms);
 
 		/* place hookable callback in writable memory area */
-		xms_callback=RealMake(DOS_GetMemory(0x1)-1,0x10);
-		callbackhandler.Install(&XMS_Handler,CB_HOOKABLE,Real2Phys(xms_callback),"XMS Handler");
+		xms_callback = RealMake(DOS_GetMemory(0x1) - 1, 0x10);
+		callbackhandler.Install(&XMS_Handler, CB_HOOKABLE, Real2Phys(xms_callback), "XMS Handler");
 		// pseudocode for CB_HOOKABLE:
 		//	jump near skip
 		//	nop,nop,nop
 		//	label skip:
 		//	callback XMS_Handler
 		//	retf
-	   
-		for (i=0;i<XMS_HANDLES;i++) {
-			xms_handles[i].free=true;
-			xms_handles[i].mem=-1;
-			xms_handles[i].size=0;
-			xms_handles[i].locked=0;
+
+		for (i = 0; i < XMS_HANDLES; i++) {
+			xms_handles[i].free = true;
+			xms_handles[i].mem = -1;
+			xms_handles[i].size = 0;
+			xms_handles[i].locked = 0;
 		}
 		/* Disable the 0 handle */
-		xms_handles[0].free	= false;
+		xms_handles[0].free = false;
 
 		/* Set up UMB chain */
-		umb_available=section->Get_bool("umb");
-		bool ems_available = GetEMSType(section)>0;
-		DOS_BuildUMBChain(section->Get_bool("umb"),ems_available);
+		umb_available = section->Get_bool("umb");
+		bool ems_available = GetEMSType(section) > 0;
+		DOS_BuildUMBChain(section->Get_bool("umb"), ems_available);
 	}
 
-	~XMS(){
+	~XMS() {
 		Section_prop * section = static_cast<Section_prop *>(m_configuration);
 		/* Remove upper memory information */
 		dos_infoblock.SetStartOfUMBChain(0xffff);
 		if (umb_available) {
 			dos_infoblock.SetUMBChainState(0);
-			umb_available=false;
+			umb_available = false;
 		}
 
 		if (!section->Get_bool("xms")) return;
@@ -464,18 +464,18 @@ public:
 		DOS_DelMultiplexHandler(multiplex_xms);
 
 		/* Free used memory while skipping the 0 handle */
-		for (Bitu i = 1;i<XMS_HANDLES;i++) 
-			if(!xms_handles[i].free) XMS_FreeMemory(i);
+		for (Bitu i = 1; i < XMS_HANDLES; i++)
+			if (!xms_handles[i].free) XMS_FreeMemory(i);
 	}
 
 };
 static XMS* test;
 
 void XMS_ShutDown(Section* /*sec*/) {
-	delete test;	
+	delete test;
 }
 
 void XMS_Init(Section* sec) {
 	test = new XMS(sec);
-	sec->AddDestroyFunction(&XMS_ShutDown,true);
+	sec->AddDestroyFunction(&XMS_ShutDown, true);
 }

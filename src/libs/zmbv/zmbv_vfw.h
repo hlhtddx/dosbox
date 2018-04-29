@@ -26,34 +26,34 @@ class CodecInst {
 private:
 	VideoCodec * codec;
 public:
-  CodecInst();
-  ~CodecInst();
+	CodecInst();
+	~CodecInst();
 
-  BOOL QueryAbout();
-  DWORD About(HWND hwnd);
+	BOOL QueryAbout();
+	DWORD About(HWND hwnd);
 
-  BOOL QueryConfigure();
-  DWORD Configure(HWND hwnd);
+	BOOL QueryConfigure();
+	DWORD Configure(HWND hwnd);
 
-  DWORD GetState(LPVOID pv, DWORD dwSize);
-  DWORD SetState(LPVOID pv, DWORD dwSize);
+	DWORD GetState(LPVOID pv, DWORD dwSize);
+	DWORD SetState(LPVOID pv, DWORD dwSize);
 
-  DWORD GetInfo(ICINFO* icinfo, DWORD dwSize);
+	DWORD GetInfo(ICINFO* icinfo, DWORD dwSize);
 
-  DWORD CompressQuery(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
-  DWORD CompressGetFormat(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
-  DWORD CompressBegin(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
-  DWORD CompressGetSize(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
-  DWORD Compress(ICCOMPRESS* icinfo, DWORD dwSize);
-  DWORD CompressEnd();
+	DWORD CompressQuery(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
+	DWORD CompressGetFormat(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
+	DWORD CompressBegin(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
+	DWORD CompressGetSize(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
+	DWORD Compress(ICCOMPRESS* icinfo, DWORD dwSize);
+	DWORD CompressEnd();
 
-  DWORD DecompressQuery(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
-  DWORD DecompressGetFormat(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
-  DWORD DecompressBegin(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
-  
-  DWORD Decompress(ICDECOMPRESS* icinfo, DWORD dwSize);
-  DWORD DecompressGetPalette(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
-  DWORD DecompressEnd();
+	DWORD DecompressQuery(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
+	DWORD DecompressGetFormat(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
+	DWORD DecompressBegin(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
+
+	DWORD Decompress(ICDECOMPRESS* icinfo, DWORD dwSize);
+	DWORD DecompressGetPalette(LPBITMAPINFOHEADER lpbiIn, LPBITMAPINFOHEADER lpbiOut);
+	DWORD DecompressEnd();
 };
 
 CodecInst* Open(ICOPEN* icinfo);

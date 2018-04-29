@@ -60,10 +60,10 @@
 #define ftruncate(blah,blah2) chsize(blah,blah2)
 #endif
 
-//Solaris maybe others
+ //Solaris maybe others
 #if defined (DB_HAVE_NO_POWF)
 #include <math.h>
-static inline float powf (float x, float y) { return (float) pow (x,y); }
+static inline float powf(float x, float y) { return (float)pow(x, y); }
 #endif
 
 class Cross {
@@ -84,7 +84,7 @@ public:
 
 typedef struct dir_struct {
 	HANDLE          handle;
-	char            base_path[MAX_PATH+4];
+	char            base_path[MAX_PATH + 4];
 	WIN32_FIND_DATA search_data;
 } dir_information;
 
@@ -93,7 +93,7 @@ typedef struct dir_struct {
 //#include <sys/types.h> //Included above
 #include <dirent.h>
 
-typedef struct dir_struct { 
+typedef struct dir_struct {
 	DIR*  dir;
 	char base_path[CROSS_LEN];
 } dir_information;

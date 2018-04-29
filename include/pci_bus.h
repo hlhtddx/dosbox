@@ -19,7 +19,7 @@
 #ifndef DOSBOX_PCI_H
 #define DOSBOX_PCI_H
 
-//#define PCI_FUNCTIONALITY_ENABLED 0
+ //#define PCI_FUNCTIONALITY_ENABLED 0
 
 #if defined PCI_FUNCTIONALITY_ENABLED
 
@@ -35,7 +35,7 @@ private:
 	// subdevices declarations, they will respond to pci functions 1 to 7
 	// (main device is attached to function 0)
 	Bitu num_subdevices;
-	PCI_Device* subdevices[PCI_MAX_PCIFUNCTIONS-1];
+	PCI_Device* subdevices[PCI_MAX_PCIFUNCTIONS - 1];
 
 public:
 	PCI_Device(Bit16u vendor, Bit16u device);
@@ -61,19 +61,19 @@ public:
 	PCI_Device* GetSubdevice(Bits subfct);
 
 	Bit16u NumSubdevices(void) {
-		if (num_subdevices>PCI_MAX_PCIFUNCTIONS-1) return (Bit16u)(PCI_MAX_PCIFUNCTIONS-1);
+		if (num_subdevices > PCI_MAX_PCIFUNCTIONS - 1) return (Bit16u)(PCI_MAX_PCIFUNCTIONS - 1);
 		return (Bit16u)num_subdevices;
 	}
 
 	Bits GetNextSubdeviceNumber(void) {
-		if (num_subdevices>=PCI_MAX_PCIFUNCTIONS-1) return -1;
-		return (Bits)num_subdevices+1;
+		if (num_subdevices >= PCI_MAX_PCIFUNCTIONS - 1) return -1;
+		return (Bits)num_subdevices + 1;
 	}
 
-	virtual Bits ParseReadRegister(Bit8u regnum)=0;
-	virtual bool OverrideReadRegister(Bit8u regnum, Bit8u* rval, Bit8u* rval_mask)=0;
-	virtual Bits ParseWriteRegister(Bit8u regnum,Bit8u value)=0;
-	virtual bool InitializeRegisters(Bit8u registers[256])=0;
+	virtual Bits ParseReadRegister(Bit8u regnum) = 0;
+	virtual bool OverrideReadRegister(Bit8u regnum, Bit8u* rval, Bit8u* rval_mask) = 0;
+	virtual Bits ParseWriteRegister(Bit8u regnum, Bit8u value) = 0;
+	virtual bool InitializeRegisters(Bit8u registers[256]) = 0;
 
 };
 

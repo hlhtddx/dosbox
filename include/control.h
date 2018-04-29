@@ -50,7 +50,7 @@
 
 
 
-class Config{
+class Config {
 public:
 	CommandLine * cmdline;
 private:
@@ -59,27 +59,27 @@ private:
 	typedef std::list<Section*>::reverse_iterator reverse_it;
 	typedef std::list<Section*>::const_iterator const_it;
 	typedef std::list<Section*>::const_reverse_iterator const_reverse_it;
-	void (* _start_function)(void);
+	void(*_start_function)(void);
 	bool secure_mode; //Sandbox mode
 public:
 	bool initialised;
 	std::vector<std::string> startup_params;
 	std::vector<std::string> configfiles;
-	Config(CommandLine * cmd):cmdline(cmd),secure_mode(false) {
+	Config(CommandLine * cmd) :cmdline(cmd), secure_mode(false) {
 		startup_params.push_back(cmdline->GetFileName());
 		cmdline->FillVector(startup_params);
-		initialised=false;
+		initialised = false;
 	}
 	~Config();
 
-	Section_line * AddSection_line(char const * const _name,void (*_initfunction)(Section*));
-	Section_prop * AddSection_prop(char const * const _name,void (*_initfunction)(Section*),bool canchange=false);
-	
+	Section_line * AddSection_line(char const * const _name, void(*_initfunction)(Section*));
+	Section_prop * AddSection_prop(char const * const _name, void(*_initfunction)(Section*), bool canchange = false);
+
 	Section* GetSection(int index);
 	Section* GetSection(std::string const&_sectionname) const;
 	Section* GetSectionFromProperty(char const * const prop) const;
 
-	void SetStartUp(void (*_function)(void));
+	void SetStartUp(void(*_function)(void));
 	void Init();
 	void ShutDown();
 	void StartUp();

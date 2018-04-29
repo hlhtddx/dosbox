@@ -28,7 +28,7 @@ enum DMAEvent {
 };
 
 class DmaChannel;
-typedef void (* DMA_CallBack)(DmaChannel * chan,DMAEvent event);
+typedef void(*DMA_CallBack)(DmaChannel * chan, DMAEvent event);
 
 class DmaChannel {
 public:
@@ -50,31 +50,31 @@ public:
 
 	DmaChannel(Bit8u num, bool dma16);
 	void DoCallBack(DMAEvent event) {
-		if (callback)	(*callback)(this,event);
+		if (callback)	(*callback)(this, event);
 	}
 	void SetMask(bool _mask) {
-		masked=_mask;
+		masked = _mask;
 		DoCallBack(masked ? DMA_MASKED : DMA_UNMASKED);
 	}
-	void Register_Callback(DMA_CallBack _cb) { 
-		callback = _cb; 
+	void Register_Callback(DMA_CallBack _cb) {
+		callback = _cb;
 		SetMask(masked);
 		if (callback) Raise_Request();
 		else Clear_Request();
 	}
 	void ReachedTC(void) {
-		tcount=true;
+		tcount = true;
 		DoCallBack(DMA_REACHED_TC);
 	}
 	void SetPage(Bit8u val) {
-		pagenum=val;
-		pagebase=(pagenum >> DMA16) << (16+DMA16);
+		pagenum = val;
+		pagebase = (pagenum >> DMA16) << (16 + DMA16);
 	}
 	void Raise_Request(void) {
-		request=true;
+		request = true;
 	}
 	void Clear_Request(void) {
-		request=false;
+		request = false;
 	}
 	Bitu Read(Bitu size, Bit8u * buffer);
 	Bitu Write(Bitu size, Bit8u * buffer);
@@ -91,21 +91,21 @@ public:
 	DmaController(Bit8u num) {
 		flipflop = false;
 		ctrlnum = num;		/* first or second DMA controller */
-		for(Bit8u i=0;i<4;i++) {
-			DmaChannels[i] = new DmaChannel(i+ctrlnum*4,ctrlnum==1);
+		for (Bit8u i = 0; i < 4; i++) {
+			DmaChannels[i] = new DmaChannel(i + ctrlnum * 4, ctrlnum == 1);
 		}
 	}
 	~DmaController(void) {
-		for(Bit8u i=0;i<4;i++) {
+		for (Bit8u i = 0; i < 4; i++) {
 			delete DmaChannels[i];
 		}
 	}
 	DmaChannel * GetChannel(Bit8u chan) {
-		if (chan<4) return DmaChannels[chan];
+		if (chan < 4) return DmaChannels[chan];
 		else return NULL;
 	}
-	void WriteControllerReg(Bitu reg,Bitu val,Bitu len);
-	Bitu ReadControllerReg(Bitu reg,Bitu len);
+	void WriteControllerReg(Bitu reg, Bitu val, Bitu len);
+	Bitu ReadControllerReg(Bitu reg, Bitu len);
 };
 
 DmaChannel * GetDMAChannel(Bit8u chan);

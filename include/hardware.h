@@ -24,7 +24,7 @@
 
 class Section;
 enum OPL_Mode {
-	OPL_none,OPL_cms,OPL_opl2,OPL_dualopl2,OPL_opl3,OPL_opl3gold
+	OPL_none, OPL_cms, OPL_opl2, OPL_dualopl2, OPL_opl3, OPL_opl3gold
 };
 #define CAPTURE_WAVE	0x01
 #define CAPTURE_OPL		0x02
@@ -34,7 +34,7 @@ enum OPL_Mode {
 
 extern Bitu CaptureState;
 
-void OPL_Init(Section* sec,OPL_Mode mode);
+void OPL_Init(Section* sec, OPL_Mode mode);
 void CMS_Init(Section* sec);
 void OPL_ShutDown(Section* sec);
 void CMS_ShutDown(Section* sec);
@@ -43,7 +43,7 @@ bool SB_Get_Address(Bitu& sbaddr, Bitu& sbirq, Bitu& sbdma);
 bool TS_Get_Address(Bitu& tsaddr, Bitu& tsirq, Bitu& tsdma);
 
 extern Bit8u adlib_commandreg;
-FILE * OpenCaptureFile(const char * type,const char * ext);
+FILE * OpenCaptureFile(const char * type, const char * ext);
 
 void CAPTURE_AddWave(Bit32u freq, Bit32u len, Bit16s * data);
 #define CAPTURE_FLAG_DBLW	0x1

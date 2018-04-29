@@ -26,7 +26,7 @@
 #define BIOS_ADDRESS_LPT1               0x408
 #define BIOS_ADDRESS_LPT2               0x40a
 #define BIOS_ADDRESS_LPT3               0x40c
-/* 0x40e is reserved */
+ /* 0x40e is reserved */
 #define BIOS_CONFIGURATION              0x410
 /* 0x412 is reserved */
 #define BIOS_MEMORY_SIZE                0x413
@@ -119,7 +119,7 @@
 //#define MAX_SWAPPABLE_DISKS 20
 
 void BIOS_ZeroExtendedSize(bool in);
-void char_out(Bit8u chr,Bit32u att,Bit8u page);
+void char_out(Bit8u chr, Bit32u att, Bit8u page);
 void INT10_StartUp(void);
 void INT16_StartUp(void);
 void INT2A_StartUp(void);
@@ -131,6 +131,6 @@ bool BIOS_AddKeyToBuffer(Bit16u code);
 
 void INT10_ReloadRomFonts();
 
-void BIOS_SetComPorts (Bit16u baseaddr[]);
+void BIOS_SetComPorts(Bit16u baseaddr[]);
 
 #endif

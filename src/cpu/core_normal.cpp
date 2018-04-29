@@ -85,14 +85,14 @@ extern Bitu cycle_count;
 	core.rep_zero=_ZERO;					\
 	goto restart_opcode;
 
-typedef PhysPt (*GetEAHandler)(void);
+typedef PhysPt(*GetEAHandler)(void);
 
-static const Bit32u AddrMaskTable[2]={0x0000ffff,0xffffffff};
+static const Bit32u AddrMaskTable[2] = { 0x0000ffff,0xffffffff };
 
 static struct {
 	Bitu opcode_index;
 	PhysPt cseip;
-	PhysPt base_ds,base_ss;
+	PhysPt base_ds, base_ss;
 	SegNames base_val_ds;
 	bool rep_zero;
 	Bitu prefixes;
@@ -108,19 +108,19 @@ static struct {
 #define BaseSS		core.base_ss
 
 static inline Bit8u Fetchb() {
-	Bit8u temp=LoadMb(core.cseip);
-	core.cseip+=1;
+	Bit8u temp = LoadMb(core.cseip);
+	core.cseip += 1;
 	return temp;
 }
 
 static inline Bit16u Fetchw() {
-	Bit16u temp=LoadMw(core.cseip);
-	core.cseip+=2;
+	Bit16u temp = LoadMw(core.cseip);
+	core.cseip += 2;
 	return temp;
 }
 static inline Bit32u Fetchd() {
-	Bit32u temp=LoadMd(core.cseip);
-	core.cseip+=4;
+	Bit32u temp = LoadMd(core.cseip);
+	core.cseip += 4;
 	return temp;
 }
 
@@ -137,14 +137,14 @@ static inline Bit32u Fetchd() {
 #define EALookupTable (core.ea_table)
 
 Bits CPU_Core_Normal_Run(void) {
-	while (CPU_Cycles-->0) {
+	while (CPU_Cycles-- > 0) {
 		LOADIP;
-		core.opcode_index=cpu.code.big*0x200;
-		core.prefixes=cpu.code.big;
-		core.ea_table=&EATable[cpu.code.big*256];
-		BaseDS=SegBase(ds);
-		BaseSS=SegBase(ss);
-		core.base_val_ds=ds;
+		core.opcode_index = cpu.code.big * 0x200;
+		core.prefixes = cpu.code.big;
+		core.ea_table = &EATable[cpu.code.big * 256];
+		BaseDS = SegBase(ds);
+		BaseSS = SegBase(ss);
+		core.base_val_ds = ds;
 #if C_DEBUG
 #if C_HEAVY_DEBUG
 		if (DEBUG_HeavyIsBreakpoint()) {
@@ -154,29 +154,29 @@ Bits CPU_Core_Normal_Run(void) {
 #endif
 		cycle_count++;
 #endif
-restart_opcode:
-		switch (core.opcode_index+Fetchb()) {
-		#include "core_normal/prefix_none.h"
-		#include "core_normal/prefix_0f.h"
-		#include "core_normal/prefix_66.h"
-		#include "core_normal/prefix_66_0f.h"
+	restart_opcode:
+		switch (core.opcode_index + Fetchb()) {
+#include "core_normal/prefix_none.h"
+#include "core_normal/prefix_0f.h"
+#include "core_normal/prefix_66.h"
+#include "core_normal/prefix_66_0f.h"
 		default:
 		illegal_opcode:
 #if C_DEBUG	
-			{
-				Bitu len=(GETIP-reg_eip);
-				LOADIP;
-				if (len>16) len=16;
-				char tempcode[16*2+1];char * writecode=tempcode;
-				for (;len>0;len--) {
-					sprintf(writecode,"%02X",mem_readb(core.cseip++));
-					writecode+=2;
-				}
-				LOG(LOG_CPU,LOG_NORMAL)("Illegal/Unhandled opcode %s",tempcode);
+		{
+			Bitu len = (GETIP - reg_eip);
+			LOADIP;
+			if (len > 16) len = 16;
+			char tempcode[16 * 2 + 1]; char * writecode = tempcode;
+			for (; len > 0; len--) {
+				sprintf(writecode, "%02X", mem_readb(core.cseip++));
+				writecode += 2;
 			}
+			LOG(LOG_CPU, LOG_NORMAL)("Illegal/Unhandled opcode %s", tempcode);
+		}
 #endif
-			CPU_Exception(6,0);
-			continue;
+		CPU_Exception(6, 0);
+		continue;
 		}
 		SAVEIP;
 	}
@@ -193,9 +193,9 @@ Bits CPU_Core_Normal_Trap_Run(void) {
 	CPU_Cycles = 1;
 	cpu.trap_skip = false;
 
-	Bits ret=CPU_Core_Normal_Run();
+	Bits ret = CPU_Core_Normal_Run();
 	if (!cpu.trap_skip) CPU_HW_Interrupt(1);
-	CPU_Cycles = oldCycles-1;
+	CPU_Cycles = oldCycles - 1;
 	cpudecoder = &CPU_Core_Normal_Run;
 
 	return ret;

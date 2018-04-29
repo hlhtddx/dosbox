@@ -18,7 +18,7 @@
 
 
 
-// #define WEAK_EXCEPTIONS
+ // #define WEAK_EXCEPTIONS
 
 
 #if defined (_MSC_VER)
@@ -928,223 +928,223 @@
 #endif
 
 #ifdef WEAK_EXCEPTIONS
-const Bit16u exc_mask=0x7f00;
+const Bit16u exc_mask = 0x7f00;
 #else
-const Bit16u exc_mask=0xffbf;
+const Bit16u exc_mask = 0xffbf;
 #endif
 
 static void FPU_FINIT(void) {
 	FPU_SetCW(0x37F);
-	fpu.sw=0;
-	TOP=FPU_GET_TOP();
-	fpu.tags[0]=TAG_Empty;
-	fpu.tags[1]=TAG_Empty;
-	fpu.tags[2]=TAG_Empty;
-	fpu.tags[3]=TAG_Empty;
-	fpu.tags[4]=TAG_Empty;
-	fpu.tags[5]=TAG_Empty;
-	fpu.tags[6]=TAG_Empty;
-	fpu.tags[7]=TAG_Empty;
-	fpu.tags[8]=TAG_Valid; // is only used by us
+	fpu.sw = 0;
+	TOP = FPU_GET_TOP();
+	fpu.tags[0] = TAG_Empty;
+	fpu.tags[1] = TAG_Empty;
+	fpu.tags[2] = TAG_Empty;
+	fpu.tags[3] = TAG_Empty;
+	fpu.tags[4] = TAG_Empty;
+	fpu.tags[5] = TAG_Empty;
+	fpu.tags[6] = TAG_Empty;
+	fpu.tags[7] = TAG_Empty;
+	fpu.tags[8] = TAG_Valid; // is only used by us
 }
 
-static void FPU_FCLEX(void){
-	fpu.sw&=0x7f00;				//should clear exceptions
+static void FPU_FCLEX(void) {
+	fpu.sw &= 0x7f00;				//should clear exceptions
 }
 
-static void FPU_FNOP(void){
+static void FPU_FNOP(void) {
 }
 
-static void FPU_PREP_PUSH(void){
-	TOP = (TOP - 1) &7;
+static void FPU_PREP_PUSH(void) {
+	TOP = (TOP - 1) & 7;
 	if (fpu.tags[TOP] != TAG_Empty) E_Exit("FPU stack overflow");
 	fpu.tags[TOP] = TAG_Valid;
 }
 
-static void FPU_FPOP(void){
+static void FPU_FPOP(void) {
 	if (fpu.tags[TOP] == TAG_Empty) E_Exit("FPU stack underflow");
 	fpu.tags[TOP] = TAG_Empty;
-	TOP = ((TOP+1)&7);
+	TOP = ((TOP + 1) & 7);
 }
 
-static void FPU_FLD_F32(PhysPt addr,Bitu store_to) {
+static void FPU_FLD_F32(PhysPt addr, Bitu store_to) {
 	fpu.p_regs[8].m1 = mem_readd(addr);
-	FPUD_LOAD(fld,DWORD,s)
+	FPUD_LOAD(fld, DWORD, s)
 }
 
 static void FPU_FLD_F32_EA(PhysPt addr) {
 	fpu.p_regs[8].m1 = mem_readd(addr);
-	FPUD_LOAD_EA(fld,DWORD,s)
+	FPUD_LOAD_EA(fld, DWORD, s)
 }
 
-static void FPU_FLD_F64(PhysPt addr,Bitu store_to) {
+static void FPU_FLD_F64(PhysPt addr, Bitu store_to) {
 	fpu.p_regs[8].m1 = mem_readd(addr);
-	fpu.p_regs[8].m2 = mem_readd(addr+4);
-	FPUD_LOAD(fld,QWORD,l)
+	fpu.p_regs[8].m2 = mem_readd(addr + 4);
+	FPUD_LOAD(fld, QWORD, l)
 }
 
 static void FPU_FLD_F64_EA(PhysPt addr) {
 	fpu.p_regs[8].m1 = mem_readd(addr);
-	fpu.p_regs[8].m2 = mem_readd(addr+4);
-	FPUD_LOAD_EA(fld,QWORD,l)
+	fpu.p_regs[8].m2 = mem_readd(addr + 4);
+	FPUD_LOAD_EA(fld, QWORD, l)
 }
 
 static void FPU_FLD_F80(PhysPt addr) {
 	fpu.p_regs[TOP].m1 = mem_readd(addr);
-	fpu.p_regs[TOP].m2 = mem_readd(addr+4);
-	fpu.p_regs[TOP].m3 = mem_readw(addr+8);
+	fpu.p_regs[TOP].m2 = mem_readd(addr + 4);
+	fpu.p_regs[TOP].m3 = mem_readw(addr + 8);
 	FPU_SET_C1(0);
 }
 
-static void FPU_FLD_I16(PhysPt addr,Bitu store_to) {
+static void FPU_FLD_I16(PhysPt addr, Bitu store_to) {
 	fpu.p_regs[8].m1 = (Bit32u)mem_readw(addr);
-	FPUD_LOAD(fild,WORD,s)
+	FPUD_LOAD(fild, WORD, s)
 }
 
 static void FPU_FLD_I16_EA(PhysPt addr) {
 	fpu.p_regs[8].m1 = (Bit32u)mem_readw(addr);
-	FPUD_LOAD_EA(fild,WORD,s)
+	FPUD_LOAD_EA(fild, WORD, s)
 }
 
-static void FPU_FLD_I32(PhysPt addr,Bitu store_to) {
+static void FPU_FLD_I32(PhysPt addr, Bitu store_to) {
 	fpu.p_regs[8].m1 = mem_readd(addr);
-	FPUD_LOAD(fild,DWORD,l)
+	FPUD_LOAD(fild, DWORD, l)
 }
 
 static void FPU_FLD_I32_EA(PhysPt addr) {
 	fpu.p_regs[8].m1 = mem_readd(addr);
-	FPUD_LOAD_EA(fild,DWORD,l)
+	FPUD_LOAD_EA(fild, DWORD, l)
 }
 
-static void FPU_FLD_I64(PhysPt addr,Bitu store_to) {
+static void FPU_FLD_I64(PhysPt addr, Bitu store_to) {
 	fpu.p_regs[8].m1 = mem_readd(addr);
-	fpu.p_regs[8].m2 = mem_readd(addr+4);
-	FPUD_LOAD(fild,QWORD,q)
+	fpu.p_regs[8].m2 = mem_readd(addr + 4);
+	FPUD_LOAD(fild, QWORD, q)
 }
 
-static void FPU_FBLD(PhysPt addr,Bitu store_to) {
+static void FPU_FBLD(PhysPt addr, Bitu store_to) {
 	fpu.p_regs[8].m1 = mem_readd(addr);
-	fpu.p_regs[8].m2 = mem_readd(addr+4);
-	fpu.p_regs[8].m3 = mem_readw(addr+8);
-	FPUD_LOAD(fbld,TBYTE,)
+	fpu.p_regs[8].m2 = mem_readd(addr + 4);
+	fpu.p_regs[8].m3 = mem_readw(addr + 8);
+	FPUD_LOAD(fbld, TBYTE, )
 }
 
 static void FPU_FST_F32(PhysPt addr) {
-	FPUD_STORE(fstp,DWORD,s)
-	mem_writed(addr,fpu.p_regs[8].m1);
+	FPUD_STORE(fstp, DWORD, s)
+		mem_writed(addr, fpu.p_regs[8].m1);
 }
 
 static void FPU_FST_F64(PhysPt addr) {
-	FPUD_STORE(fstp,QWORD,l)
-	mem_writed(addr,fpu.p_regs[8].m1);
-	mem_writed(addr+4,fpu.p_regs[8].m2);
+	FPUD_STORE(fstp, QWORD, l)
+		mem_writed(addr, fpu.p_regs[8].m1);
+	mem_writed(addr + 4, fpu.p_regs[8].m2);
 }
 
 static void FPU_FST_F80(PhysPt addr) {
-	mem_writed(addr,fpu.p_regs[TOP].m1);
-	mem_writed(addr+4,fpu.p_regs[TOP].m2);
-	mem_writew(addr+8,fpu.p_regs[TOP].m3);
+	mem_writed(addr, fpu.p_regs[TOP].m1);
+	mem_writed(addr + 4, fpu.p_regs[TOP].m2);
+	mem_writew(addr + 8, fpu.p_regs[TOP].m3);
 	FPU_SET_C1(0);
 }
 
 static void FPU_FST_I16(PhysPt addr) {
-	FPUD_STORE(fistp,WORD,s)
-	mem_writew(addr,(Bit16u)fpu.p_regs[8].m1);
+	FPUD_STORE(fistp, WORD, s)
+		mem_writew(addr, (Bit16u)fpu.p_regs[8].m1);
 }
 
 static void FPU_FST_I32(PhysPt addr) {
-	FPUD_STORE(fistp,DWORD,l)
-	mem_writed(addr,fpu.p_regs[8].m1);
+	FPUD_STORE(fistp, DWORD, l)
+		mem_writed(addr, fpu.p_regs[8].m1);
 }
 
 static void FPU_FST_I64(PhysPt addr) {
-	FPUD_STORE(fistp,QWORD,q)
-	mem_writed(addr,fpu.p_regs[8].m1);
-	mem_writed(addr+4,fpu.p_regs[8].m2);
+	FPUD_STORE(fistp, QWORD, q)
+		mem_writed(addr, fpu.p_regs[8].m1);
+	mem_writed(addr + 4, fpu.p_regs[8].m2);
 }
 
 static void FPU_FBST(PhysPt addr) {
-	FPUD_STORE(fbstp,TBYTE,)
-	mem_writed(addr,fpu.p_regs[8].m1);
-	mem_writed(addr+4,fpu.p_regs[8].m2);
-	mem_writew(addr+8,fpu.p_regs[8].m3);
+	FPUD_STORE(fbstp, TBYTE, )
+		mem_writed(addr, fpu.p_regs[8].m1);
+	mem_writed(addr + 4, fpu.p_regs[8].m2);
+	mem_writew(addr + 8, fpu.p_regs[8].m3);
 }
 
 
-static void FPU_FSIN(void){
+static void FPU_FSIN(void) {
 	FPUD_TRIG(fsin)
 }
 
-static void FPU_FSINCOS(void){
+static void FPU_FSINCOS(void) {
 	FPUD_SINCOS()
 }
 
-static void FPU_FCOS(void){
+static void FPU_FCOS(void) {
 	FPUD_TRIG(fcos)
 }
 
-static void FPU_FSQRT(void){
+static void FPU_FSQRT(void) {
 	FPUD_ARITH2(fsqrt)
 }
 
-static void FPU_FPATAN(void){
+static void FPU_FPATAN(void) {
 	FPUD_WITH_POP(fpatan)
 }
 
-static void FPU_FPTAN(void){
+static void FPU_FPTAN(void) {
 	FPUD_PTAN()
 }
 
 
-static void FPU_FADD(Bitu op1, Bitu op2){
+static void FPU_FADD(Bitu op1, Bitu op2) {
 	FPUD_ARITH1(faddp)
 }
 
-static void FPU_FADD_EA(Bitu op1){
+static void FPU_FADD_EA(Bitu op1) {
 	FPUD_ARITH1_EA(faddp)
 }
 
-static void FPU_FDIV(Bitu op1, Bitu op2){
+static void FPU_FDIV(Bitu op1, Bitu op2) {
 	FPUD_ARITH3(fdivp)
 }
 
-static void FPU_FDIV_EA(Bitu op1){
+static void FPU_FDIV_EA(Bitu op1) {
 	FPUD_ARITH3_EA(fdivp)
 }
 
-static void FPU_FDIVR(Bitu op1, Bitu op2){
+static void FPU_FDIVR(Bitu op1, Bitu op2) {
 	FPUD_ARITH3(fdivrp)
 }
 
-static void FPU_FDIVR_EA(Bitu op1){
+static void FPU_FDIVR_EA(Bitu op1) {
 	FPUD_ARITH3_EA(fdivrp)
 }
 
-static void FPU_FMUL(Bitu op1, Bitu op2){
+static void FPU_FMUL(Bitu op1, Bitu op2) {
 	FPUD_ARITH1(fmulp)
 }
 
-static void FPU_FMUL_EA(Bitu op1){
+static void FPU_FMUL_EA(Bitu op1) {
 	FPUD_ARITH1_EA(fmulp)
 }
 
-static void FPU_FSUB(Bitu op1, Bitu op2){
+static void FPU_FSUB(Bitu op1, Bitu op2) {
 	FPUD_ARITH1(fsubp)
 }
 
-static void FPU_FSUB_EA(Bitu op1){
+static void FPU_FSUB_EA(Bitu op1) {
 	FPUD_ARITH1_EA(fsubp)
 }
 
-static void FPU_FSUBR(Bitu op1, Bitu op2){
+static void FPU_FSUBR(Bitu op1, Bitu op2) {
 	FPUD_ARITH1(fsubrp)
 }
 
-static void FPU_FSUBR_EA(Bitu op1){
+static void FPU_FSUBR_EA(Bitu op1) {
 	FPUD_ARITH1_EA(fsubrp)
 }
 
-static void FPU_FXCH(Bitu stv, Bitu other){
+static void FPU_FXCH(Bitu stv, Bitu other) {
 	FPU_Tag tag = fpu.tags[other];
 	fpu.tags[other] = fpu.tags[stv];
 	fpu.tags[stv] = tag;
@@ -1162,7 +1162,7 @@ static void FPU_FXCH(Bitu stv, Bitu other){
 	FPU_SET_C1(0);
 }
 
-static void FPU_FST(Bitu stv, Bitu other){
+static void FPU_FST(Bitu stv, Bitu other) {
 	fpu.tags[other] = fpu.tags[stv];
 
 	fpu.p_regs[other].m1 = fpu.p_regs[stv].m1;
@@ -1173,108 +1173,110 @@ static void FPU_FST(Bitu stv, Bitu other){
 }
 
 
-static void FPU_FCOM(Bitu op1, Bitu op2){
+static void FPU_FCOM(Bitu op1, Bitu op2) {
 	FPUD_COMPARE(fcompp)
 }
 
-static void FPU_FCOM_EA(Bitu op1){
+static void FPU_FCOM_EA(Bitu op1) {
 	FPUD_COMPARE_EA(fcompp)
 }
 
-static void FPU_FUCOM(Bitu op1, Bitu op2){
+static void FPU_FUCOM(Bitu op1, Bitu op2) {
 	FPUD_COMPARE(fucompp)
 }
 
-static void FPU_FRNDINT(void){
+static void FPU_FRNDINT(void) {
 	FPUD_ARITH2(frndint)
 }
 
-static void FPU_FPREM(void){
+static void FPU_FPREM(void) {
 	FPUD_REMAINDER(fprem)
 }
 
-static void FPU_FPREM1(void){
+static void FPU_FPREM1(void) {
 	FPUD_REMAINDER(fprem1)
 }
 
-static void FPU_FXAM(void){
+static void FPU_FXAM(void) {
 	FPUD_EXAMINE(fxam)
-	// handle empty registers (C1 set to sign in any way!)
-	if(fpu.tags[TOP] == TAG_Empty) {
-		FPU_SET_C3(1);FPU_SET_C2(0);FPU_SET_C0(1);
-		return;
-	}
+		// handle empty registers (C1 set to sign in any way!)
+		if (fpu.tags[TOP] == TAG_Empty) {
+			FPU_SET_C3(1); FPU_SET_C2(0); FPU_SET_C0(1);
+			return;
+		}
 }
 
-static void FPU_F2XM1(void){
+static void FPU_F2XM1(void) {
 	FPUD_TRIG(f2xm1)
 }
 
-static void FPU_FYL2X(void){
+static void FPU_FYL2X(void) {
 	FPUD_FYL2X(fyl2x)
 }
 
-static void FPU_FYL2XP1(void){
+static void FPU_FYL2XP1(void) {
 	FPUD_WITH_POP(fyl2xp1)
 }
 
-static void FPU_FSCALE(void){
+static void FPU_FSCALE(void) {
 	FPUD_REMAINDER(fscale)
 }
 
 
-static void FPU_FSTENV(PhysPt addr){
+static void FPU_FSTENV(PhysPt addr) {
 	FPU_SET_TOP(TOP);
-	if(!cpu.code.big) {
-		mem_writew(addr+0,static_cast<Bit16u>(fpu.cw));
-		mem_writew(addr+2,static_cast<Bit16u>(fpu.sw));
-		mem_writew(addr+4,static_cast<Bit16u>(FPU_GetTag()));
-	} else { 
-		mem_writed(addr+0,static_cast<Bit32u>(fpu.cw));
-		mem_writed(addr+4,static_cast<Bit32u>(fpu.sw));
-		mem_writed(addr+8,static_cast<Bit32u>(FPU_GetTag()));
+	if (!cpu.code.big) {
+		mem_writew(addr + 0, static_cast<Bit16u>(fpu.cw));
+		mem_writew(addr + 2, static_cast<Bit16u>(fpu.sw));
+		mem_writew(addr + 4, static_cast<Bit16u>(FPU_GetTag()));
+	}
+	else {
+		mem_writed(addr + 0, static_cast<Bit32u>(fpu.cw));
+		mem_writed(addr + 4, static_cast<Bit32u>(fpu.sw));
+		mem_writed(addr + 8, static_cast<Bit32u>(FPU_GetTag()));
 	}
 }
 
-static void FPU_FLDENV(PhysPt addr){
+static void FPU_FLDENV(PhysPt addr) {
 	Bit16u tag;
 	Bit32u tagbig;
 	Bitu cw;
-	if(!cpu.code.big) {
-		cw     = mem_readw(addr+0);
-		fpu.sw = mem_readw(addr+2);
-		tag    = mem_readw(addr+4);
-	} else { 
-		cw     = mem_readd(addr+0);
-		fpu.sw = (Bit16u)mem_readd(addr+4);
-		tagbig = mem_readd(addr+8);
-		tag    = static_cast<Bit16u>(tagbig);
+	if (!cpu.code.big) {
+		cw = mem_readw(addr + 0);
+		fpu.sw = mem_readw(addr + 2);
+		tag = mem_readw(addr + 4);
+	}
+	else {
+		cw = mem_readd(addr + 0);
+		fpu.sw = (Bit16u)mem_readd(addr + 4);
+		tagbig = mem_readd(addr + 8);
+		tag = static_cast<Bit16u>(tagbig);
 	}
 	FPU_SetTag(tag);
 	FPU_SetCW(cw);
-	TOP=FPU_GET_TOP();
+	TOP = FPU_GET_TOP();
 }
 
-static void FPU_FSAVE(PhysPt addr){
+static void FPU_FSAVE(PhysPt addr) {
 	FPU_FSTENV(addr);
-	Bitu start=(cpu.code.big?28:14);
-	for(Bitu i=0;i<8;i++){
-		mem_writed(addr+start,fpu.p_regs[STV(i)].m1);
-		mem_writed(addr+start+4,fpu.p_regs[STV(i)].m2);
-		mem_writew(addr+start+8,fpu.p_regs[STV(i)].m3);
-		start+=10;
+	Bitu start = (cpu.code.big ? 28 : 14);
+	for (Bitu i = 0; i < 8; i++) {
+		mem_writed(addr + start, fpu.p_regs[STV(i)].m1);
+		mem_writed(addr + start + 4, fpu.p_regs[STV(i)].m2);
+		mem_writew(addr + start + 8, fpu.p_regs[STV(i)].m3);
+		start += 10;
 	}
 	FPU_FINIT();
 }
 
-static void FPU_FRSTOR(PhysPt addr){
+static void FPU_FRSTOR(PhysPt addr) {
 	FPU_FLDENV(addr);
-	Bitu start=(cpu.code.big?28:14);
-	for(Bitu i=0;i<8;i++){
-		fpu.p_regs[STV(i)].m1 = mem_readd(addr+start);
-		fpu.p_regs[STV(i)].m2 = mem_readd(addr+start+4);
-		fpu.p_regs[STV(i)].m3 = mem_readw(addr+start+8);
-		start+=10;
+	Bitu start = (cpu.code.big ? 28 : 14);
+	for (Bitu i = 0; i < 8; i++) {
+		fpu.p_regs[STV(i)].m1 = mem_readd(addr + start);
+		fpu.p_regs[STV(i)].m2 = mem_readd(addr + start + 4);
+		fpu.p_regs[STV(i)].m3 = mem_readw(addr + start + 8);
+		start += 10;
 	}
 }
 
@@ -1283,43 +1285,43 @@ static void FPU_FXTRACT(void) {
 	FPUD_XTRACT
 }
 
-static void FPU_FCHS(void){
+static void FPU_FCHS(void) {
 	FPUD_TRIG(fchs)
 }
 
-static void FPU_FABS(void){
+static void FPU_FABS(void) {
 	FPUD_TRIG(fabs)
 }
 
-static void FPU_FTST(void){
+static void FPU_FTST(void) {
 	FPUD_EXAMINE(ftst)
 }
 
-static void FPU_FLD1(void){
+static void FPU_FLD1(void) {
 	FPUD_LOAD_CONST(fld1)
 }
 
-static void FPU_FLDL2T(void){
+static void FPU_FLDL2T(void) {
 	FPUD_LOAD_CONST(fldl2t)
 }
 
-static void FPU_FLDL2E(void){
+static void FPU_FLDL2E(void) {
 	FPUD_LOAD_CONST(fldl2e)
 }
 
-static void FPU_FLDPI(void){
+static void FPU_FLDPI(void) {
 	FPUD_LOAD_CONST(fldpi)
 }
 
-static void FPU_FLDLG2(void){
+static void FPU_FLDLG2(void) {
 	FPUD_LOAD_CONST(fldlg2)
 }
 
-static void FPU_FLDLN2(void){
+static void FPU_FLDLN2(void) {
 	FPUD_LOAD_CONST(fldln2)
 }
 
-static void FPU_FLDZ(void){
+static void FPU_FLDZ(void) {
 	FPUD_LOAD_CONST(fldz)
-	fpu.tags[TOP]=TAG_Zero;
+		fpu.tags[TOP] = TAG_Zero;
 }

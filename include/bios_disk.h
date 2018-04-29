@@ -30,7 +30,7 @@
 #include "bios.h"
 #endif
 
-/* The Section handling Bios Disk Access */
+ /* The Section handling Bios Disk Access */
 #define BIOS_MAX_DISK 10
 
 #define MAX_SWAPPABLE_DISKS 20
@@ -43,10 +43,10 @@ struct diskGeo {
 };
 extern diskGeo DiskGeometryList[];
 
-class imageDisk  {
+class imageDisk {
 public:
-	Bit8u Read_Sector(Bit32u head,Bit32u cylinder,Bit32u sector,void * data);
-	Bit8u Write_Sector(Bit32u head,Bit32u cylinder,Bit32u sector,void * data);
+	Bit8u Read_Sector(Bit32u head, Bit32u cylinder, Bit32u sector, void * data);
+	Bit8u Write_Sector(Bit32u head, Bit32u cylinder, Bit32u sector, void * data);
 	Bit8u Read_AbsoluteSector(Bit32u sectnum, void * data);
 	Bit8u Write_AbsoluteSector(Bit32u sectnum, void * data);
 
@@ -55,7 +55,7 @@ public:
 	Bit8u GetBiosType(void);
 	Bit32u getSectSize(void);
 	imageDisk(FILE *imgFile, Bit8u *imgName, Bit32u imgSizeK, bool isHardDisk);
-	~imageDisk() { if(diskimg != NULL) { fclose(diskimg); }	};
+	~imageDisk() { if (diskimg != NULL) { fclose(diskimg); } };
 
 	bool hardDrive;
 	bool active;
@@ -64,10 +64,10 @@ public:
 	Bit8u floppytype;
 
 	Bit32u sector_size;
-	Bit32u heads,cylinders,sectors;
+	Bit32u heads, cylinders, sectors;
 private:
 	Bit32u current_fpos;
-	enum { NONE,READ,WRITE } last_action;
+	enum { NONE, READ, WRITE } last_action;
 };
 
 void updateDPT(void);

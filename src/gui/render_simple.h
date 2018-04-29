@@ -18,9 +18,9 @@
 
 
 #if defined (SCALERLINEAR)
-static void conc4d(SCALERNAME,SBPP,DBPP,L)(const void *s) {
+static void conc4d(SCALERNAME, SBPP, DBPP, L)(const void *s) {
 #else
-static void conc4d(SCALERNAME,SBPP,DBPP,R)(const void *s) {
+static void conc4d(SCALERNAME, SBPP, DBPP, R)(const void *s) {
 #endif
 #ifdef RENDER_NULL_INPUT
 	if (!s) {
@@ -28,9 +28,9 @@ static void conc4d(SCALERNAME,SBPP,DBPP,R)(const void *s) {
 #if defined(SCALERLINEAR) 
 		Bitu skipLines = SCALERHEIGHT;
 #else
-		Bitu skipLines = Scaler_Aspect[ render.scale.outLine++ ];
+		Bitu skipLines = Scaler_Aspect[render.scale.outLine++];
 #endif
-		ScalerAddLines( 0, skipLines );
+		ScalerAddLines(0, skipLines);
 		return;
 	}
 #endif
@@ -39,25 +39,25 @@ static void conc4d(SCALERNAME,SBPP,DBPP,R)(const void *s) {
 	const SRCTYPE *src = (SRCTYPE*)s;
 	SRCTYPE *cache = (SRCTYPE*)(render.scale.cacheRead);
 	render.scale.cacheRead += render.scale.cachePitch;
-	PTYPE * line0=(PTYPE *)(render.scale.outWrite);
+	PTYPE * line0 = (PTYPE *)(render.scale.outWrite);
 #if (SBPP == 9)
-	for (Bits x=render.src.width;x>0;) {
+	for (Bits x = render.src.width; x > 0;) {
 		if (*(Bit32u const*)src == *(Bit32u*)cache && !(
-			render.pal.modified[src[0]] | 
-			render.pal.modified[src[1]] | 
-			render.pal.modified[src[2]] | 
-			render.pal.modified[src[3]] )) {
-			x-=4;
-			src+=4;
-			cache+=4;
-			line0+=4*SCALERWIDTH;
+			render.pal.modified[src[0]] |
+			render.pal.modified[src[1]] |
+			render.pal.modified[src[2]] |
+			render.pal.modified[src[3]])) {
+			x -= 4;
+			src += 4;
+			cache += 4;
+			line0 += 4 * SCALERWIDTH;
 #else 
-	for (Bits x=render.src.width;x>0;) {
+	for (Bits x = render.src.width; x > 0;) {
 		if (*(Bitu const*)src == *(Bitu*)cache) {
-			x-=(sizeof(Bitu)/sizeof(SRCTYPE));
-			src+=(sizeof(Bitu)/sizeof(SRCTYPE));
-			cache+=(sizeof(Bitu)/sizeof(SRCTYPE));
-			line0+=(sizeof(Bitu)/sizeof(SRCTYPE))*SCALERWIDTH;
+			x -= (sizeof(Bitu) / sizeof(SRCTYPE));
+			src += (sizeof(Bitu) / sizeof(SRCTYPE));
+			cache += (sizeof(Bitu) / sizeof(SRCTYPE));
+			line0 += (sizeof(Bitu) / sizeof(SRCTYPE))*SCALERWIDTH;
 #endif
 		} else {
 #if defined(SCALERLINEAR)
@@ -69,17 +69,17 @@ static void conc4d(SCALERNAME,SBPP,DBPP,R)(const void *s) {
 #endif
 #else
 #if (SCALERHEIGHT > 1) 
-		PTYPE *line1 = (PTYPE *)(((Bit8u*)line0)+ render.scale.outPitch);
+			PTYPE *line1 = (PTYPE *)(((Bit8u*)line0) + render.scale.outPitch);
 #endif
 #if (SCALERHEIGHT > 2) 
-		PTYPE *line2 = (PTYPE *)(((Bit8u*)line0)+ render.scale.outPitch * 2);
+			PTYPE *line2 = (PTYPE *)(((Bit8u*)line0) + render.scale.outPitch * 2);
 #endif
 #endif //defined(SCALERLINEAR)
 			hadChange = 1;
-			for (Bitu i = x > 32 ? 32 : x;i>0;i--,x--) {
+			for (Bitu i = x > 32 ? 32 : x; i > 0; i--, x--) {
 				const SRCTYPE S = *src;
 				*cache = S;
-				src++;cache++;
+				src++; cache++;
 				const PTYPE P = PMAKE(S);
 				SCALERFUNC;
 				line0 += SCALERWIDTH;
@@ -93,10 +93,10 @@ static void conc4d(SCALERNAME,SBPP,DBPP,R)(const void *s) {
 #if defined(SCALERLINEAR)
 #if (SCALERHEIGHT > 1)
 			Bitu copyLen = (Bitu)((Bit8u*)line1 - (Bit8u*)WC[0]);
-			BituMove(((Bit8u*)line0)-copyLen+render.scale.outPitch  ,WC[0], copyLen );
+			BituMove(((Bit8u*)line0) - copyLen + render.scale.outPitch, WC[0], copyLen);
 #endif
 #if (SCALERHEIGHT > 2) 
-			BituMove(((Bit8u*)line0)-copyLen+render.scale.outPitch*2,WC[1], copyLen );
+			BituMove(((Bit8u*)line0) - copyLen + render.scale.outPitch * 2, WC[1], copyLen);
 #endif
 #endif //defined(SCALERLINEAR)
 		}
@@ -104,15 +104,15 @@ static void conc4d(SCALERNAME,SBPP,DBPP,R)(const void *s) {
 #if defined(SCALERLINEAR) 
 	Bitu scaleLines = SCALERHEIGHT;
 #else
-	Bitu scaleLines = Scaler_Aspect[ render.scale.outLine++ ];
-	if ( scaleLines - SCALERHEIGHT && hadChange ) {
-		BituMove( render.scale.outWrite + render.scale.outPitch * SCALERHEIGHT,
-			render.scale.outWrite + render.scale.outPitch * (SCALERHEIGHT-1),
+	Bitu scaleLines = Scaler_Aspect[render.scale.outLine++];
+	if (scaleLines - SCALERHEIGHT && hadChange) {
+		BituMove(render.scale.outWrite + render.scale.outPitch * SCALERHEIGHT,
+			render.scale.outWrite + render.scale.outPitch * (SCALERHEIGHT - 1),
 			render.src.width * SCALERWIDTH * PSIZE);
 	}
 #endif
-	ScalerAddLines( hadChange, scaleLines );
-}
+	ScalerAddLines(hadChange, scaleLines);
+		}
 
 #if !defined(SCALERLINEAR) 
 #define SCALERLINEAR 1

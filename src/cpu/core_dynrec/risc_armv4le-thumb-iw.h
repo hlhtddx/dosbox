@@ -18,10 +18,10 @@
 
 
 
-/* ARMv4 (little endian) backend by M-HT (thumb version with data pool, requires -mthumb-interwork switch when compiling dosbox) */
+ /* ARMv4 (little endian) backend by M-HT (thumb version with data pool, requires -mthumb-interwork switch when compiling dosbox) */
 
 
-// temporary "lo" registers
+ // temporary "lo" registers
 #define templo1 HOST_v3
 #define templo2 HOST_v4
 #define templo3 HOST_v2
@@ -212,20 +212,18 @@ static void cache_checkinstr(Bit32u size) {
 	}
 
 	if (cache.pos + CACHE_DATA_MAX + CACHE_DATA_ALIGN >= cache.block.active->cache.start + cache.block.active->cache.size &&
-		cache.pos + CACHE_DATA_MIN + CACHE_DATA_ALIGN + (CACHE_DATA_ALIGN - CACHE_ALIGN) < cache.block.active->cache.start + cache.block.active->cache.size)
-	{
-		cache_datapos = (Bit8u *) (((Bitu)cache.block.active->cache.start + cache.block.active->cache.size - CACHE_DATA_ALIGN) & ~(CACHE_DATA_ALIGN - 1));
+		cache.pos + CACHE_DATA_MIN + CACHE_DATA_ALIGN + (CACHE_DATA_ALIGN - CACHE_ALIGN) < cache.block.active->cache.start + cache.block.active->cache.size) {
+		cache_datapos = (Bit8u *)(((Bitu)cache.block.active->cache.start + cache.block.active->cache.size - CACHE_DATA_ALIGN) & ~(CACHE_DATA_ALIGN - 1));
 	} else {
 		register Bit32u cachemodsize;
 
 		cachemodsize = (cache.pos - cache.block.active->cache.start) & (CACHE_MAXSIZE - 1);
 
 		if (cachemodsize + CACHE_DATA_MAX + CACHE_DATA_ALIGN <= CACHE_MAXSIZE ||
-			cachemodsize + CACHE_DATA_MIN + CACHE_DATA_ALIGN + (CACHE_DATA_ALIGN - CACHE_ALIGN) > CACHE_MAXSIZE)
-		{
-			cache_datapos = (Bit8u *) (((Bitu)cache.pos + CACHE_DATA_MAX) & ~(CACHE_DATA_ALIGN - 1));
+			cachemodsize + CACHE_DATA_MIN + CACHE_DATA_ALIGN + (CACHE_DATA_ALIGN - CACHE_ALIGN) > CACHE_MAXSIZE) {
+			cache_datapos = (Bit8u *)(((Bitu)cache.pos + CACHE_DATA_MAX) & ~(CACHE_DATA_ALIGN - 1));
 		} else {
-			cache_datapos = (Bit8u *) (((Bitu)cache.pos + (CACHE_MAXSIZE - CACHE_DATA_ALIGN) - cachemodsize) & ~(CACHE_DATA_ALIGN - 1));
+			cache_datapos = (Bit8u *)(((Bitu)cache.pos + (CACHE_MAXSIZE - CACHE_DATA_ALIGN) - cachemodsize) & ~(CACHE_DATA_ALIGN - 1));
 		}
 	}
 
@@ -239,7 +237,7 @@ static Bit8u * cache_reservedata(void) {
 	// if data pool not yet initialized, then initialize data pool
 	if (cache_datapos == NULL) {
 		if (cache.pos + CACHE_DATA_MIN + CACHE_DATA_ALIGN < cache.block.active->cache.start + CACHE_DATA_MAX) {
-			cache_datapos = (Bit8u *) (((Bitu)cache.block.active->cache.start + CACHE_DATA_MAX) & ~(CACHE_DATA_ALIGN - 1));
+			cache_datapos = (Bit8u *)(((Bitu)cache.block.active->cache.start + CACHE_DATA_MAX) & ~(CACHE_DATA_ALIGN - 1));
 		}
 	}
 
@@ -248,20 +246,18 @@ static Bit8u * cache_reservedata(void) {
 		// set data pool address is too close (or behind)  cache.pos then set new data pool size
 		if (cache.pos + CACHE_DATA_MIN + CACHE_DATA_JUMP /*+ CACHE_DATA_ALIGN*/ > cache_datapos) {
 			if (cache.pos + CACHE_DATA_MAX + CACHE_DATA_ALIGN >= cache.block.active->cache.start + cache.block.active->cache.size &&
-				cache.pos + CACHE_DATA_MIN + CACHE_DATA_ALIGN + (CACHE_DATA_ALIGN - CACHE_ALIGN) < cache.block.active->cache.start + cache.block.active->cache.size)
-			{
-				cache_datapos = (Bit8u *) (((Bitu)cache.block.active->cache.start + cache.block.active->cache.size - CACHE_DATA_ALIGN) & ~(CACHE_DATA_ALIGN - 1));
+				cache.pos + CACHE_DATA_MIN + CACHE_DATA_ALIGN + (CACHE_DATA_ALIGN - CACHE_ALIGN) < cache.block.active->cache.start + cache.block.active->cache.size) {
+				cache_datapos = (Bit8u *)(((Bitu)cache.block.active->cache.start + cache.block.active->cache.size - CACHE_DATA_ALIGN) & ~(CACHE_DATA_ALIGN - 1));
 			} else {
 				register Bit32u cachemodsize;
 
 				cachemodsize = (cache.pos - cache.block.active->cache.start) & (CACHE_MAXSIZE - 1);
 
 				if (cachemodsize + CACHE_DATA_MAX + CACHE_DATA_ALIGN <= CACHE_MAXSIZE ||
-					cachemodsize + CACHE_DATA_MIN + CACHE_DATA_ALIGN + (CACHE_DATA_ALIGN - CACHE_ALIGN) > CACHE_MAXSIZE)
-				{
-					cache_datapos = (Bit8u *) (((Bitu)cache.pos + CACHE_DATA_MAX) & ~(CACHE_DATA_ALIGN - 1));
+					cachemodsize + CACHE_DATA_MIN + CACHE_DATA_ALIGN + (CACHE_DATA_ALIGN - CACHE_ALIGN) > CACHE_MAXSIZE) {
+					cache_datapos = (Bit8u *)(((Bitu)cache.pos + CACHE_DATA_MAX) & ~(CACHE_DATA_ALIGN - 1));
 				} else {
-					cache_datapos = (Bit8u *) (((Bitu)cache.pos + (CACHE_MAXSIZE - CACHE_DATA_ALIGN) - cachemodsize) & ~(CACHE_DATA_ALIGN - 1));
+					cache_datapos = (Bit8u *)(((Bitu)cache.pos + (CACHE_MAXSIZE - CACHE_DATA_ALIGN) - cachemodsize) & ~(CACHE_DATA_ALIGN - 1));
 				}
 			}
 		}
@@ -280,8 +276,7 @@ static Bit8u * cache_reservedata(void) {
 
 static void cache_block_before_close(void) {
 	// if data pool in use, then resize cache block to include the data pool
-	if (cache_datasize != 0)
-	{
+	if (cache_datasize != 0) {
 		cache.pos = cache_datapos + cache_dataindex;
 	}
 
@@ -293,10 +288,10 @@ static void cache_block_before_close(void) {
 
 
 // move a full register from reg_src to reg_dst
-static void gen_mov_regs(HostReg reg_dst,HostReg reg_src) {
-	if(reg_src == reg_dst) return;
+static void gen_mov_regs(HostReg reg_dst, HostReg reg_src) {
+	if (reg_src == reg_dst) return;
 	cache_checkinstr(2);
-	cache_addw( MOV_REG(reg_dst, reg_src) );      // mov reg_dst, reg_src
+	cache_addw(MOV_REG(reg_dst, reg_src));      // mov reg_dst, reg_src
 }
 
 // helper function
@@ -310,8 +305,8 @@ static bool val_single_shift(Bit32u value, Bit32u *val_shift) {
 
 	shift = 0;
 	while ((value & 1) == 0) {
-		value>>=1;
-		shift+=1;
+		value >>= 1;
+		shift += 1;
 	}
 
 	if ((value >> 8) != 0) return false;
@@ -321,44 +316,44 @@ static bool val_single_shift(Bit32u value, Bit32u *val_shift) {
 }
 
 // move a 32bit constant value into dest_reg
-static void gen_mov_dword_to_reg_imm(HostReg dest_reg,Bit32u imm) {
+static void gen_mov_dword_to_reg_imm(HostReg dest_reg, Bit32u imm) {
 	Bit32u scale;
 
 	if (imm < 256) {
 		cache_checkinstr(2);
-		cache_addw( MOV_IMM(dest_reg, imm) );      // mov dest_reg, #(imm)
+		cache_addw(MOV_IMM(dest_reg, imm));      // mov dest_reg, #(imm)
 	} else if ((~imm) < 256) {
 		cache_checkinstr(4);
-		cache_addw( MOV_IMM(dest_reg, ~imm) );      // mov dest_reg, #(~imm)
-		cache_addw( MVN(dest_reg, dest_reg) );      // mvn dest_reg, dest_reg
+		cache_addw(MOV_IMM(dest_reg, ~imm));      // mov dest_reg, #(~imm)
+		cache_addw(MVN(dest_reg, dest_reg));      // mvn dest_reg, dest_reg
 	} else if (val_single_shift(imm, &scale)) {
 		cache_checkinstr(4);
-		cache_addw( MOV_IMM(dest_reg, imm >> scale) );      // mov dest_reg, #(imm >> scale)
-		cache_addw( LSL_IMM(dest_reg, dest_reg, scale) );      // lsl dest_reg, dest_reg, #scale
+		cache_addw(MOV_IMM(dest_reg, imm >> scale));      // mov dest_reg, #(imm >> scale)
+		cache_addw(LSL_IMM(dest_reg, dest_reg, scale));      // lsl dest_reg, dest_reg, #scale
 	} else {
 		Bit32u diff;
 
 		cache_checkinstr(4);
 
-		diff = imm - ((Bit32u)cache.pos+4);
+		diff = imm - ((Bit32u)cache.pos + 4);
 
 		if ((diff < 1024) && ((imm & 0x03) == 0)) {
 			if (((Bit32u)cache.pos & 0x03) == 0) {
-				cache_addw( ADD_LO_PC_IMM(dest_reg, diff >> 2) );      // add dest_reg, pc, #(diff >> 2)
+				cache_addw(ADD_LO_PC_IMM(dest_reg, diff >> 2));      // add dest_reg, pc, #(diff >> 2)
 			} else {
-				cache_addw( NOP );      // nop
-				cache_addw( ADD_LO_PC_IMM(dest_reg, (diff - 2) >> 2) );      // add dest_reg, pc, #((diff - 2) >> 2)
+				cache_addw(NOP);      // nop
+				cache_addw(ADD_LO_PC_IMM(dest_reg, (diff - 2) >> 2));      // add dest_reg, pc, #((diff - 2) >> 2)
 			}
 		} else {
 			Bit8u *datapos;
 
 			datapos = cache_reservedata();
-			*(Bit32u*)datapos=imm;
+			*(Bit32u*)datapos = imm;
 
 			if (((Bit32u)cache.pos & 0x03) == 0) {
-				cache_addw( LDR_PC_IMM(dest_reg, datapos - (cache.pos + 4)) );      // ldr dest_reg, [pc, datapos]
+				cache_addw(LDR_PC_IMM(dest_reg, datapos - (cache.pos + 4)));      // ldr dest_reg, [pc, datapos]
 			} else {
-				cache_addw( LDR_PC_IMM(dest_reg, datapos - (cache.pos + 2)) );      // ldr dest_reg, [pc, datapos]
+				cache_addw(LDR_PC_IMM(dest_reg, datapos - (cache.pos + 2)));      // ldr dest_reg, [pc, datapos]
 			}
 		}
 	}
@@ -367,41 +362,41 @@ static void gen_mov_dword_to_reg_imm(HostReg dest_reg,Bit32u imm) {
 // helper function
 static bool gen_mov_memval_to_reg_helper(HostReg dest_reg, Bit32u data, Bitu size, HostReg addr_reg, Bit32u addr_data) {
 	switch (size) {
-		case 4:
+	case 4:
 #if !defined(C_UNALIGNED_MEMORY)
-			if ((data & 3) == 0)
+		if ((data & 3) == 0)
 #endif
-			{
-				if ((data >= addr_data) && (data < addr_data + 128) && (((data - addr_data) & 3) == 0)) {
-					cache_checkinstr(4);
-					cache_addw( MOV_LO_HI(templo2, addr_reg) );      // mov templo2, addr_reg
-					cache_addw( LDR_IMM(dest_reg, templo2, data - addr_data) );      // ldr dest_reg, [templo2, #(data - addr_data)]
-					return true;
-				}
-			}
-			break;
-		case 2:
-#if !defined(C_UNALIGNED_MEMORY)
-			if ((data & 1) == 0)
-#endif
-			{
-				if ((data >= addr_data) && (data < addr_data + 64) && (((data - addr_data) & 1) == 0)) {
-					cache_checkinstr(4);
-					cache_addw( MOV_LO_HI(templo2, addr_reg) );      // mov templo2, addr_reg
-					cache_addw( LDRH_IMM(dest_reg, templo2, data - addr_data) );      // ldrh dest_reg, [templo2, #(data - addr_data)]
-					return true;
-				}
-			}
-			break;
-		case 1:
-			if ((data >= addr_data) && (data < addr_data + 32)) {
+		{
+			if ((data >= addr_data) && (data < addr_data + 128) && (((data - addr_data) & 3) == 0)) {
 				cache_checkinstr(4);
-				cache_addw( MOV_LO_HI(templo2, addr_reg) );      // mov templo2, addr_reg
-				cache_addw( LDRB_IMM(dest_reg, templo2, data - addr_data) );      // ldrb dest_reg, [templo2, #(data - addr_data)]
+				cache_addw(MOV_LO_HI(templo2, addr_reg));      // mov templo2, addr_reg
+				cache_addw(LDR_IMM(dest_reg, templo2, data - addr_data));      // ldr dest_reg, [templo2, #(data - addr_data)]
 				return true;
 			}
-		default:
-			break;
+		}
+		break;
+	case 2:
+#if !defined(C_UNALIGNED_MEMORY)
+		if ((data & 1) == 0)
+#endif
+		{
+			if ((data >= addr_data) && (data < addr_data + 64) && (((data - addr_data) & 1) == 0)) {
+				cache_checkinstr(4);
+				cache_addw(MOV_LO_HI(templo2, addr_reg));      // mov templo2, addr_reg
+				cache_addw(LDRH_IMM(dest_reg, templo2, data - addr_data));      // ldrh dest_reg, [templo2, #(data - addr_data)]
+				return true;
+			}
+		}
+		break;
+	case 1:
+		if ((data >= addr_data) && (data < addr_data + 32)) {
+			cache_checkinstr(4);
+			cache_addw(MOV_LO_HI(templo2, addr_reg));      // mov templo2, addr_reg
+			cache_addw(LDRB_IMM(dest_reg, templo2, data - addr_data));      // ldrb dest_reg, [templo2, #(data - addr_data)]
+			return true;
+		}
+	default:
+		break;
 	}
 	return false;
 }
@@ -415,55 +410,55 @@ static bool gen_mov_memval_to_reg(HostReg dest_reg, void *data, Bitu size) {
 }
 
 // helper function for gen_mov_word_to_reg
-static void gen_mov_word_to_reg_helper(HostReg dest_reg,void* data,bool dword,HostReg data_reg) {
+static void gen_mov_word_to_reg_helper(HostReg dest_reg, void* data, bool dword, HostReg data_reg) {
 	// alignment....
 	if (dword) {
 #if !defined(C_UNALIGNED_MEMORY)
 		if ((Bit32u)data & 3) {
-			if ( ((Bit32u)data & 3) == 2 ) {
+			if (((Bit32u)data & 3) == 2) {
 				cache_checkinstr(8);
-				cache_addw( LDRH_IMM(dest_reg, data_reg, 0) );      // ldrh dest_reg, [data_reg]
-				cache_addw( LDRH_IMM(templo1, data_reg, 2) );      // ldrh templo1, [data_reg, #2]
-				cache_addw( LSL_IMM(templo1, templo1, 16) );      // lsl templo1, templo1, #16
-				cache_addw( ORR(dest_reg, templo1) );      // orr dest_reg, templo1
+				cache_addw(LDRH_IMM(dest_reg, data_reg, 0));      // ldrh dest_reg, [data_reg]
+				cache_addw(LDRH_IMM(templo1, data_reg, 2));      // ldrh templo1, [data_reg, #2]
+				cache_addw(LSL_IMM(templo1, templo1, 16));      // lsl templo1, templo1, #16
+				cache_addw(ORR(dest_reg, templo1));      // orr dest_reg, templo1
 			} else {
 				cache_checkinstr(16);
-				cache_addw( LDRB_IMM(dest_reg, data_reg, 0) );      // ldrb dest_reg, [data_reg]
-				cache_addw( ADD_IMM3(templo1, data_reg, 1) );      // add templo1, data_reg, #1
-				cache_addw( LDRH_IMM(templo1, templo1, 0) );      // ldrh templo1, [templo1]
-				cache_addw( LSL_IMM(templo1, templo1, 8) );      // lsl templo1, templo1, #8
-				cache_addw( ORR(dest_reg, templo1) );      // orr dest_reg, templo1
-				cache_addw( LDRB_IMM(templo1, data_reg, 3) );      // ldrb templo1, [data_reg, #3]
-				cache_addw( LSL_IMM(templo1, templo1, 24) );      // lsl templo1, templo1, #24
-				cache_addw( ORR(dest_reg, templo1) );      // orr dest_reg, templo1
+				cache_addw(LDRB_IMM(dest_reg, data_reg, 0));      // ldrb dest_reg, [data_reg]
+				cache_addw(ADD_IMM3(templo1, data_reg, 1));      // add templo1, data_reg, #1
+				cache_addw(LDRH_IMM(templo1, templo1, 0));      // ldrh templo1, [templo1]
+				cache_addw(LSL_IMM(templo1, templo1, 8));      // lsl templo1, templo1, #8
+				cache_addw(ORR(dest_reg, templo1));      // orr dest_reg, templo1
+				cache_addw(LDRB_IMM(templo1, data_reg, 3));      // ldrb templo1, [data_reg, #3]
+				cache_addw(LSL_IMM(templo1, templo1, 24));      // lsl templo1, templo1, #24
+				cache_addw(ORR(dest_reg, templo1));      // orr dest_reg, templo1
 			}
 		} else
 #endif
 		{
 			cache_checkinstr(2);
-			cache_addw( LDR_IMM(dest_reg, data_reg, 0) );      // ldr dest_reg, [data_reg]
+			cache_addw(LDR_IMM(dest_reg, data_reg, 0));      // ldr dest_reg, [data_reg]
 		}
 	} else {
 #if !defined(C_UNALIGNED_MEMORY)
 		if ((Bit32u)data & 1) {
 			cache_checkinstr(8);
-			cache_addw( LDRB_IMM(dest_reg, data_reg, 0) );      // ldrb dest_reg, [data_reg]
-			cache_addw( LDRB_IMM(templo1, data_reg, 1) );      // ldrb templo1, [data_reg, #1]
-			cache_addw( LSL_IMM(templo1, templo1, 8) );      // lsl templo1, templo1, #8
-			cache_addw( ORR(dest_reg, templo1) );      // orr dest_reg, templo1
+			cache_addw(LDRB_IMM(dest_reg, data_reg, 0));      // ldrb dest_reg, [data_reg]
+			cache_addw(LDRB_IMM(templo1, data_reg, 1));      // ldrb templo1, [data_reg, #1]
+			cache_addw(LSL_IMM(templo1, templo1, 8));      // lsl templo1, templo1, #8
+			cache_addw(ORR(dest_reg, templo1));      // orr dest_reg, templo1
 		} else
 #endif
 		{
 			cache_checkinstr(2);
-			cache_addw( LDRH_IMM(dest_reg, data_reg, 0) );      // ldrh dest_reg, [data_reg]
+			cache_addw(LDRH_IMM(dest_reg, data_reg, 0));      // ldrh dest_reg, [data_reg]
 		}
 	}
 }
 
 // move a 32bit (dword==true) or 16bit (dword==false) value from memory into dest_reg
 // 16bit moves may destroy the upper 16bit of the destination register
-static void gen_mov_word_to_reg(HostReg dest_reg,void* data,bool dword) {
-	if (!gen_mov_memval_to_reg(dest_reg, data, (dword)?4:2)) {
+static void gen_mov_word_to_reg(HostReg dest_reg, void* data, bool dword) {
+	if (!gen_mov_memval_to_reg(dest_reg, data, (dword) ? 4 : 2)) {
 		gen_mov_dword_to_reg_imm(templo2, (Bit32u)data);
 		gen_mov_word_to_reg_helper(dest_reg, data, dword, templo2);
 	}
@@ -471,48 +466,48 @@ static void gen_mov_word_to_reg(HostReg dest_reg,void* data,bool dword) {
 
 // move a 16bit constant value into dest_reg
 // the upper 16bit of the destination register may be destroyed
-static void inline gen_mov_word_to_reg_imm(HostReg dest_reg,Bit16u imm) {
+static void inline gen_mov_word_to_reg_imm(HostReg dest_reg, Bit16u imm) {
 	gen_mov_dword_to_reg_imm(dest_reg, (Bit32u)imm);
 }
 
 // helper function
 static bool gen_mov_memval_from_reg_helper(HostReg src_reg, Bit32u data, Bitu size, HostReg addr_reg, Bit32u addr_data) {
 	switch (size) {
-		case 4:
+	case 4:
 #if !defined(C_UNALIGNED_MEMORY)
-			if ((data & 3) == 0)
+		if ((data & 3) == 0)
 #endif
-			{
-				if ((data >= addr_data) && (data < addr_data + 128) && (((data - addr_data) & 3) == 0)) {
-					cache_checkinstr(4);
-					cache_addw( MOV_LO_HI(templo2, addr_reg) );      // mov templo2, addr_reg
-					cache_addw( STR_IMM(src_reg, templo2, data - addr_data) );      // str src_reg, [templo2, #(data - addr_data)]
-					return true;
-				}
-			}
-			break;
-		case 2:
-#if !defined(C_UNALIGNED_MEMORY)
-			if ((data & 1) == 0)
-#endif
-			{
-				if ((data >= addr_data) && (data < addr_data + 64) && (((data - addr_data) & 1) == 0)) {
-					cache_checkinstr(4);
-					cache_addw( MOV_LO_HI(templo2, addr_reg) );      // mov templo2, addr_reg
-					cache_addw( STRH_IMM(src_reg, templo2, data - addr_data) );      // strh src_reg, [templo2, #(data - addr_data)]
-					return true;
-				}
-			}
-			break;
-		case 1:
-			if ((data >= addr_data) && (data < addr_data + 32)) {
+		{
+			if ((data >= addr_data) && (data < addr_data + 128) && (((data - addr_data) & 3) == 0)) {
 				cache_checkinstr(4);
-				cache_addw( MOV_LO_HI(templo2, addr_reg) );      // mov templo2, addr_reg
-				cache_addw( STRB_IMM(src_reg, templo2, data - addr_data) );      // strb src_reg, [templo2, #(data - addr_data)]
+				cache_addw(MOV_LO_HI(templo2, addr_reg));      // mov templo2, addr_reg
+				cache_addw(STR_IMM(src_reg, templo2, data - addr_data));      // str src_reg, [templo2, #(data - addr_data)]
 				return true;
 			}
-		default:
-			break;
+		}
+		break;
+	case 2:
+#if !defined(C_UNALIGNED_MEMORY)
+		if ((data & 1) == 0)
+#endif
+		{
+			if ((data >= addr_data) && (data < addr_data + 64) && (((data - addr_data) & 1) == 0)) {
+				cache_checkinstr(4);
+				cache_addw(MOV_LO_HI(templo2, addr_reg));      // mov templo2, addr_reg
+				cache_addw(STRH_IMM(src_reg, templo2, data - addr_data));      // strh src_reg, [templo2, #(data - addr_data)]
+				return true;
+			}
+		}
+		break;
+	case 1:
+		if ((data >= addr_data) && (data < addr_data + 32)) {
+			cache_checkinstr(4);
+			cache_addw(MOV_LO_HI(templo2, addr_reg));      // mov templo2, addr_reg
+			cache_addw(STRB_IMM(src_reg, templo2, data - addr_data));      // strb src_reg, [templo2, #(data - addr_data)]
+			return true;
+		}
+	default:
+		break;
 	}
 	return false;
 }
@@ -526,56 +521,56 @@ static bool gen_mov_memval_from_reg(HostReg src_reg, void *dest, Bitu size) {
 }
 
 // helper function for gen_mov_word_from_reg
-static void gen_mov_word_from_reg_helper(HostReg src_reg,void* dest,bool dword, HostReg data_reg) {
+static void gen_mov_word_from_reg_helper(HostReg src_reg, void* dest, bool dword, HostReg data_reg) {
 	// alignment....
 	if (dword) {
 #if !defined(C_UNALIGNED_MEMORY)
 		if ((Bit32u)dest & 3) {
-			if ( ((Bit32u)dest & 3) == 2 ) {
+			if (((Bit32u)dest & 3) == 2) {
 				cache_checkinstr(8);
-				cache_addw( STRH_IMM(src_reg, data_reg, 0) );      // strh src_reg, [data_reg]
-				cache_addw( MOV_REG(templo1, src_reg) );      // mov templo1, src_reg
-				cache_addw( LSR_IMM(templo1, templo1, 16) );      // lsr templo1, templo1, #16
-				cache_addw( STRH_IMM(templo1, data_reg, 2) );      // strh templo1, [data_reg, #2]
+				cache_addw(STRH_IMM(src_reg, data_reg, 0));      // strh src_reg, [data_reg]
+				cache_addw(MOV_REG(templo1, src_reg));      // mov templo1, src_reg
+				cache_addw(LSR_IMM(templo1, templo1, 16));      // lsr templo1, templo1, #16
+				cache_addw(STRH_IMM(templo1, data_reg, 2));      // strh templo1, [data_reg, #2]
 			} else {
 				cache_checkinstr(20);
-				cache_addw( STRB_IMM(src_reg, data_reg, 0) );      // strb src_reg, [data_reg]
-				cache_addw( MOV_REG(templo1, src_reg) );      // mov templo1, src_reg
-				cache_addw( LSR_IMM(templo1, templo1, 8) );      // lsr templo1, templo1, #8
-				cache_addw( STRB_IMM(templo1, data_reg, 1) );      // strb templo1, [data_reg, #1]
-				cache_addw( MOV_REG(templo1, src_reg) );      // mov templo1, src_reg
-				cache_addw( LSR_IMM(templo1, templo1, 16) );      // lsr templo1, templo1, #16
-				cache_addw( STRB_IMM(templo1, data_reg, 2) );      // strb templo1, [data_reg, #2]
-				cache_addw( MOV_REG(templo1, src_reg) );      // mov templo1, src_reg
-				cache_addw( LSR_IMM(templo1, templo1, 24) );      // lsr templo1, templo1, #24
-				cache_addw( STRB_IMM(templo1, data_reg, 3) );      // strb templo1, [data_reg, #3]
+				cache_addw(STRB_IMM(src_reg, data_reg, 0));      // strb src_reg, [data_reg]
+				cache_addw(MOV_REG(templo1, src_reg));      // mov templo1, src_reg
+				cache_addw(LSR_IMM(templo1, templo1, 8));      // lsr templo1, templo1, #8
+				cache_addw(STRB_IMM(templo1, data_reg, 1));      // strb templo1, [data_reg, #1]
+				cache_addw(MOV_REG(templo1, src_reg));      // mov templo1, src_reg
+				cache_addw(LSR_IMM(templo1, templo1, 16));      // lsr templo1, templo1, #16
+				cache_addw(STRB_IMM(templo1, data_reg, 2));      // strb templo1, [data_reg, #2]
+				cache_addw(MOV_REG(templo1, src_reg));      // mov templo1, src_reg
+				cache_addw(LSR_IMM(templo1, templo1, 24));      // lsr templo1, templo1, #24
+				cache_addw(STRB_IMM(templo1, data_reg, 3));      // strb templo1, [data_reg, #3]
 			}
 		} else
 #endif
 		{
 			cache_checkinstr(2);
-			cache_addw( STR_IMM(src_reg, data_reg, 0) );      // str src_reg, [data_reg]
+			cache_addw(STR_IMM(src_reg, data_reg, 0));      // str src_reg, [data_reg]
 		}
 	} else {
 #if !defined(C_UNALIGNED_MEMORY)
 		if ((Bit32u)dest & 1) {
 			cache_checkinstr(8);
-			cache_addw( STRB_IMM(src_reg, data_reg, 0) );      // strb src_reg, [data_reg]
-			cache_addw( MOV_REG(templo1, src_reg) );      // mov templo1, src_reg
-			cache_addw( LSR_IMM(templo1, templo1, 8) );      // lsr templo1, templo1, #8
-			cache_addw( STRB_IMM(templo1, data_reg, 1) );      // strb templo1, [data_reg, #1]
+			cache_addw(STRB_IMM(src_reg, data_reg, 0));      // strb src_reg, [data_reg]
+			cache_addw(MOV_REG(templo1, src_reg));      // mov templo1, src_reg
+			cache_addw(LSR_IMM(templo1, templo1, 8));      // lsr templo1, templo1, #8
+			cache_addw(STRB_IMM(templo1, data_reg, 1));      // strb templo1, [data_reg, #1]
 		} else
 #endif
 		{
 			cache_checkinstr(2);
-			cache_addw( STRH_IMM(src_reg, data_reg, 0) );      // strh src_reg, [data_reg]
+			cache_addw(STRH_IMM(src_reg, data_reg, 0));      // strh src_reg, [data_reg]
 		}
 	}
 }
 
 // move 32bit (dword==true) or 16bit (dword==false) of a register into memory
-static void gen_mov_word_from_reg(HostReg src_reg,void* dest,bool dword) {
-	if (!gen_mov_memval_from_reg(src_reg, dest, (dword)?4:2)) {
+static void gen_mov_word_from_reg(HostReg src_reg, void* dest, bool dword) {
+	if (!gen_mov_memval_from_reg(src_reg, dest, (dword) ? 4 : 2)) {
 		gen_mov_dword_to_reg_imm(templo2, (Bit32u)dest);
 		gen_mov_word_from_reg_helper(src_reg, dest, dword, templo2);
 	}
@@ -585,11 +580,11 @@ static void gen_mov_word_from_reg(HostReg src_reg,void* dest,bool dword) {
 // the upper 24bit of the destination register can be destroyed
 // this function does not use FC_OP1/FC_OP2 as dest_reg as these
 // registers might not be directly byte-accessible on some architectures
-static void gen_mov_byte_to_reg_low(HostReg dest_reg,void* data) {
+static void gen_mov_byte_to_reg_low(HostReg dest_reg, void* data) {
 	if (!gen_mov_memval_to_reg(dest_reg, data, 1)) {
 		gen_mov_dword_to_reg_imm(templo1, (Bit32u)data);
 		cache_checkinstr(2);
-		cache_addw( LDRB_IMM(dest_reg, templo1, 0) );      // ldrb dest_reg, [templo1]
+		cache_addw(LDRB_IMM(dest_reg, templo1, 0));      // ldrb dest_reg, [templo1]
 	}
 }
 
@@ -597,7 +592,7 @@ static void gen_mov_byte_to_reg_low(HostReg dest_reg,void* data) {
 // the upper 24bit of the destination register can be destroyed
 // this function can use FC_OP1/FC_OP2 as dest_reg which are
 // not directly byte-accessible on some architectures
-static void inline gen_mov_byte_to_reg_low_canuseword(HostReg dest_reg,void* data) {
+static void inline gen_mov_byte_to_reg_low_canuseword(HostReg dest_reg, void* data) {
 	gen_mov_byte_to_reg_low(dest_reg, data);
 }
 
@@ -605,25 +600,25 @@ static void inline gen_mov_byte_to_reg_low_canuseword(HostReg dest_reg,void* dat
 // the upper 24bit of the destination register can be destroyed
 // this function does not use FC_OP1/FC_OP2 as dest_reg as these
 // registers might not be directly byte-accessible on some architectures
-static void gen_mov_byte_to_reg_low_imm(HostReg dest_reg,Bit8u imm) {
+static void gen_mov_byte_to_reg_low_imm(HostReg dest_reg, Bit8u imm) {
 	cache_checkinstr(2);
-	cache_addw( MOV_IMM(dest_reg, imm) );      // mov dest_reg, #(imm)
+	cache_addw(MOV_IMM(dest_reg, imm));      // mov dest_reg, #(imm)
 }
 
 // move an 8bit constant value into dest_reg
 // the upper 24bit of the destination register can be destroyed
 // this function can use FC_OP1/FC_OP2 as dest_reg which are
 // not directly byte-accessible on some architectures
-static void inline gen_mov_byte_to_reg_low_imm_canuseword(HostReg dest_reg,Bit8u imm) {
+static void inline gen_mov_byte_to_reg_low_imm_canuseword(HostReg dest_reg, Bit8u imm) {
 	gen_mov_byte_to_reg_low_imm(dest_reg, imm);
 }
 
 // move the lowest 8bit of a register into memory
-static void gen_mov_byte_from_reg_low(HostReg src_reg,void* dest) {
+static void gen_mov_byte_from_reg_low(HostReg src_reg, void* dest) {
 	if (!gen_mov_memval_from_reg(src_reg, dest, 1)) {
 		gen_mov_dword_to_reg_imm(templo1, (Bit32u)dest);
 		cache_checkinstr(2);
-		cache_addw( STRB_IMM(src_reg, templo1, 0) );      // strb src_reg, [templo1]
+		cache_addw(STRB_IMM(src_reg, templo1, 0));      // strb src_reg, [templo1]
 	}
 }
 
@@ -631,181 +626,181 @@ static void gen_mov_byte_from_reg_low(HostReg src_reg,void* dest) {
 
 // convert an 8bit word to a 32bit dword
 // the register is zero-extended (sign==false) or sign-extended (sign==true)
-static void gen_extend_byte(bool sign,HostReg reg) {
+static void gen_extend_byte(bool sign, HostReg reg) {
 	cache_checkinstr(4);
-	cache_addw( LSL_IMM(reg, reg, 24) );      // lsl reg, reg, #24
+	cache_addw(LSL_IMM(reg, reg, 24));      // lsl reg, reg, #24
 
 	if (sign) {
-		cache_addw( ASR_IMM(reg, reg, 24) );      // asr reg, reg, #24
+		cache_addw(ASR_IMM(reg, reg, 24));      // asr reg, reg, #24
 	} else {
-		cache_addw( LSR_IMM(reg, reg, 24) );      // lsr reg, reg, #24
+		cache_addw(LSR_IMM(reg, reg, 24));      // lsr reg, reg, #24
 	}
 }
 
 // convert a 16bit word to a 32bit dword
 // the register is zero-extended (sign==false) or sign-extended (sign==true)
-static void gen_extend_word(bool sign,HostReg reg) {
+static void gen_extend_word(bool sign, HostReg reg) {
 	cache_checkinstr(4);
-	cache_addw( LSL_IMM(reg, reg, 16) );      // lsl reg, reg, #16
+	cache_addw(LSL_IMM(reg, reg, 16));      // lsl reg, reg, #16
 
 	if (sign) {
-		cache_addw( ASR_IMM(reg, reg, 16) );      // asr reg, reg, #16
+		cache_addw(ASR_IMM(reg, reg, 16));      // asr reg, reg, #16
 	} else {
-		cache_addw( LSR_IMM(reg, reg, 16) );      // lsr reg, reg, #16
+		cache_addw(LSR_IMM(reg, reg, 16));      // lsr reg, reg, #16
 	}
 }
 
 // add a 32bit value from memory to a full register
-static void gen_add(HostReg reg,void* op) {
+static void gen_add(HostReg reg, void* op) {
 	gen_mov_word_to_reg(templo3, op, 1);
 	cache_checkinstr(2);
-	cache_addw( ADD_REG(reg, reg, templo3) );      // add reg, reg, templo3
+	cache_addw(ADD_REG(reg, reg, templo3));      // add reg, reg, templo3
 }
 
 // add a 32bit constant value to a full register
-static void gen_add_imm(HostReg reg,Bit32u imm) {
+static void gen_add_imm(HostReg reg, Bit32u imm) {
 	Bit32u imm2, scale;
 
-	if(!imm) return;
+	if (!imm) return;
 
-	imm2 = (Bit32u) (-((Bit32s)imm));
+	imm2 = (Bit32u)(-((Bit32s)imm));
 
 	if (imm <= 255) {
 		cache_checkinstr(2);
-		cache_addw( ADD_IMM8(reg, imm) );      // add reg, #imm
+		cache_addw(ADD_IMM8(reg, imm));      // add reg, #imm
 	} else if (imm2 <= 255) {
 		cache_checkinstr(2);
-		cache_addw( SUB_IMM8(reg, imm2) );      // sub reg, #(-imm)
+		cache_addw(SUB_IMM8(reg, imm2));      // sub reg, #(-imm)
 	} else {
 		if (val_single_shift(imm2, &scale)) {
-			cache_checkinstr((scale)?6:4);
-			cache_addw( MOV_IMM(templo1, imm2 >> scale) );      // mov templo1, #(~imm >> scale)
+			cache_checkinstr((scale) ? 6 : 4);
+			cache_addw(MOV_IMM(templo1, imm2 >> scale));      // mov templo1, #(~imm >> scale)
 			if (scale) {
-				cache_addw( LSL_IMM(templo1, templo1, scale) );      // lsl templo1, templo1, #scale
+				cache_addw(LSL_IMM(templo1, templo1, scale));      // lsl templo1, templo1, #scale
 			}
-			cache_addw( SUB_REG(reg, reg, templo1) );      // sub reg, reg, templo1
+			cache_addw(SUB_REG(reg, reg, templo1));      // sub reg, reg, templo1
 		} else {
 			gen_mov_dword_to_reg_imm(templo1, imm);
 			cache_checkinstr(2);
-			cache_addw( ADD_REG(reg, reg, templo1) );      // add reg, reg, templo1
+			cache_addw(ADD_REG(reg, reg, templo1));      // add reg, reg, templo1
 		}
 	}
 }
 
 // and a 32bit constant value with a full register
-static void gen_and_imm(HostReg reg,Bit32u imm) {
+static void gen_and_imm(HostReg reg, Bit32u imm) {
 	Bit32u imm2, scale;
 
 	imm2 = ~imm;
-	if(!imm2) return;
+	if (!imm2) return;
 
 	if (!imm) {
 		cache_checkinstr(2);
-		cache_addw( MOV_IMM(reg, 0) );      // mov reg, #0
+		cache_addw(MOV_IMM(reg, 0));      // mov reg, #0
 	} else {
 		if (val_single_shift(imm2, &scale)) {
-			cache_checkinstr((scale)?6:4);
-			cache_addw( MOV_IMM(templo1, imm2 >> scale) );      // mov templo1, #(~imm >> scale)
+			cache_checkinstr((scale) ? 6 : 4);
+			cache_addw(MOV_IMM(templo1, imm2 >> scale));      // mov templo1, #(~imm >> scale)
 			if (scale) {
-				cache_addw( LSL_IMM(templo1, templo1, scale) );      // lsl templo1, templo1, #scale
+				cache_addw(LSL_IMM(templo1, templo1, scale));      // lsl templo1, templo1, #scale
 			}
-			cache_addw( BIC(reg, templo1) );      // bic reg, templo1
+			cache_addw(BIC(reg, templo1));      // bic reg, templo1
 		} else {
 			gen_mov_dword_to_reg_imm(templo1, imm);
 			cache_checkinstr(2);
-			cache_addw( AND(reg, templo1) );      // and reg, templo1
+			cache_addw(AND(reg, templo1));      // and reg, templo1
 		}
 	}
 }
 
 
 // move a 32bit constant value into memory
-static void gen_mov_direct_dword(void* dest,Bit32u imm) {
+static void gen_mov_direct_dword(void* dest, Bit32u imm) {
 	gen_mov_dword_to_reg_imm(templo3, imm);
 	gen_mov_word_from_reg(templo3, dest, 1);
 }
 
 // move an address into memory
-static void inline gen_mov_direct_ptr(void* dest,DRC_PTR_SIZE_IM imm) {
-	gen_mov_direct_dword(dest,(Bit32u)imm);
+static void inline gen_mov_direct_ptr(void* dest, DRC_PTR_SIZE_IM imm) {
+	gen_mov_direct_dword(dest, (Bit32u)imm);
 }
 
 // add a 32bit (dword==true) or 16bit (dword==false) constant value to a memory value
-static void gen_add_direct_word(void* dest,Bit32u imm,bool dword) {
+static void gen_add_direct_word(void* dest, Bit32u imm, bool dword) {
 	if (!dword) imm &= 0xffff;
-	if(!imm) return;
+	if (!imm) return;
 
-	if (!gen_mov_memval_to_reg(templo3, dest, (dword)?4:2)) {
+	if (!gen_mov_memval_to_reg(templo3, dest, (dword) ? 4 : 2)) {
 		gen_mov_dword_to_reg_imm(templo2, (Bit32u)dest);
 		gen_mov_word_to_reg_helper(templo3, dest, dword, templo2);
 	}
 	gen_add_imm(templo3, imm);
-	if (!gen_mov_memval_from_reg(templo3, dest, (dword)?4:2)) {
+	if (!gen_mov_memval_from_reg(templo3, dest, (dword) ? 4 : 2)) {
 		gen_mov_word_from_reg_helper(templo3, dest, dword, templo2);
 	}
 }
 
 // add an 8bit constant value to a dword memory value
-static void gen_add_direct_byte(void* dest,Bit8s imm) {
+static void gen_add_direct_byte(void* dest, Bit8s imm) {
 	gen_add_direct_word(dest, (Bit32s)imm, 1);
 }
 
 // subtract a 32bit (dword==true) or 16bit (dword==false) constant value from a memory value
-static void gen_sub_direct_word(void* dest,Bit32u imm,bool dword) {
+static void gen_sub_direct_word(void* dest, Bit32u imm, bool dword) {
 	Bit32u imm2, scale;
 
 	if (!dword) imm &= 0xffff;
-	if(!imm) return;
+	if (!imm) return;
 
-	if (!gen_mov_memval_to_reg(templo3, dest, (dword)?4:2)) {
+	if (!gen_mov_memval_to_reg(templo3, dest, (dword) ? 4 : 2)) {
 		gen_mov_dword_to_reg_imm(templo2, (Bit32u)dest);
 		gen_mov_word_to_reg_helper(templo3, dest, dword, templo2);
 	}
 
-	imm2 = (Bit32u) (-((Bit32s)imm));
+	imm2 = (Bit32u)(-((Bit32s)imm));
 
 	if (imm <= 255) {
 		cache_checkinstr(2);
-		cache_addw( SUB_IMM8(templo3, imm) );      // sub templo3, #imm
+		cache_addw(SUB_IMM8(templo3, imm));      // sub templo3, #imm
 	} else if (imm2 <= 255) {
 		cache_checkinstr(2);
-		cache_addw( ADD_IMM8(templo3, imm2) );      // add templo3, #(-imm)
+		cache_addw(ADD_IMM8(templo3, imm2));      // add templo3, #(-imm)
 	} else {
 		if (val_single_shift(imm2, &scale)) {
-			cache_checkinstr((scale)?6:4);
-			cache_addw( MOV_IMM(templo1, imm2 >> scale) );      // mov templo1, #(~imm >> scale)
+			cache_checkinstr((scale) ? 6 : 4);
+			cache_addw(MOV_IMM(templo1, imm2 >> scale));      // mov templo1, #(~imm >> scale)
 			if (scale) {
-				cache_addw( LSL_IMM(templo1, templo1, scale) );      // lsl templo1, templo1, #scale
+				cache_addw(LSL_IMM(templo1, templo1, scale));      // lsl templo1, templo1, #scale
 			}
-			cache_addw( ADD_REG(templo3, templo3, templo1) );      // add templo3, templo3, templo1
+			cache_addw(ADD_REG(templo3, templo3, templo1));      // add templo3, templo3, templo1
 		} else {
 			gen_mov_dword_to_reg_imm(templo1, imm);
 			cache_checkinstr(2);
-			cache_addw( SUB_REG(templo3, templo3, templo1) );      // sub templo3, templo3, templo1
+			cache_addw(SUB_REG(templo3, templo3, templo1));      // sub templo3, templo3, templo1
 		}
 	}
 
-	if (!gen_mov_memval_from_reg(templo3, dest, (dword)?4:2)) {
+	if (!gen_mov_memval_from_reg(templo3, dest, (dword) ? 4 : 2)) {
 		gen_mov_word_from_reg_helper(templo3, dest, dword, templo2);
 	}
 }
 
 // subtract an 8bit constant value from a dword memory value
-static void gen_sub_direct_byte(void* dest,Bit8s imm) {
+static void gen_sub_direct_byte(void* dest, Bit8s imm) {
 	gen_sub_direct_word(dest, (Bit32s)imm, 1);
 }
 
 // effective address calculation, destination is dest_reg
 // scale_reg is scaled by scale (scale_reg*(2^scale)) and
 // added to dest_reg, then the immediate value is added
-static inline void gen_lea(HostReg dest_reg,HostReg scale_reg,Bitu scale,Bits imm) {
+static inline void gen_lea(HostReg dest_reg, HostReg scale_reg, Bitu scale, Bits imm) {
 	if (scale) {
 		cache_checkinstr(4);
-		cache_addw( LSL_IMM(templo1, scale_reg, scale) );      // lsl templo1, scale_reg, #(scale)
-		cache_addw( ADD_REG(dest_reg, dest_reg, templo1) );      // add dest_reg, dest_reg, templo1
+		cache_addw(LSL_IMM(templo1, scale_reg, scale));      // lsl templo1, scale_reg, #(scale)
+		cache_addw(ADD_REG(dest_reg, dest_reg, templo1));      // add dest_reg, dest_reg, templo1
 	} else {
 		cache_checkinstr(2);
-		cache_addw( ADD_REG(dest_reg, dest_reg, scale_reg) );      // add dest_reg, dest_reg, scale_reg
+		cache_addw(ADD_REG(dest_reg, dest_reg, scale_reg));      // add dest_reg, dest_reg, scale_reg
 	}
 	gen_add_imm(dest_reg, imm);
 }
@@ -813,10 +808,10 @@ static inline void gen_lea(HostReg dest_reg,HostReg scale_reg,Bitu scale,Bits im
 // effective address calculation, destination is dest_reg
 // dest_reg is scaled by scale (dest_reg*(2^scale)),
 // then the immediate value is added
-static inline void gen_lea(HostReg dest_reg,Bitu scale,Bits imm) {
+static inline void gen_lea(HostReg dest_reg, Bitu scale, Bits imm) {
 	if (scale) {
 		cache_checkinstr(2);
-		cache_addw( LSL_IMM(dest_reg, dest_reg, scale) );      // lsl dest_reg, dest_reg, #(scale)
+		cache_addw(LSL_IMM(dest_reg, dest_reg, scale));      // lsl dest_reg, dest_reg, #(scale)
 	}
 	gen_add_imm(dest_reg, imm);
 }
@@ -826,21 +821,21 @@ static void gen_call_function_helper(void * func) {
 	Bit8u *datapos;
 
 	datapos = cache_reservedata();
-	*(Bit32u*)datapos=(Bit32u)func;
+	*(Bit32u*)datapos = (Bit32u)func;
 
 	if (((Bit32u)cache.pos & 0x03) == 0) {
-		cache_addw( LDR_PC_IMM(templo1, datapos - (cache.pos + 4)) );      // ldr templo1, [pc, datapos]
-		cache_addw( ADD_LO_PC_IMM(templo2, 8) );      // adr templo2, after_call (add templo2, pc, #8)
-		cache_addw( ADD_IMM8(templo2, 1) );      // add templo2, #1
-		cache_addw( MOV_HI_LO(HOST_lr, templo2) );      // mov lr, templo2
-		cache_addw( BX(templo1) );      // bx templo1     --- switch to arm state
-		cache_addw( NOP );      // nop
+		cache_addw(LDR_PC_IMM(templo1, datapos - (cache.pos + 4)));      // ldr templo1, [pc, datapos]
+		cache_addw(ADD_LO_PC_IMM(templo2, 8));      // adr templo2, after_call (add templo2, pc, #8)
+		cache_addw(ADD_IMM8(templo2, 1));      // add templo2, #1
+		cache_addw(MOV_HI_LO(HOST_lr, templo2));      // mov lr, templo2
+		cache_addw(BX(templo1));      // bx templo1     --- switch to arm state
+		cache_addw(NOP);      // nop
 	} else {
-		cache_addw( LDR_PC_IMM(templo1, datapos - (cache.pos + 2)) );      // ldr templo1, [pc, datapos]
-		cache_addw( ADD_LO_PC_IMM(templo2, 4) );      // adr templo2, after_call (add templo2, pc, #4)
-		cache_addw( ADD_IMM8(templo2, 1) );      // add templo2, #1
-		cache_addw( MOV_HI_LO(HOST_lr, templo2) );      // mov lr, templo2
-		cache_addw( BX(templo1) );      // bx templo1     --- switch to arm state
+		cache_addw(LDR_PC_IMM(templo1, datapos - (cache.pos + 2)));      // ldr templo1, [pc, datapos]
+		cache_addw(ADD_LO_PC_IMM(templo2, 4));      // adr templo2, after_call (add templo2, pc, #4)
+		cache_addw(ADD_IMM8(templo2, 1));      // add templo2, #1
+		cache_addw(MOV_HI_LO(HOST_lr, templo2));      // mov lr, templo2
+		cache_addw(BX(templo1));      // bx templo1     --- switch to arm state
 	}
 	// after_call:
 
@@ -856,7 +851,7 @@ static void inline gen_call_function_raw(void * func) {
 // generate a call to a function with paramcount parameters
 // note: the parameters are loaded in the architecture specific way
 // using the gen_load_param_ functions below
-static Bit32u inline gen_call_function_setup(void * func,Bitu paramcount,bool fastcall=false) {
+static Bit32u inline gen_call_function_setup(void * func, Bitu paramcount, bool fastcall = false) {
 	cache_checkinstr(12);
 	Bit32u proc_addr = (Bit32u)cache.pos;
 	gen_call_function_helper(func);
@@ -870,126 +865,126 @@ static Bit32u inline gen_call_function_setup(void * func,Bitu paramcount,bool fa
 // max of 4 parameters in a1-a4
 
 // load an immediate value as param'th function parameter
-static void inline gen_load_param_imm(Bitu imm,Bitu param) {
+static void inline gen_load_param_imm(Bitu imm, Bitu param) {
 	gen_mov_dword_to_reg_imm(param, imm);
 }
 
 // load an address as param'th function parameter
-static void inline gen_load_param_addr(Bitu addr,Bitu param) {
+static void inline gen_load_param_addr(Bitu addr, Bitu param) {
 	gen_mov_dword_to_reg_imm(param, addr);
 }
 
 // load a host-register as param'th function parameter
-static void inline gen_load_param_reg(Bitu reg,Bitu param) {
+static void inline gen_load_param_reg(Bitu reg, Bitu param) {
 	gen_mov_regs(param, reg);
 }
 
 // load a value from memory as param'th function parameter
-static void inline gen_load_param_mem(Bitu mem,Bitu param) {
+static void inline gen_load_param_mem(Bitu mem, Bitu param) {
 	gen_mov_word_to_reg(param, (void *)mem, 1);
 }
 #else
-	other arm abis
+other arm abis
 #endif
 
 // jump to an address pointed at by ptr, offset is in imm
-static void gen_jmp_ptr(void * ptr,Bits imm=0) {
+static void gen_jmp_ptr(void * ptr, Bits imm = 0) {
 	gen_mov_word_to_reg(templo3, ptr, 1);
 
 #if !defined(C_UNALIGNED_MEMORY)
-// (*ptr) should be word aligned
+	// (*ptr) should be word aligned
 	if ((imm & 0x03) == 0) {
 #endif
 		if ((imm >= 0) && (imm < 128) && ((imm & 3) == 0)) {
 			cache_checkinstr(6);
-			cache_addw( LDR_IMM(templo2, templo3, imm) );      // ldr templo2, [templo3, #imm]
+			cache_addw(LDR_IMM(templo2, templo3, imm));      // ldr templo2, [templo3, #imm]
 		} else {
 			gen_mov_dword_to_reg_imm(templo2, imm);
 			cache_checkinstr(6);
-			cache_addw( LDR_REG(templo2, templo3, templo2) );      // ldr templo2, [templo3, templo2]
+			cache_addw(LDR_REG(templo2, templo3, templo2));      // ldr templo2, [templo3, templo2]
 		}
 #if !defined(C_UNALIGNED_MEMORY)
 	} else {
 		gen_add_imm(templo3, imm);
 
 		cache_checkinstr(24);
-		cache_addw( LDRB_IMM(templo2, templo3, 0) );      // ldrb templo2, [templo3]
-		cache_addw( LDRB_IMM(templo1, templo3, 1) );      // ldrb templo1, [templo3, #1]
-		cache_addw( LSL_IMM(templo1, templo1, 8) );      // lsl templo1, templo1, #8
-		cache_addw( ORR(templo2, templo1) );      // orr templo2, templo1
-		cache_addw( LDRB_IMM(templo1, templo3, 2) );      // ldrb templo1, [templo3, #2]
-		cache_addw( LSL_IMM(templo1, templo1, 16) );      // lsl templo1, templo1, #16
-		cache_addw( ORR(templo2, templo1) );      // orr templo2, templo1
-		cache_addw( LDRB_IMM(templo1, templo3, 3) );      // ldrb templo1, [templo3, #3]
-		cache_addw( LSL_IMM(templo1, templo1, 24) );      // lsl templo1, templo1, #24
-		cache_addw( ORR(templo2, templo1) );      // orr templo2, templo1
+		cache_addw(LDRB_IMM(templo2, templo3, 0));      // ldrb templo2, [templo3]
+		cache_addw(LDRB_IMM(templo1, templo3, 1));      // ldrb templo1, [templo3, #1]
+		cache_addw(LSL_IMM(templo1, templo1, 8));      // lsl templo1, templo1, #8
+		cache_addw(ORR(templo2, templo1));      // orr templo2, templo1
+		cache_addw(LDRB_IMM(templo1, templo3, 2));      // ldrb templo1, [templo3, #2]
+		cache_addw(LSL_IMM(templo1, templo1, 16));      // lsl templo1, templo1, #16
+		cache_addw(ORR(templo2, templo1));      // orr templo2, templo1
+		cache_addw(LDRB_IMM(templo1, templo3, 3));      // ldrb templo1, [templo3, #3]
+		cache_addw(LSL_IMM(templo1, templo1, 24));      // lsl templo1, templo1, #24
+		cache_addw(ORR(templo2, templo1));      // orr templo2, templo1
 	}
 #endif
 
 	// increase jmp address to keep thumb state
-	cache_addw( ADD_IMM3(templo2, templo2, 1) );      // add templo2, templo2, #1
+	cache_addw(ADD_IMM3(templo2, templo2, 1));      // add templo2, templo2, #1
 
-	cache_addw( BX(templo2) );      // bx templo2
+	cache_addw(BX(templo2));      // bx templo2
 }
 
 // short conditional jump (+-127 bytes) if register is zero
 // the destination is set by gen_fill_branch() later
-static Bit32u gen_create_branch_on_zero(HostReg reg,bool dword) {
+static Bit32u gen_create_branch_on_zero(HostReg reg, bool dword) {
 	cache_checkinstr(4);
 	if (dword) {
-		cache_addw( CMP_IMM(reg, 0) );      // cmp reg, #0
+		cache_addw(CMP_IMM(reg, 0));      // cmp reg, #0
 	} else {
-		cache_addw( LSL_IMM(templo1, reg, 16) );      // lsl templo1, reg, #16
+		cache_addw(LSL_IMM(templo1, reg, 16));      // lsl templo1, reg, #16
 	}
-	cache_addw( BEQ_FWD(0) );      // beq j
-	return ((Bit32u)cache.pos-2);
+	cache_addw(BEQ_FWD(0));      // beq j
+	return ((Bit32u)cache.pos - 2);
 }
 
 // short conditional jump (+-127 bytes) if register is nonzero
 // the destination is set by gen_fill_branch() later
-static Bit32u gen_create_branch_on_nonzero(HostReg reg,bool dword) {
+static Bit32u gen_create_branch_on_nonzero(HostReg reg, bool dword) {
 	cache_checkinstr(4);
 	if (dword) {
-		cache_addw( CMP_IMM(reg, 0) );      // cmp reg, #0
+		cache_addw(CMP_IMM(reg, 0));      // cmp reg, #0
 	} else {
-		cache_addw( LSL_IMM(templo1, reg, 16) );      // lsl templo1, reg, #16
+		cache_addw(LSL_IMM(templo1, reg, 16));      // lsl templo1, reg, #16
 	}
-	cache_addw( BNE_FWD(0) );      // bne j
-	return ((Bit32u)cache.pos-2);
+	cache_addw(BNE_FWD(0));      // bne j
+	return ((Bit32u)cache.pos - 2);
 }
 
 // calculate relative offset and fill it into the location pointed to by data
 static void inline gen_fill_branch(DRC_PTR_SIZE_IM data) {
 #if C_DEBUG
-	Bits len=(Bit32u)cache.pos-(data+4);
-	if (len<0) len=-len;
-	if (len>252) LOG_MSG("Big jump %d",len);
+	Bits len = (Bit32u)cache.pos - (data + 4);
+	if (len < 0) len = -len;
+	if (len > 252) LOG_MSG("Big jump %d", len);
 #endif
-	*(Bit8u*)data=(Bit8u)( ((Bit32u)cache.pos-(data+4)) >> 1 );
+	*(Bit8u*)data = (Bit8u)(((Bit32u)cache.pos - (data + 4)) >> 1);
 }
 
 
 // conditional jump if register is nonzero
 // for isdword==true the 32bit of the register are tested
 // for isdword==false the lowest 8bit of the register are tested
-static Bit32u gen_create_branch_long_nonzero(HostReg reg,bool isdword) {
+static Bit32u gen_create_branch_long_nonzero(HostReg reg, bool isdword) {
 	Bit8u *datapos;
 
 	cache_checkinstr(8);
 	datapos = cache_reservedata();
 
 	if (isdword) {
-		cache_addw( CMP_IMM(reg, 0) );      // cmp reg, #0
+		cache_addw(CMP_IMM(reg, 0));      // cmp reg, #0
 	} else {
-		cache_addw( LSL_IMM(templo2, reg, 24) );      // lsl templo2, reg, #24
+		cache_addw(LSL_IMM(templo2, reg, 24));      // lsl templo2, reg, #24
 	}
-	cache_addw( BEQ_FWD(2) );      // beq nobranch (pc+2)
+	cache_addw(BEQ_FWD(2));      // beq nobranch (pc+2)
 	if (((Bit32u)cache.pos & 0x03) == 0) {
-		cache_addw( LDR_PC_IMM(templo1, datapos - (cache.pos + 4)) );      // ldr templo1, [pc, datapos]
+		cache_addw(LDR_PC_IMM(templo1, datapos - (cache.pos + 4)));      // ldr templo1, [pc, datapos]
 	} else {
-		cache_addw( LDR_PC_IMM(templo1, datapos - (cache.pos + 2)) );      // ldr templo1, [pc, datapos]
+		cache_addw(LDR_PC_IMM(templo1, datapos - (cache.pos + 2)));      // ldr templo1, [pc, datapos]
 	}
-	cache_addw( BX(templo1) );      // bx templo1
+	cache_addw(BX(templo1));      // bx templo1
 	// nobranch:
 	return ((Bit32u)datapos);
 }
@@ -1001,14 +996,14 @@ static Bit32u gen_create_branch_long_leqzero(HostReg reg) {
 	cache_checkinstr(8);
 	datapos = cache_reservedata();
 
-	cache_addw( CMP_IMM(reg, 0) );      // cmp reg, #0
-	cache_addw( BGT_FWD(2) );      // bgt nobranch (pc+2)
+	cache_addw(CMP_IMM(reg, 0));      // cmp reg, #0
+	cache_addw(BGT_FWD(2));      // bgt nobranch (pc+2)
 	if (((Bit32u)cache.pos & 0x03) == 0) {
-		cache_addw( LDR_PC_IMM(templo1, datapos - (cache.pos + 4)) );      // ldr templo1, [pc, datapos]
+		cache_addw(LDR_PC_IMM(templo1, datapos - (cache.pos + 4)));      // ldr templo1, [pc, datapos]
 	} else {
-		cache_addw( LDR_PC_IMM(templo1, datapos - (cache.pos + 2)) );      // ldr templo1, [pc, datapos]
+		cache_addw(LDR_PC_IMM(templo1, datapos - (cache.pos + 2)));      // ldr templo1, [pc, datapos]
 	}
-	cache_addw( BX(templo1) );      // bx templo1
+	cache_addw(BX(templo1));      // bx templo1
 	// nobranch:
 	return ((Bit32u)datapos);
 }
@@ -1016,7 +1011,7 @@ static Bit32u gen_create_branch_long_leqzero(HostReg reg) {
 // calculate long relative offset and fill it into the location pointed to by data
 static void inline gen_fill_branch_long(Bit32u data) {
 	// this is an absolute branch
-	*(Bit32u*)data=((Bit32u)cache.pos) + 1; // add 1 to keep processor in thumb state
+	*(Bit32u*)data = ((Bit32u)cache.pos) + 1; // add 1 to keep processor in thumb state
 }
 
 static void gen_run_code(void) {
@@ -1029,25 +1024,25 @@ static void gen_run_code(void) {
 	cache_addd(0xe92d4df0);			// stmfd sp!, {v1-v5,v7,v8,lr}
 #endif
 
-	cache_addd( ARM_ADD_IMM(HOST_r0, HOST_r0, 1, 0) );      // add r0, r0, #1
+	cache_addd(ARM_ADD_IMM(HOST_r0, HOST_r0, 1, 0));      // add r0, r0, #1
 
 	pos1 = cache.pos;
-	cache_addd( 0 );
+	cache_addd(0);
 	pos2 = cache.pos;
-	cache_addd( 0 );
+	cache_addd(0);
 	pos3 = cache.pos;
-	cache_addd( 0 );
+	cache_addd(0);
 
-	cache_addd( ARM_ADD_IMM(HOST_lr, HOST_pc, 4, 0) );			// add lr, pc, #4
-	cache_addd( ARM_STR_IMM_M_W(HOST_lr, HOST_sp, 4) );      // str lr, [sp, #-4]!
-	cache_addd( ARM_BX(HOST_r0) );			// bx r0
+	cache_addd(ARM_ADD_IMM(HOST_lr, HOST_pc, 4, 0));			// add lr, pc, #4
+	cache_addd(ARM_STR_IMM_M_W(HOST_lr, HOST_sp, 4));      // str lr, [sp, #-4]!
+	cache_addd(ARM_BX(HOST_r0));			// bx r0
 
 #if (__ARM_EABI__)
 	cache_addd(0xe8bd4ff0);			// ldmfd sp!, {v1-v8,lr}
 #else
 	cache_addd(0xe8bd4df0);			// ldmfd sp!, {v1-v5,v7,v8,lr}
 #endif
-	cache_addd( ARM_BX(HOST_lr) );			// bx lr
+	cache_addd(ARM_BX(HOST_lr));			// bx lr
 
 	// align cache.pos to 32 bytes
 	if ((((Bitu)cache.pos) & 0x1f) != 0) {
@@ -1073,14 +1068,14 @@ static void gen_run_code(void) {
 static void gen_return_function(void) {
 	cache_checkinstr(4);
 	cache_addw(0xbc08);      // pop {r3}
-	cache_addw( BX(HOST_r3) );      // bx r3
+	cache_addw(BX(HOST_r3));      // bx r3
 }
 
 
 // short unconditional jump (over data pool)
 // must emit at most CACHE_DATA_JUMP bytes
 static void inline gen_create_branch_short(void * func) {
-	cache_addw( B_FWD((Bit32u)func - ((Bit32u)cache.pos + 4)) );      // b func
+	cache_addw(B_FWD((Bit32u)func - ((Bit32u)cache.pos + 4)));      // b func
 }
 
 
@@ -1088,297 +1083,290 @@ static void inline gen_create_branch_short(void * func) {
 
 // called when a call to a function can be replaced by a
 // call to a simpler function
-static void gen_fill_function_ptr(Bit8u * pos,void* fct_ptr,Bitu flags_type) {
+static void gen_fill_function_ptr(Bit8u * pos, void* fct_ptr, Bitu flags_type) {
 	if ((*(Bit16u*)pos & 0xf000) == 0xe000) {
 		if ((*(Bit16u*)pos & 0x0fff) >= ((CACHE_DATA_ALIGN / 2) - 1) &&
-			(*(Bit16u*)pos & 0x0fff) < 0x0800)
-		{
-			pos = (Bit8u *) ( ( ( (Bit32u)(*(Bit16u*)pos & 0x0fff) ) << 1 ) + ((Bit32u)pos + 4) );
+			(*(Bit16u*)pos & 0x0fff) < 0x0800) {
+			pos = (Bit8u *)((((Bit32u)(*(Bit16u*)pos & 0x0fff)) << 1) + ((Bit32u)pos + 4));
 		}
 	}
 
 #ifdef DRC_FLAGS_INVALIDATION_DCODE
-	if (((Bit32u)pos & 0x03) == 0)
-	{
+	if (((Bit32u)pos & 0x03) == 0) {
 		// try to avoid function calls but rather directly fill in code
 		switch (flags_type) {
-			case t_ADDb:
-			case t_ADDw:
-			case t_ADDd:
-				*(Bit16u*)pos=ADD_REG(HOST_a1, HOST_a1, HOST_a2);	// add a1, a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_ORb:
-			case t_ORw:
-			case t_ORd:
-				*(Bit16u*)pos=ORR(HOST_a1, HOST_a2);				// orr a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_ANDb:
-			case t_ANDw:
-			case t_ANDd:
-				*(Bit16u*)pos=AND(HOST_a1, HOST_a2);				// and a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_SUBb:
-			case t_SUBw:
-			case t_SUBd:
-				*(Bit16u*)pos=SUB_REG(HOST_a1, HOST_a1, HOST_a2);	// sub a1, a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_XORb:
-			case t_XORw:
-			case t_XORd:
-				*(Bit16u*)pos=EOR(HOST_a1, HOST_a2);				// eor a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_CMPb:
-			case t_CMPw:
-			case t_CMPd:
-			case t_TESTb:
-			case t_TESTw:
-			case t_TESTd:
-				*(Bit16u*)pos=B_FWD(8);								// b after_call (pc+8)
-				break;
-			case t_INCb:
-			case t_INCw:
-			case t_INCd:
-				*(Bit16u*)pos=ADD_IMM3(HOST_a1, HOST_a1, 1);		// add a1, a1, #1
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_DECb:
-			case t_DECw:
-			case t_DECd:
-				*(Bit16u*)pos=SUB_IMM3(HOST_a1, HOST_a1, 1);		// sub a1, a1, #1
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_SHLb:
-			case t_SHLw:
-			case t_SHLd:
-				*(Bit16u*)pos=LSL_REG(HOST_a1, HOST_a2);			// lsl a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_SHRb:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 24);		// lsl a1, a1, #24
-				*(Bit16u*)(pos+2)=NOP;								// nop
-				*(Bit16u*)(pos+4)=LSR_IMM(HOST_a1, HOST_a1, 24);	// lsr a1, a1, #24
-				*(Bit16u*)(pos+6)=NOP;								// nop
-				*(Bit16u*)(pos+8)=LSR_REG(HOST_a1, HOST_a2);		// lsr a1, a2
-				*(Bit16u*)(pos+10)=NOP;								// nop
-				break;
-			case t_SHRw:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
-				*(Bit16u*)(pos+2)=NOP;								// nop
-				*(Bit16u*)(pos+4)=LSR_IMM(HOST_a1, HOST_a1, 16);	// lsr a1, a1, #16
-				*(Bit16u*)(pos+6)=NOP;								// nop
-				*(Bit16u*)(pos+8)=LSR_REG(HOST_a1, HOST_a2);		// lsr a1, a2
-				*(Bit16u*)(pos+10)=NOP;								// nop
-				break;
-			case t_SHRd:
-				*(Bit16u*)pos=LSR_REG(HOST_a1, HOST_a2);			// lsr a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_SARb:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 24);		// lsl a1, a1, #24
-				*(Bit16u*)(pos+2)=NOP;								// nop
-				*(Bit16u*)(pos+4)=ASR_IMM(HOST_a1, HOST_a1, 24);	// asr a1, a1, #24
-				*(Bit16u*)(pos+6)=NOP;								// nop
-				*(Bit16u*)(pos+8)=ASR_REG(HOST_a1, HOST_a2);		// asr a1, a2
-				*(Bit16u*)(pos+10)=NOP;								// nop
-				break;
-			case t_SARw:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
-				*(Bit16u*)(pos+2)=NOP;								// nop
-				*(Bit16u*)(pos+4)=ASR_IMM(HOST_a1, HOST_a1, 16);	// asr a1, a1, #16
-				*(Bit16u*)(pos+6)=NOP;								// nop
-				*(Bit16u*)(pos+8)=ASR_REG(HOST_a1, HOST_a2);		// asr a1, a2
-				*(Bit16u*)(pos+10)=NOP;								// nop
-				break;
-			case t_SARd:
-				*(Bit16u*)pos=ASR_REG(HOST_a1, HOST_a2);			// asr a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_RORb:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 24);		// lsl a1, a1, #24
-				*(Bit16u*)(pos+2)=LSR_IMM(templo1, HOST_a1, 8);		// lsr templo1, a1, #8
-				*(Bit16u*)(pos+4)=ORR(HOST_a1, templo1);			// orr a1, templo1
-				*(Bit16u*)(pos+6)=LSR_IMM(templo1, HOST_a1, 16);	// lsr templo1, a1, #16
-				*(Bit16u*)(pos+8)=ORR(HOST_a1, templo1);			// orr a1, templo1
-				*(Bit16u*)(pos+10)=ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
-				break;
-			case t_RORw:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
-				*(Bit16u*)(pos+2)=LSR_IMM(templo1, HOST_a1, 16);	// lsr templo1, a1, #16
-				*(Bit16u*)(pos+4)=NOP;								// nop
-				*(Bit16u*)(pos+6)=ORR(HOST_a1, templo1);			// orr a1, templo1
-				*(Bit16u*)(pos+8)=NOP;								// nop
-				*(Bit16u*)(pos+10)=ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
-				break;
-			case t_RORd:
-				*(Bit16u*)pos=ROR_REG(HOST_a1, HOST_a2);			// ror a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			case t_ROLw:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
-				*(Bit16u*)(pos+2)=NEG(HOST_a2, HOST_a2);			// neg a2, a2
-				*(Bit16u*)(pos+4)=LSR_IMM(templo1, HOST_a1, 16);	// lsr templo1, a1, #16
-				*(Bit16u*)(pos+6)=ADD_IMM8(HOST_a2, 32);			// add a2, #32
-				*(Bit16u*)(pos+8)=ORR(HOST_a1, templo1);			// orr a1, templo1
-				*(Bit16u*)(pos+10)=ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
-				break;
-			case t_ROLd:
-				*(Bit16u*)pos=NEG(HOST_a2, HOST_a2);				// neg a2, a2
-				*(Bit16u*)(pos+2)=NOP;								// nop
-				*(Bit16u*)(pos+4)=ADD_IMM8(HOST_a2, 32);			// add a2, #32
-				*(Bit16u*)(pos+6)=NOP;								// nop
-				*(Bit16u*)(pos+8)=ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
-				*(Bit16u*)(pos+10)=NOP;								// nop
-				break;
-			case t_NEGb:
-			case t_NEGw:
-			case t_NEGd:
-				*(Bit16u*)pos=NEG(HOST_a1, HOST_a1);				// neg a1, a1
-				*(Bit16u*)(pos+2)=B_FWD(6);							// b after_call (pc+6)
-				break;
-			default:
-				*(Bit32u*)( ( ((Bit32u) (*pos)) << 2 ) + ((Bit32u)pos + 4) ) = (Bit32u)fct_ptr;		// simple_func
-				break;
+		case t_ADDb:
+		case t_ADDw:
+		case t_ADDd:
+			*(Bit16u*)pos = ADD_REG(HOST_a1, HOST_a1, HOST_a2);	// add a1, a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_ORb:
+		case t_ORw:
+		case t_ORd:
+			*(Bit16u*)pos = ORR(HOST_a1, HOST_a2);				// orr a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_ANDb:
+		case t_ANDw:
+		case t_ANDd:
+			*(Bit16u*)pos = AND(HOST_a1, HOST_a2);				// and a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_SUBb:
+		case t_SUBw:
+		case t_SUBd:
+			*(Bit16u*)pos = SUB_REG(HOST_a1, HOST_a1, HOST_a2);	// sub a1, a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_XORb:
+		case t_XORw:
+		case t_XORd:
+			*(Bit16u*)pos = EOR(HOST_a1, HOST_a2);				// eor a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_CMPb:
+		case t_CMPw:
+		case t_CMPd:
+		case t_TESTb:
+		case t_TESTw:
+		case t_TESTd:
+			*(Bit16u*)pos = B_FWD(8);								// b after_call (pc+8)
+			break;
+		case t_INCb:
+		case t_INCw:
+		case t_INCd:
+			*(Bit16u*)pos = ADD_IMM3(HOST_a1, HOST_a1, 1);		// add a1, a1, #1
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_DECb:
+		case t_DECw:
+		case t_DECd:
+			*(Bit16u*)pos = SUB_IMM3(HOST_a1, HOST_a1, 1);		// sub a1, a1, #1
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_SHLb:
+		case t_SHLw:
+		case t_SHLd:
+			*(Bit16u*)pos = LSL_REG(HOST_a1, HOST_a2);			// lsl a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_SHRb:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 24);		// lsl a1, a1, #24
+			*(Bit16u*)(pos + 2) = NOP;								// nop
+			*(Bit16u*)(pos + 4) = LSR_IMM(HOST_a1, HOST_a1, 24);	// lsr a1, a1, #24
+			*(Bit16u*)(pos + 6) = NOP;								// nop
+			*(Bit16u*)(pos + 8) = LSR_REG(HOST_a1, HOST_a2);		// lsr a1, a2
+			*(Bit16u*)(pos + 10) = NOP;								// nop
+			break;
+		case t_SHRw:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
+			*(Bit16u*)(pos + 2) = NOP;								// nop
+			*(Bit16u*)(pos + 4) = LSR_IMM(HOST_a1, HOST_a1, 16);	// lsr a1, a1, #16
+			*(Bit16u*)(pos + 6) = NOP;								// nop
+			*(Bit16u*)(pos + 8) = LSR_REG(HOST_a1, HOST_a2);		// lsr a1, a2
+			*(Bit16u*)(pos + 10) = NOP;								// nop
+			break;
+		case t_SHRd:
+			*(Bit16u*)pos = LSR_REG(HOST_a1, HOST_a2);			// lsr a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_SARb:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 24);		// lsl a1, a1, #24
+			*(Bit16u*)(pos + 2) = NOP;								// nop
+			*(Bit16u*)(pos + 4) = ASR_IMM(HOST_a1, HOST_a1, 24);	// asr a1, a1, #24
+			*(Bit16u*)(pos + 6) = NOP;								// nop
+			*(Bit16u*)(pos + 8) = ASR_REG(HOST_a1, HOST_a2);		// asr a1, a2
+			*(Bit16u*)(pos + 10) = NOP;								// nop
+			break;
+		case t_SARw:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
+			*(Bit16u*)(pos + 2) = NOP;								// nop
+			*(Bit16u*)(pos + 4) = ASR_IMM(HOST_a1, HOST_a1, 16);	// asr a1, a1, #16
+			*(Bit16u*)(pos + 6) = NOP;								// nop
+			*(Bit16u*)(pos + 8) = ASR_REG(HOST_a1, HOST_a2);		// asr a1, a2
+			*(Bit16u*)(pos + 10) = NOP;								// nop
+			break;
+		case t_SARd:
+			*(Bit16u*)pos = ASR_REG(HOST_a1, HOST_a2);			// asr a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_RORb:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 24);		// lsl a1, a1, #24
+			*(Bit16u*)(pos + 2) = LSR_IMM(templo1, HOST_a1, 8);		// lsr templo1, a1, #8
+			*(Bit16u*)(pos + 4) = ORR(HOST_a1, templo1);			// orr a1, templo1
+			*(Bit16u*)(pos + 6) = LSR_IMM(templo1, HOST_a1, 16);	// lsr templo1, a1, #16
+			*(Bit16u*)(pos + 8) = ORR(HOST_a1, templo1);			// orr a1, templo1
+			*(Bit16u*)(pos + 10) = ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
+			break;
+		case t_RORw:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
+			*(Bit16u*)(pos + 2) = LSR_IMM(templo1, HOST_a1, 16);	// lsr templo1, a1, #16
+			*(Bit16u*)(pos + 4) = NOP;								// nop
+			*(Bit16u*)(pos + 6) = ORR(HOST_a1, templo1);			// orr a1, templo1
+			*(Bit16u*)(pos + 8) = NOP;								// nop
+			*(Bit16u*)(pos + 10) = ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
+			break;
+		case t_RORd:
+			*(Bit16u*)pos = ROR_REG(HOST_a1, HOST_a2);			// ror a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		case t_ROLw:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
+			*(Bit16u*)(pos + 2) = NEG(HOST_a2, HOST_a2);			// neg a2, a2
+			*(Bit16u*)(pos + 4) = LSR_IMM(templo1, HOST_a1, 16);	// lsr templo1, a1, #16
+			*(Bit16u*)(pos + 6) = ADD_IMM8(HOST_a2, 32);			// add a2, #32
+			*(Bit16u*)(pos + 8) = ORR(HOST_a1, templo1);			// orr a1, templo1
+			*(Bit16u*)(pos + 10) = ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
+			break;
+		case t_ROLd:
+			*(Bit16u*)pos = NEG(HOST_a2, HOST_a2);				// neg a2, a2
+			*(Bit16u*)(pos + 2) = NOP;								// nop
+			*(Bit16u*)(pos + 4) = ADD_IMM8(HOST_a2, 32);			// add a2, #32
+			*(Bit16u*)(pos + 6) = NOP;								// nop
+			*(Bit16u*)(pos + 8) = ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
+			*(Bit16u*)(pos + 10) = NOP;								// nop
+			break;
+		case t_NEGb:
+		case t_NEGw:
+		case t_NEGd:
+			*(Bit16u*)pos = NEG(HOST_a1, HOST_a1);				// neg a1, a1
+			*(Bit16u*)(pos + 2) = B_FWD(6);							// b after_call (pc+6)
+			break;
+		default:
+			*(Bit32u*)((((Bit32u)(*pos)) << 2) + ((Bit32u)pos + 4)) = (Bit32u)fct_ptr;		// simple_func
+			break;
 		}
-	}
-	else
-	{
+	} else {
 		// try to avoid function calls but rather directly fill in code
 		switch (flags_type) {
-			case t_ADDb:
-			case t_ADDw:
-			case t_ADDd:
-				*(Bit16u*)pos=ADD_REG(HOST_a1, HOST_a1, HOST_a2);	// add a1, a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_ORb:
-			case t_ORw:
-			case t_ORd:
-				*(Bit16u*)pos=ORR(HOST_a1, HOST_a2);				// orr a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_ANDb:
-			case t_ANDw:
-			case t_ANDd:
-				*(Bit16u*)pos=AND(HOST_a1, HOST_a2);				// and a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_SUBb:
-			case t_SUBw:
-			case t_SUBd:
-				*(Bit16u*)pos=SUB_REG(HOST_a1, HOST_a1, HOST_a2);	// sub a1, a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_XORb:
-			case t_XORw:
-			case t_XORd:
-				*(Bit16u*)pos=EOR(HOST_a1, HOST_a2);				// eor a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_CMPb:
-			case t_CMPw:
-			case t_CMPd:
-			case t_TESTb:
-			case t_TESTw:
-			case t_TESTd:
-				*(Bit16u*)pos=B_FWD(6);								// b after_call (pc+6)
-				break;
-			case t_INCb:
-			case t_INCw:
-			case t_INCd:
-				*(Bit16u*)pos=ADD_IMM3(HOST_a1, HOST_a1, 1);		// add a1, a1, #1
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_DECb:
-			case t_DECw:
-			case t_DECd:
-				*(Bit16u*)pos=SUB_IMM3(HOST_a1, HOST_a1, 1);		// sub a1, a1, #1
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_SHLb:
-			case t_SHLw:
-			case t_SHLd:
-				*(Bit16u*)pos=LSL_REG(HOST_a1, HOST_a2);			// lsl a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_SHRb:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 24);		// lsl a1, a1, #24
-				*(Bit16u*)(pos+2)=NOP;								// nop
-				*(Bit16u*)(pos+4)=LSR_IMM(HOST_a1, HOST_a1, 24);	// lsr a1, a1, #24
-				*(Bit16u*)(pos+6)=NOP;								// nop
-				*(Bit16u*)(pos+8)=LSR_REG(HOST_a1, HOST_a2);		// lsr a1, a2
-				break;
-			case t_SHRw:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
-				*(Bit16u*)(pos+2)=NOP;								// nop
-				*(Bit16u*)(pos+4)=LSR_IMM(HOST_a1, HOST_a1, 16);	// lsr a1, a1, #16
-				*(Bit16u*)(pos+6)=NOP;								// nop
-				*(Bit16u*)(pos+8)=LSR_REG(HOST_a1, HOST_a2);		// lsr a1, a2
-				break;
-			case t_SHRd:
-				*(Bit16u*)pos=LSR_REG(HOST_a1, HOST_a2);			// lsr a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_SARb:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 24);		// lsl a1, a1, #24
-				*(Bit16u*)(pos+2)=NOP;								// nop
-				*(Bit16u*)(pos+4)=ASR_IMM(HOST_a1, HOST_a1, 24);	// asr a1, a1, #24
-				*(Bit16u*)(pos+6)=NOP;								// nop
-				*(Bit16u*)(pos+8)=ASR_REG(HOST_a1, HOST_a2);		// asr a1, a2
-				break;
-			case t_SARw:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
-				*(Bit16u*)(pos+2)=NOP;								// nop
-				*(Bit16u*)(pos+4)=ASR_IMM(HOST_a1, HOST_a1, 16);	// asr a1, a1, #16
-				*(Bit16u*)(pos+6)=NOP;								// nop
-				*(Bit16u*)(pos+8)=ASR_REG(HOST_a1, HOST_a2);		// asr a1, a2
-				break;
-			case t_SARd:
-				*(Bit16u*)pos=ASR_REG(HOST_a1, HOST_a2);			// asr a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_RORw:
-				*(Bit16u*)pos=LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
-				*(Bit16u*)(pos+2)=LSR_IMM(templo1, HOST_a1, 16);	// lsr templo1, a1, #16
-				*(Bit16u*)(pos+4)=NOP;								// nop
-				*(Bit16u*)(pos+6)=ORR(HOST_a1, templo1);			// orr a1, templo1
-				*(Bit16u*)(pos+8)=ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
-				break;
-			case t_RORd:
-				*(Bit16u*)pos=ROR_REG(HOST_a1, HOST_a2);			// ror a1, a2
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			case t_ROLd:
-				*(Bit16u*)pos=NEG(HOST_a2, HOST_a2);				// neg a2, a2
-				*(Bit16u*)(pos+2)=NOP;								// nop
-				*(Bit16u*)(pos+4)=ADD_IMM8(HOST_a2, 32);			// add a2, #32
-				*(Bit16u*)(pos+6)=NOP;								// nop
-				*(Bit16u*)(pos+8)=ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
-				break;
-			case t_NEGb:
-			case t_NEGw:
-			case t_NEGd:
-				*(Bit16u*)pos=NEG(HOST_a1, HOST_a1);				// neg a1, a1
-				*(Bit16u*)(pos+2)=B_FWD(4);							// b after_call (pc+4)
-				break;
-			default:
-				*(Bit32u*)( ( ((Bit32u) (*pos)) << 2 ) + ((Bit32u)pos + 2) ) = (Bit32u)fct_ptr;		// simple_func
-				break;
+		case t_ADDb:
+		case t_ADDw:
+		case t_ADDd:
+			*(Bit16u*)pos = ADD_REG(HOST_a1, HOST_a1, HOST_a2);	// add a1, a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_ORb:
+		case t_ORw:
+		case t_ORd:
+			*(Bit16u*)pos = ORR(HOST_a1, HOST_a2);				// orr a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_ANDb:
+		case t_ANDw:
+		case t_ANDd:
+			*(Bit16u*)pos = AND(HOST_a1, HOST_a2);				// and a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_SUBb:
+		case t_SUBw:
+		case t_SUBd:
+			*(Bit16u*)pos = SUB_REG(HOST_a1, HOST_a1, HOST_a2);	// sub a1, a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_XORb:
+		case t_XORw:
+		case t_XORd:
+			*(Bit16u*)pos = EOR(HOST_a1, HOST_a2);				// eor a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_CMPb:
+		case t_CMPw:
+		case t_CMPd:
+		case t_TESTb:
+		case t_TESTw:
+		case t_TESTd:
+			*(Bit16u*)pos = B_FWD(6);								// b after_call (pc+6)
+			break;
+		case t_INCb:
+		case t_INCw:
+		case t_INCd:
+			*(Bit16u*)pos = ADD_IMM3(HOST_a1, HOST_a1, 1);		// add a1, a1, #1
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_DECb:
+		case t_DECw:
+		case t_DECd:
+			*(Bit16u*)pos = SUB_IMM3(HOST_a1, HOST_a1, 1);		// sub a1, a1, #1
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_SHLb:
+		case t_SHLw:
+		case t_SHLd:
+			*(Bit16u*)pos = LSL_REG(HOST_a1, HOST_a2);			// lsl a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_SHRb:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 24);		// lsl a1, a1, #24
+			*(Bit16u*)(pos + 2) = NOP;								// nop
+			*(Bit16u*)(pos + 4) = LSR_IMM(HOST_a1, HOST_a1, 24);	// lsr a1, a1, #24
+			*(Bit16u*)(pos + 6) = NOP;								// nop
+			*(Bit16u*)(pos + 8) = LSR_REG(HOST_a1, HOST_a2);		// lsr a1, a2
+			break;
+		case t_SHRw:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
+			*(Bit16u*)(pos + 2) = NOP;								// nop
+			*(Bit16u*)(pos + 4) = LSR_IMM(HOST_a1, HOST_a1, 16);	// lsr a1, a1, #16
+			*(Bit16u*)(pos + 6) = NOP;								// nop
+			*(Bit16u*)(pos + 8) = LSR_REG(HOST_a1, HOST_a2);		// lsr a1, a2
+			break;
+		case t_SHRd:
+			*(Bit16u*)pos = LSR_REG(HOST_a1, HOST_a2);			// lsr a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_SARb:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 24);		// lsl a1, a1, #24
+			*(Bit16u*)(pos + 2) = NOP;								// nop
+			*(Bit16u*)(pos + 4) = ASR_IMM(HOST_a1, HOST_a1, 24);	// asr a1, a1, #24
+			*(Bit16u*)(pos + 6) = NOP;								// nop
+			*(Bit16u*)(pos + 8) = ASR_REG(HOST_a1, HOST_a2);		// asr a1, a2
+			break;
+		case t_SARw:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
+			*(Bit16u*)(pos + 2) = NOP;								// nop
+			*(Bit16u*)(pos + 4) = ASR_IMM(HOST_a1, HOST_a1, 16);	// asr a1, a1, #16
+			*(Bit16u*)(pos + 6) = NOP;								// nop
+			*(Bit16u*)(pos + 8) = ASR_REG(HOST_a1, HOST_a2);		// asr a1, a2
+			break;
+		case t_SARd:
+			*(Bit16u*)pos = ASR_REG(HOST_a1, HOST_a2);			// asr a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_RORw:
+			*(Bit16u*)pos = LSL_IMM(HOST_a1, HOST_a1, 16);		// lsl a1, a1, #16
+			*(Bit16u*)(pos + 2) = LSR_IMM(templo1, HOST_a1, 16);	// lsr templo1, a1, #16
+			*(Bit16u*)(pos + 4) = NOP;								// nop
+			*(Bit16u*)(pos + 6) = ORR(HOST_a1, templo1);			// orr a1, templo1
+			*(Bit16u*)(pos + 8) = ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
+			break;
+		case t_RORd:
+			*(Bit16u*)pos = ROR_REG(HOST_a1, HOST_a2);			// ror a1, a2
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		case t_ROLd:
+			*(Bit16u*)pos = NEG(HOST_a2, HOST_a2);				// neg a2, a2
+			*(Bit16u*)(pos + 2) = NOP;								// nop
+			*(Bit16u*)(pos + 4) = ADD_IMM8(HOST_a2, 32);			// add a2, #32
+			*(Bit16u*)(pos + 6) = NOP;								// nop
+			*(Bit16u*)(pos + 8) = ROR_REG(HOST_a1, HOST_a2);		// ror a1, a2
+			break;
+		case t_NEGb:
+		case t_NEGw:
+		case t_NEGd:
+			*(Bit16u*)pos = NEG(HOST_a1, HOST_a1);				// neg a1, a1
+			*(Bit16u*)(pos + 2) = B_FWD(4);							// b after_call (pc+4)
+			break;
+		default:
+			*(Bit32u*)((((Bit32u)(*pos)) << 2) + ((Bit32u)pos + 2)) = (Bit32u)fct_ptr;		// simple_func
+			break;
 		}
 
 	}
 #else
-	if (((Bit32u)pos & 0x03) == 0)
-	{
-		*(Bit32u*)( ( ((Bit32u) (*pos)) << 2 ) + ((Bit32u)pos + 4) ) = (Bit32u)fct_ptr;		// simple_func
-	}
-	else
-	{
-		*(Bit32u*)( ( ((Bit32u) (*pos)) << 2 ) + ((Bit32u)pos + 2) ) = (Bit32u)fct_ptr;		// simple_func
+	if (((Bit32u)pos & 0x03) == 0) {
+		*(Bit32u*)((((Bit32u)(*pos)) << 2) + ((Bit32u)pos + 4)) = (Bit32u)fct_ptr;		// simple_func
+	} else {
+		*(Bit32u*)((((Bit32u)(*pos)) << 2) + ((Bit32u)pos + 2)) = (Bit32u)fct_ptr;		// simple_func
 	}
 #endif
 }
@@ -1388,25 +1376,25 @@ static void gen_fill_function_ptr(Bit8u * pos,void* fct_ptr,Bitu flags_type) {
 
 // mov 16bit value from Segs[index] into dest_reg using FC_SEGS_ADDR (index modulo 2 must be zero)
 // 16bit moves may destroy the upper 16bit of the destination register
-static void gen_mov_seg16_to_reg(HostReg dest_reg,Bitu index) {
+static void gen_mov_seg16_to_reg(HostReg dest_reg, Bitu index) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo1, FC_SEGS_ADDR) );      // mov templo1, FC_SEGS_ADDR
-	cache_addw( LDRH_IMM(dest_reg, templo1, index) );      // ldrh dest_reg, [templo1, #index]
+	cache_addw(MOV_LO_HI(templo1, FC_SEGS_ADDR));      // mov templo1, FC_SEGS_ADDR
+	cache_addw(LDRH_IMM(dest_reg, templo1, index));      // ldrh dest_reg, [templo1, #index]
 }
 
 // mov 32bit value from Segs[index] into dest_reg using FC_SEGS_ADDR (index modulo 4 must be zero)
-static void gen_mov_seg32_to_reg(HostReg dest_reg,Bitu index) {
+static void gen_mov_seg32_to_reg(HostReg dest_reg, Bitu index) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo1, FC_SEGS_ADDR) );      // mov templo1, FC_SEGS_ADDR
-	cache_addw( LDR_IMM(dest_reg, templo1, index) );      // ldr dest_reg, [templo1, #index]
+	cache_addw(MOV_LO_HI(templo1, FC_SEGS_ADDR));      // mov templo1, FC_SEGS_ADDR
+	cache_addw(LDR_IMM(dest_reg, templo1, index));      // ldr dest_reg, [templo1, #index]
 }
 
 // add a 32bit value from Segs[index] to a full register using FC_SEGS_ADDR (index modulo 4 must be zero)
-static void gen_add_seg32_to_reg(HostReg reg,Bitu index) {
+static void gen_add_seg32_to_reg(HostReg reg, Bitu index) {
 	cache_checkinstr(6);
-	cache_addw( MOV_LO_HI(templo1, FC_SEGS_ADDR) );      // mov templo1, FC_SEGS_ADDR
-	cache_addw( LDR_IMM(templo2, templo1, index) );      // ldr templo2, [templo1, #index]
-	cache_addw( ADD_REG(reg, reg, templo2) );      // add reg, reg, templo2
+	cache_addw(MOV_LO_HI(templo1, FC_SEGS_ADDR));      // mov templo1, FC_SEGS_ADDR
+	cache_addw(LDR_IMM(templo2, templo1, index));      // ldr templo2, [templo1, #index]
+	cache_addw(ADD_REG(reg, reg, templo2));      // add reg, reg, templo2
 }
 
 #endif
@@ -1415,28 +1403,28 @@ static void gen_add_seg32_to_reg(HostReg reg,Bitu index) {
 
 // mov 16bit value from cpu_regs[index] into dest_reg using FC_REGS_ADDR (index modulo 2 must be zero)
 // 16bit moves may destroy the upper 16bit of the destination register
-static void gen_mov_regval16_to_reg(HostReg dest_reg,Bitu index) {
+static void gen_mov_regval16_to_reg(HostReg dest_reg, Bitu index) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo2, FC_REGS_ADDR) );      // mov templo2, FC_REGS_ADDR
-	cache_addw( LDRH_IMM(dest_reg, templo2, index) );      // ldrh dest_reg, [templo2, #index]
+	cache_addw(MOV_LO_HI(templo2, FC_REGS_ADDR));      // mov templo2, FC_REGS_ADDR
+	cache_addw(LDRH_IMM(dest_reg, templo2, index));      // ldrh dest_reg, [templo2, #index]
 }
 
 // mov 32bit value from cpu_regs[index] into dest_reg using FC_REGS_ADDR (index modulo 4 must be zero)
-static void gen_mov_regval32_to_reg(HostReg dest_reg,Bitu index) {
+static void gen_mov_regval32_to_reg(HostReg dest_reg, Bitu index) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo2, FC_REGS_ADDR) );      // mov templo2, FC_REGS_ADDR
-	cache_addw( LDR_IMM(dest_reg, templo2, index) );      // ldr dest_reg, [templo2, #index]
+	cache_addw(MOV_LO_HI(templo2, FC_REGS_ADDR));      // mov templo2, FC_REGS_ADDR
+	cache_addw(LDR_IMM(dest_reg, templo2, index));      // ldr dest_reg, [templo2, #index]
 }
 
 // move a 32bit (dword==true) or 16bit (dword==false) value from cpu_regs[index] into dest_reg using FC_REGS_ADDR (if dword==true index modulo 4 must be zero) (if dword==false index modulo 2 must be zero)
 // 16bit moves may destroy the upper 16bit of the destination register
-static void gen_mov_regword_to_reg(HostReg dest_reg,Bitu index,bool dword) {
+static void gen_mov_regword_to_reg(HostReg dest_reg, Bitu index, bool dword) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo2, FC_REGS_ADDR) );      // mov templo2, FC_REGS_ADDR
+	cache_addw(MOV_LO_HI(templo2, FC_REGS_ADDR));      // mov templo2, FC_REGS_ADDR
 	if (dword) {
-		cache_addw( LDR_IMM(dest_reg, templo2, index) );      // ldr dest_reg, [templo2, #index]
+		cache_addw(LDR_IMM(dest_reg, templo2, index));      // ldr dest_reg, [templo2, #index]
 	} else {
-		cache_addw( LDRH_IMM(dest_reg, templo2, index) );      // ldrh dest_reg, [templo2, #index]
+		cache_addw(LDRH_IMM(dest_reg, templo2, index));      // ldrh dest_reg, [templo2, #index]
 	}
 }
 
@@ -1444,62 +1432,62 @@ static void gen_mov_regword_to_reg(HostReg dest_reg,Bitu index,bool dword) {
 // the upper 24bit of the destination register can be destroyed
 // this function does not use FC_OP1/FC_OP2 as dest_reg as these
 // registers might not be directly byte-accessible on some architectures
-static void gen_mov_regbyte_to_reg_low(HostReg dest_reg,Bitu index) {
+static void gen_mov_regbyte_to_reg_low(HostReg dest_reg, Bitu index) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo2, FC_REGS_ADDR) );      // mov templo2, FC_REGS_ADDR
-	cache_addw( LDRB_IMM(dest_reg, templo2, index) );      // ldrb dest_reg, [templo2, #index]
+	cache_addw(MOV_LO_HI(templo2, FC_REGS_ADDR));      // mov templo2, FC_REGS_ADDR
+	cache_addw(LDRB_IMM(dest_reg, templo2, index));      // ldrb dest_reg, [templo2, #index]
 }
 
 // move an 8bit value from cpu_regs[index]  into dest_reg using FC_REGS_ADDR
 // the upper 24bit of the destination register can be destroyed
 // this function can use FC_OP1/FC_OP2 as dest_reg which are
 // not directly byte-accessible on some architectures
-static void inline gen_mov_regbyte_to_reg_low_canuseword(HostReg dest_reg,Bitu index) {
+static void inline gen_mov_regbyte_to_reg_low_canuseword(HostReg dest_reg, Bitu index) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo2, FC_REGS_ADDR) );      // mov templo2, FC_REGS_ADDR
-	cache_addw( LDRB_IMM(dest_reg, templo2, index) );      // ldrb dest_reg, [templo2, #index]
+	cache_addw(MOV_LO_HI(templo2, FC_REGS_ADDR));      // mov templo2, FC_REGS_ADDR
+	cache_addw(LDRB_IMM(dest_reg, templo2, index));      // ldrb dest_reg, [templo2, #index]
 }
 
 
 // add a 32bit value from cpu_regs[index] to a full register using FC_REGS_ADDR (index modulo 4 must be zero)
-static void gen_add_regval32_to_reg(HostReg reg,Bitu index) {
+static void gen_add_regval32_to_reg(HostReg reg, Bitu index) {
 	cache_checkinstr(6);
-	cache_addw( MOV_LO_HI(templo2, FC_REGS_ADDR) );      // mov templo2, FC_REGS_ADDR
-	cache_addw( LDR_IMM(templo1, templo2, index) );      // ldr templo1, [templo2, #index]
-	cache_addw( ADD_REG(reg, reg, templo1) );      // add reg, reg, templo1
+	cache_addw(MOV_LO_HI(templo2, FC_REGS_ADDR));      // mov templo2, FC_REGS_ADDR
+	cache_addw(LDR_IMM(templo1, templo2, index));      // ldr templo1, [templo2, #index]
+	cache_addw(ADD_REG(reg, reg, templo1));      // add reg, reg, templo1
 }
 
 
 // move 16bit of register into cpu_regs[index] using FC_REGS_ADDR (index modulo 2 must be zero)
-static void gen_mov_regval16_from_reg(HostReg src_reg,Bitu index) {
+static void gen_mov_regval16_from_reg(HostReg src_reg, Bitu index) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo1, FC_REGS_ADDR) );      // mov templo1, FC_REGS_ADDR
-	cache_addw( STRH_IMM(src_reg, templo1, index) );      // strh src_reg, [templo1, #index]
+	cache_addw(MOV_LO_HI(templo1, FC_REGS_ADDR));      // mov templo1, FC_REGS_ADDR
+	cache_addw(STRH_IMM(src_reg, templo1, index));      // strh src_reg, [templo1, #index]
 }
 
 // move 32bit of register into cpu_regs[index] using FC_REGS_ADDR (index modulo 4 must be zero)
-static void gen_mov_regval32_from_reg(HostReg src_reg,Bitu index) {
+static void gen_mov_regval32_from_reg(HostReg src_reg, Bitu index) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo1, FC_REGS_ADDR) );      // mov templo1, FC_REGS_ADDR
-	cache_addw( STR_IMM(src_reg, templo1, index) );      // str src_reg, [templo1, #index]
+	cache_addw(MOV_LO_HI(templo1, FC_REGS_ADDR));      // mov templo1, FC_REGS_ADDR
+	cache_addw(STR_IMM(src_reg, templo1, index));      // str src_reg, [templo1, #index]
 }
 
 // move 32bit (dword==true) or 16bit (dword==false) of a register into cpu_regs[index] using FC_REGS_ADDR (if dword==true index modulo 4 must be zero) (if dword==false index modulo 2 must be zero)
-static void gen_mov_regword_from_reg(HostReg src_reg,Bitu index,bool dword) {
+static void gen_mov_regword_from_reg(HostReg src_reg, Bitu index, bool dword) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo1, FC_REGS_ADDR) );      // mov templo1, FC_REGS_ADDR
+	cache_addw(MOV_LO_HI(templo1, FC_REGS_ADDR));      // mov templo1, FC_REGS_ADDR
 	if (dword) {
-		cache_addw( STR_IMM(src_reg, templo1, index) );      // str src_reg, [templo1, #index]
+		cache_addw(STR_IMM(src_reg, templo1, index));      // str src_reg, [templo1, #index]
 	} else {
-		cache_addw( STRH_IMM(src_reg, templo1, index) );      // strh src_reg, [templo1, #index]
+		cache_addw(STRH_IMM(src_reg, templo1, index));      // strh src_reg, [templo1, #index]
 	}
 }
 
 // move the lowest 8bit of a register into cpu_regs[index] using FC_REGS_ADDR
-static void gen_mov_regbyte_from_reg_low(HostReg src_reg,Bitu index) {
+static void gen_mov_regbyte_from_reg_low(HostReg src_reg, Bitu index) {
 	cache_checkinstr(4);
-	cache_addw( MOV_LO_HI(templo1, FC_REGS_ADDR) );      // mov templo1, FC_REGS_ADDR
-	cache_addw( STRB_IMM(src_reg, templo1, index) );      // strb src_reg, [templo1, #index]
+	cache_addw(MOV_LO_HI(templo1, FC_REGS_ADDR));      // mov templo1, FC_REGS_ADDR
+	cache_addw(STRB_IMM(src_reg, templo1, index));      // strb src_reg, [templo1, #index]
 }
 
 #endif

@@ -1,20 +1,20 @@
- /*
- *  Copyright (C) 2002-2017  The DOSBox Team
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
+/*
+*  Copyright (C) 2002-2017  The DOSBox Team
+*
+*  This program is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+*/
 
 
 #ifndef DOSBOX_VGA_H
@@ -70,17 +70,17 @@ typedef struct {
 } VGA_Internal;
 
 typedef struct {
-/* Memory handlers */
+	/* Memory handlers */
 	Bitu mh_mask;
 
-/* Video drawing */
+	/* Video drawing */
 	Bitu display_start;
 	Bitu real_start;
 	bool retrace;					/* A retrace is active */
 	Bitu scan_len;
 	Bitu cursor_start;
 
-/* Some other screen related variables */
+	/* Some other screen related variables */
 	Bitu line_compare;
 	bool chained;					/* Enable or Disabled Chain 4 Mode */
 	bool compatible_chain4;
@@ -91,8 +91,8 @@ typedef struct {
 	Bit8u bytes_skip;
 	Bit8u addr_shift;
 
-/* Specific stuff memory write/read handling */
-	
+	/* Specific stuff memory write/read handling */
+
 	Bit8u read_mode;
 	Bit8u write_mode;
 	Bit8u read_map_select;
@@ -152,16 +152,16 @@ typedef struct {
 	Bitu bpp;
 	double aspect_ratio;
 	bool double_scan;
-	bool doublewidth,doubleheight;
-	Bit8u font[64*1024];
+	bool doublewidth, doubleheight;
+	Bit8u font[64 * 1024];
 	Bit8u * font_tables[2];
 	Bitu blinking;
 	bool blink;
 	bool char9dot;
 	struct {
 		Bitu address;
-		Bit8u sline,eline;
-		Bit8u count,delay;
+		Bit8u sline, eline;
+		Bit8u count, delay;
 		Bit8u enabled;
 	} cursor;
 	Drawmode mode;
@@ -208,7 +208,7 @@ typedef struct {
 		Bit8u r;
 		Bit8u n;
 		Bit8u m;
-	} clk[4],mclk;
+	} clk[4], mclk;
 	struct {
 		Bit8u lock;
 		Bit8u cmd;
@@ -324,7 +324,7 @@ typedef struct {
 	Bit8u bit_mask;
 } VGA_Gfx;
 
-typedef struct  {
+typedef struct {
 	Bit8u red;
 	Bit8u green;
 	Bit8u blue;
@@ -333,7 +333,7 @@ typedef struct  {
 typedef struct {
 	Bit8u bits;						/* DAC bits, usually 6 or 8 */
 	Bit8u pel_mask;
-	Bit8u pel_index;	
+	Bit8u pel_index;
 	Bit8u state;
 	Bit8u write_index;
 	Bit8u read_index;
@@ -386,7 +386,7 @@ typedef struct {
 	VGA_Draw draw;
 	VGA_Config config;
 	VGA_Internal internal;
-/* Internal module groups */
+	/* Internal module groups */
 	VGA_Seq seq;
 	VGA_Attr attr;
 	VGA_Crtc crtc;
@@ -417,17 +417,17 @@ void Herc_Palette(void);
 void VGA_SetMode(VGAModes mode);
 void VGA_DetermineMode(void);
 void VGA_SetupHandlers(void);
-void VGA_StartResize(Bitu delay=50);
+void VGA_StartResize(Bitu delay = 50);
 void VGA_SetupDrawing(Bitu val);
 void VGA_CheckScanLength(void);
 void VGA_ChangedBank(void);
 
 /* Some DAC/Attribute functions */
-void VGA_DAC_CombineColor(Bit8u attr,Bit8u pal);
-void VGA_DAC_SetEntry(Bitu entry,Bit8u red,Bit8u green,Bit8u blue);
-void VGA_ATTR_SetPalette(Bit8u index,Bit8u val);
+void VGA_DAC_CombineColor(Bit8u attr, Bit8u pal);
+void VGA_DAC_SetEntry(Bitu entry, Bit8u red, Bit8u green, Bit8u blue);
+void VGA_ATTR_SetPalette(Bit8u index, Bit8u val);
 
-typedef enum {CGA, EGA, MONO} EGAMonitorMode;
+typedef enum { CGA, EGA, MONO } EGAMonitorMode;
 
 void VGA_ATTR_SetEGAMonitorPalette(EGAMonitorMode m);
 
@@ -443,13 +443,13 @@ void VGA_SetupOther(void);
 void VGA_SetupXGA(void);
 
 /* Some Support Functions */
-void VGA_SetClock(Bitu which,Bitu target);
+void VGA_SetClock(Bitu which, Bitu target);
 void VGA_DACSetEntirePalette(void);
 void VGA_StartRetrace(void);
 void VGA_StartUpdateLFB(void);
 void VGA_SetBlinking(Bitu enabled);
-void VGA_SetCGA2Table(Bit8u val0,Bit8u val1);
-void VGA_SetCGA4Table(Bit8u val0,Bit8u val1,Bit8u val2,Bit8u val3);
+void VGA_SetCGA2Table(Bit8u val0, Bit8u val1);
+void VGA_SetCGA4Table(Bit8u val0, Bit8u val1, Bit8u val2, Bit8u val3);
 void VGA_ActivateHardwareCursor(void);
 void VGA_KillDrawing(void);
 
@@ -478,14 +478,14 @@ typedef struct {
 } VGA_ModeExtraData;
 
 // Vector function prototypes
-typedef void (*tWritePort)(Bitu reg,Bitu val,Bitu iolen);
-typedef Bitu (*tReadPort)(Bitu reg,Bitu iolen);
-typedef void (*tFinishSetMode)(Bitu crtc_base, VGA_ModeExtraData* modeData);
-typedef void (*tDetermineMode)();
-typedef void (*tSetClock)(Bitu which,Bitu target);
-typedef Bitu (*tGetClock)();
-typedef bool (*tHWCursorActive)();
-typedef bool (*tAcceptsMode)(Bitu modeNo);
+typedef void(*tWritePort)(Bitu reg, Bitu val, Bitu iolen);
+typedef Bitu(*tReadPort)(Bitu reg, Bitu iolen);
+typedef void(*tFinishSetMode)(Bitu crtc_base, VGA_ModeExtraData* modeData);
+typedef void(*tDetermineMode)();
+typedef void(*tSetClock)(Bitu which, Bitu target);
+typedef Bitu(*tGetClock)();
+typedef bool(*tHWCursorActive)();
+typedef bool(*tAcceptsMode)(Bitu modeNo);
 
 struct SVGA_Driver {
 	tWritePort write_p3d5;

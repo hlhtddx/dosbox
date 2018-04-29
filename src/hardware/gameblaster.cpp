@@ -32,7 +32,7 @@
 
 #define MASTER_CLOCK 7159090
 
-//My mixer channel
+ //My mixer channel
 static MixerChannel * cms_chan;
 //Timer to disable the channel after a while
 static Bit32u lastWriteTicks;
@@ -40,9 +40,9 @@ static Bit32u cmsBase;
 static saa1099_device* device[2];
 
 static void write_cms(Bitu port, Bitu val, Bitu /* iolen */) {
-	if(cms_chan && (!cms_chan->enabled)) cms_chan->Enable(true);
+	if (cms_chan && (!cms_chan->enabled)) cms_chan->Enable(true);
 	lastWriteTicks = PIC_Ticks;
-	switch ( port - cmsBase ) {
+	switch (port - cmsBase) {
 	case 1:
 		device[0]->control_w(0, 0, val);
 		break;
@@ -63,14 +63,14 @@ static void CMS_CallBack(Bitu len) {
 		BUFFER_SIZE = 2048
 	};
 
-	if ( len > BUFFER_SIZE )
+	if (len > BUFFER_SIZE)
 		return;
 
-	if ( cms_chan ) {
+	if (cms_chan) {
 
 		//Have there been 10 seconds of no commands, disable channel
-		if ( lastWriteTicks + 10000 < PIC_Ticks ) {
-			cms_chan->Enable( false );
+		if (lastWriteTicks + 10000 < PIC_Ticks) {
+			cms_chan->Enable(false);
 			return;
 		}
 		Bit32s result[BUFFER_SIZE][2];
@@ -87,7 +87,7 @@ static void CMS_CallBack(Bitu len) {
 			result[i][0] += work[0][i];
 			result[i][1] += work[1][i];
 		}
-		cms_chan->AddSamples_s32( len, result[0] );
+		cms_chan->AddSamples_s32(len, result[0]);
 	}
 }
 
@@ -95,7 +95,7 @@ static void CMS_CallBack(Bitu len) {
 static Bit8u cms_detect_register = 0xff;
 
 static void write_cms_detect(Bitu port, Bitu val, Bitu /* iolen */) {
-	switch ( port - cmsBase ) {
+	switch (port - cmsBase) {
 	case 0x6:
 	case 0x7:
 		cms_detect_register = val;
@@ -105,7 +105,7 @@ static void write_cms_detect(Bitu port, Bitu val, Bitu /* iolen */) {
 
 static Bitu read_cms_detect(Bitu port, Bitu /* iolen */) {
 	Bit8u retval = 0xff;
-	switch ( port - cmsBase ) {
+	switch (port - cmsBase) {
 	case 0x4:
 		retval = 0x7f;
 		break;
@@ -118,7 +118,7 @@ static Bitu read_cms_detect(Bitu port, Bitu /* iolen */) {
 }
 
 
-class CMS:public Module_base {
+class CMS :public Module_base {
 private:
 	IO_WriteHandleObject WriteHandler;
 	IO_WriteHandleObject DetWriteHandler;
@@ -126,23 +126,23 @@ private:
 	MixerObject MixerChan;
 
 public:
-	CMS(Section* configuration):Module_base(configuration) {
+	CMS(Section* configuration) :Module_base(configuration) {
 		Section_prop * section = static_cast<Section_prop *>(configuration);
-		Bitu sampleRate = section->Get_int( "oplrate" );
+		Bitu sampleRate = section->Get_int("oplrate");
 		cmsBase = section->Get_hex("sbbase");
-		WriteHandler.Install( cmsBase, write_cms, IO_MB, 4 );
+		WriteHandler.Install(cmsBase, write_cms, IO_MB, 4);
 
 		// A standalone Gameblaster has a magic chip on it which is
 		// sometimes used for detection.
-		const char * sbtype=section->Get_string("sbtype");
-		if (!strcasecmp(sbtype,"gb")) {
-			DetWriteHandler.Install( cmsBase + 4, write_cms_detect, IO_MB, 12 );
-			DetReadHandler.Install(cmsBase,read_cms_detect,IO_MB,16);
+		const char * sbtype = section->Get_string("sbtype");
+		if (!strcasecmp(sbtype, "gb")) {
+			DetWriteHandler.Install(cmsBase + 4, write_cms_detect, IO_MB, 12);
+			DetReadHandler.Install(cmsBase, read_cms_detect, IO_MB, 16);
 		}
 
 		/* Register the Mixer CallBack */
-		cms_chan = MixerChan.Install(CMS_CallBack,sampleRate,"CMS");
-	
+		cms_chan = MixerChan.Install(CMS_CallBack, sampleRate, "CMS");
+
 		lastWriteTicks = PIC_Ticks;
 
 		Bit32u freq = 7159000;		//14318180 isa clock / 2
@@ -164,10 +164,10 @@ public:
 
 
 static CMS* test;
-   
+
 void CMS_Init(Section* sec) {
 	test = new CMS(sec);
 }
 void CMS_ShutDown(Section* sec) {
-	delete test;	       
+	delete test;
 }

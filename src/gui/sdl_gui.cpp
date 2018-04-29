@@ -50,13 +50,13 @@ static SDL_Surface *screenshot, *background;
 
 /* Prepare screen for UI */
 void UI_Init(void) {
-	GUI::Font::addFont("default",new GUI::BitmapFont(int10_font_14,14,10));
+	GUI::Font::addFont("default", new GUI::BitmapFont(int10_font_14, 14, 10));
 }
 
 static void getPixel(Bits x, Bits y, int &r, int &g, int &b, int shift)
 {
-	if (x >= (Bits)render.src.width) x = (Bits)render.src.width-1;
-	if (y >= (Bits)render.src.height) x = (Bits)render.src.height-1;
+	if (x >= (Bits)render.src.width) x = (Bits)render.src.width - 1;
+	if (y >= (Bits)render.src.height) x = (Bits)render.src.height - 1;
 	if (x < 0) x = 0;
 	if (y < 0) y = 0;
 
@@ -64,27 +64,27 @@ static void getPixel(Bits x, Bits y, int &r, int &g, int &b, int shift)
 	Bit32u pixel;
 	switch (render.scale.inMode) {
 	case scalerMode8:
-		pixel = *(x+(Bit8u*)(src+y*render.scale.cachePitch));
+		pixel = *(x + (Bit8u*)(src + y * render.scale.cachePitch));
 		r += render.pal.rgb[pixel].red >> shift;
 		g += render.pal.rgb[pixel].green >> shift;
 		b += render.pal.rgb[pixel].blue >> shift;
 		break;
 	case scalerMode15:
-		pixel = *(x+(Bit16u*)(src+y*render.scale.cachePitch));
-		r += (pixel >> (7+shift)) & (0xf8 >> shift);
-		g += (pixel >> (2+shift)) & (0xf8 >> shift);
-		b += (pixel << (3-shift)) & (0xf8 >> shift);
+		pixel = *(x + (Bit16u*)(src + y * render.scale.cachePitch));
+		r += (pixel >> (7 + shift)) & (0xf8 >> shift);
+		g += (pixel >> (2 + shift)) & (0xf8 >> shift);
+		b += (pixel << (3 - shift)) & (0xf8 >> shift);
 		break;
 	case scalerMode16:
-		pixel = *(x+(Bit16u*)(src+y*render.scale.cachePitch));
-		r += (pixel >> (8+shift)) & (0xf8 >> shift);
-		g += (pixel >> (3+shift)) & (0xfc >> shift);
-		b += (pixel << (3-shift)) & (0xf8 >> shift);
+		pixel = *(x + (Bit16u*)(src + y * render.scale.cachePitch));
+		r += (pixel >> (8 + shift)) & (0xf8 >> shift);
+		g += (pixel >> (3 + shift)) & (0xfc >> shift);
+		b += (pixel << (3 - shift)) & (0xf8 >> shift);
 		break;
 	case scalerMode32:
-		pixel = *(x+(Bit32u*)(src+y*render.scale.cachePitch));
-		r += (pixel >> (16+shift)) & (0xff >> shift);
-		g += (pixel >> (8+shift))  & (0xff >> shift);
+		pixel = *(x + (Bit32u*)(src + y * render.scale.cachePitch));
+		r += (pixel >> (16 + shift)) & (0xff >> shift);
+		g += (pixel >> (8 + shift))  & (0xff >> shift);
 		b += (pixel >> shift)      & (0xff >> shift);
 		break;
 	}
@@ -92,8 +92,8 @@ static void getPixel(Bits x, Bits y, int &r, int &g, int &b, int shift)
 
 static GUI::ScreenSDL *UI_Startup(GUI::ScreenSDL *screen) {
 	GFX_EndUpdate(0);
-	GFX_SetTitle(-1,-1,true);
-	if(!screen) { //Coming from DOSBox. Clean up the keyboard buffer.
+	GFX_SetTitle(-1, -1, true);
+	if (!screen) { //Coming from DOSBox. Clean up the keyboard buffer.
 		KEYBOARD_ClrBuffer();//Clear buffer
 	}
 	GFX_LosingFocus();//Release any keys pressed (buffer gets filled again). (could be in above if, but clearing the mapper input when exiting the mapper is sensible as well
@@ -109,7 +109,7 @@ static GUI::ScreenSDL *UI_Startup(GUI::ScreenSDL *screen) {
 	if (h < 350) h = 400;
 
 	old_unicode = SDL_EnableUNICODE(1);
-	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 	screenshot = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, GUI::Color::RedMask, GUI::Color::GreenMask, GUI::Color::BlueMask, 0);
 
 	// create screenshot for fade effect
@@ -118,7 +118,7 @@ static GUI::ScreenSDL *UI_Startup(GUI::ScreenSDL *screen) {
 		Bit32u *bg = (Bit32u*)(y*screenshot->pitch + (char*)screenshot->pixels);
 		for (int x = 0; x < w; x++) {
 			int r = 0, g = 0, b = 0;
-			getPixel(x    *(int)render.src.width/w, y    *(int)render.src.height/h, r, g, b, 0);
+			getPixel(x    *(int)render.src.width / w, y    *(int)render.src.height / h, r, g, b, 0);
 			bg[x] = r << rs | g << gs | b << bs;
 		}
 	}
@@ -129,14 +129,14 @@ static GUI::ScreenSDL *UI_Startup(GUI::ScreenSDL *screen) {
 		Bit32u *bg = (Bit32u*)(y*background->pitch + (char*)background->pixels);
 		for (int x = 0; x < w; x++) {
 			int r = 0, g = 0, b = 0;
-			getPixel(x    *(int)render.src.width/w, y    *(int)render.src.height/h, r, g, b, 3);
-			getPixel((x-1)*(int)render.src.width/w, y    *(int)render.src.height/h, r, g, b, 3);
-			getPixel(x    *(int)render.src.width/w, (y-1)*(int)render.src.height/h, r, g, b, 3);
-			getPixel((x-1)*(int)render.src.width/w, (y-1)*(int)render.src.height/h, r, g, b, 3);
-			getPixel((x+1)*(int)render.src.width/w, y    *(int)render.src.height/h, r, g, b, 3);
-			getPixel(x    *(int)render.src.width/w, (y+1)*(int)render.src.height/h, r, g, b, 3);
-			getPixel((x+1)*(int)render.src.width/w, (y+1)*(int)render.src.height/h, r, g, b, 3);
-			getPixel((x-1)*(int)render.src.width/w, (y+1)*(int)render.src.height/h, r, g, b, 3);
+			getPixel(x    *(int)render.src.width / w, y    *(int)render.src.height / h, r, g, b, 3);
+			getPixel((x - 1)*(int)render.src.width / w, y    *(int)render.src.height / h, r, g, b, 3);
+			getPixel(x    *(int)render.src.width / w, (y - 1)*(int)render.src.height / h, r, g, b, 3);
+			getPixel((x - 1)*(int)render.src.width / w, (y - 1)*(int)render.src.height / h, r, g, b, 3);
+			getPixel((x + 1)*(int)render.src.width / w, y    *(int)render.src.height / h, r, g, b, 3);
+			getPixel(x    *(int)render.src.width / w, (y + 1)*(int)render.src.height / h, r, g, b, 3);
+			getPixel((x + 1)*(int)render.src.width / w, (y + 1)*(int)render.src.height / h, r, g, b, 3);
+			getPixel((x - 1)*(int)render.src.width / w, (y + 1)*(int)render.src.height / h, r, g, b, 3);
 			int r1 = (int)((r * 393 + g * 769 + b * 189) / 1351);
 			int g1 = (int)((r * 349 + g * 686 + b * 168) / 1203);
 			int b1 = (int)((r * 272 + g * 534 + b * 131) / 2140);
@@ -150,7 +150,7 @@ static GUI::ScreenSDL *UI_Startup(GUI::ScreenSDL *screen) {
 	mousetoggle = mouselocked;
 	if (mouselocked) GFX_CaptureMouse();
 
-	SDL_Surface* sdlscreen = SDL_SetVideoMode(w, h, 32, SDL_SWSURFACE|(fs?SDL_FULLSCREEN:0));
+	SDL_Surface* sdlscreen = SDL_SetVideoMode(w, h, 32, SDL_SWSURFACE | (fs ? SDL_FULLSCREEN : 0));
 	if (sdlscreen == NULL) E_Exit("Could not initialize video mode %ix%ix32 for UI: %s", w, h, SDL_GetError());
 
 	// fade out
@@ -201,8 +201,8 @@ static void UI_Shutdown(GUI::ScreenSDL *screen) {
 	screen->setSurface(NULL);
 	GFX_ResetScreen();
 	SDL_EnableUNICODE(old_unicode);
-	SDL_EnableKeyRepeat(0,0);
-	GFX_SetTitle(-1,-1,false);
+	SDL_EnableKeyRepeat(0, 0);
+	GFX_SetTitle(-1, -1, false);
 }
 
 /* helper class for command execution */
@@ -214,11 +214,11 @@ public:
 	}
 	bool ReadLine(char *line) {
 		std::string l;
-		if (!std::getline(lines,l)) {
+		if (!std::getline(lines, l)) {
 			delete this;
 			return false;
 		}
-		strcpy(line,l.c_str());
+		strcpy(line, l.c_str());
 		return true;
 	}
 };
@@ -239,14 +239,14 @@ class BadConversion : public std::runtime_error {
 public: BadConversion(const std::string& s) : std::runtime_error(s) { }
 };
 
-template<typename T> inline std::string stringify(const T& x, std::ios_base& ( *pf )(std::ios_base&) = NULL) {
+template<typename T> inline std::string stringify(const T& x, std::ios_base& (*pf)(std::ios_base&) = NULL) {
 	std::ostringstream o;
 	if (pf) o << pf;
 	if (!(o << x)) throw BadConversion(std::string("stringify(") + typeid(x).name() + ")");
 	return o.str();
 }
 
-template<typename T> inline void convert(const std::string& s, T& x, bool failIfLeftoverChars = true, std::ios_base& ( *pf )(std::ios_base&) = NULL) {
+template<typename T> inline void convert(const std::string& s, T& x, bool failIfLeftoverChars = true, std::ios_base& (*pf)(std::ios_base&) = NULL) {
 	std::istringstream i(s);
 	if (pf) i >> pf;
 	char c;
@@ -287,7 +287,7 @@ public:
 
 	bool prepare(std::string &buffer) {
 		if (input->isChecked() == static_cast<bool>(prop->GetValue())) return false;
-		buffer.append(input->isChecked()?"true":"false");
+		buffer.append(input->isChecked() ? "true" : "false");
 		return true;
 	}
 };
@@ -347,7 +347,7 @@ public:
 	bool prepare(std::string &buffer) {
 		int val;
 		convert(input->getText(), val, false, std::hex);
-		if ((Hex)val ==  prop->GetValue()) return false;
+		if ((Hex)val == prop->GetValue()) return false;
 		buffer.append(stringify(val, std::hex));
 		return true;
 	}
@@ -380,7 +380,7 @@ public:
 		MessageBox(parent, x, y, 580, "", "") {
 		std::string title(section->GetName());
 		title.at(0) = std::toupper(title.at(0));
-		setTitle("Help for "+title);
+		setTitle("Help for " + title);
 		std::string name = section->GetName();
 		std::transform(name.begin(), name.end(), name.begin(), (int(*)(int))std::toupper);
 		name += "_CONFIGFILE_HELP";
@@ -395,7 +395,7 @@ public:
 		ToplevelWindow(parent, x, y, 510, 300, ""), section(section) {
 		std::string title(section->GetName());
 		title[0] = std::toupper(title[0]);
-		setTitle("Configuration for "+title);
+		setTitle("Configuration for " + title);
 		new GUI::Label(this, 5, 10, "Settings:");
 		GUI::Button *b = new GUI::Button(this, 120, 220, "Cancel", 70);
 		b->addActionHandler(this);
@@ -406,18 +406,18 @@ public:
 		int i = 0;
 		Property *prop;
 		while ((prop = section->Get_prop(i))) {
-			Prop_bool   *pbool   = dynamic_cast<Prop_bool*>(prop);
-			Prop_int    *pint    = dynamic_cast<Prop_int*>(prop);
-			Prop_double  *pdouble  = dynamic_cast<Prop_double*>(prop);
-			Prop_hex    *phex    = dynamic_cast<Prop_hex*>(prop);
+			Prop_bool   *pbool = dynamic_cast<Prop_bool*>(prop);
+			Prop_int    *pint = dynamic_cast<Prop_int*>(prop);
+			Prop_double  *pdouble = dynamic_cast<Prop_double*>(prop);
+			Prop_hex    *phex = dynamic_cast<Prop_hex*>(prop);
 			Prop_string *pstring = dynamic_cast<Prop_string*>(prop);
 
 			PropertyEditor *p;
-			if (pbool) p = new PropertyEditorBool(this, 5+250*(i/6), 40+(i%6)*30, section, prop);
-			else if (phex) p = new PropertyEditorHex(this, 5+250*(i/6), 40+(i%6)*30, section, prop);
-			else if (pint) p = new PropertyEditorInt(this, 5+250*(i/6), 40+(i%6)*30, section, prop);
-			else if (pdouble) p = new PropertyEditorFloat(this, 5+250*(i/6), 40+(i%6)*30, section, prop);
-			else if (pstring) p = new PropertyEditorString(this, 5+250*(i/6), 40+(i%6)*30, section, prop);
+			if (pbool) p = new PropertyEditorBool(this, 5 + 250 * (i / 6), 40 + (i % 6) * 30, section, prop);
+			else if (phex) p = new PropertyEditorHex(this, 5 + 250 * (i / 6), 40 + (i % 6) * 30, section, prop);
+			else if (pint) p = new PropertyEditorInt(this, 5 + 250 * (i / 6), 40 + (i % 6) * 30, section, prop);
+			else if (pdouble) p = new PropertyEditorFloat(this, 5 + 250 * (i / 6), 40 + (i % 6) * 30, section, prop);
+			else if (pstring) p = new PropertyEditorString(this, 5 + 250 * (i / 6), 40 + (i % 6) * 30, section, prop);
 			else { i++; continue; }
 			b->addActionHandler(p);
 			i++;
@@ -427,7 +427,7 @@ public:
 
 	void actionExecuted(GUI::ActionEventSource *b, const GUI::String &arg) {
 		if (arg == "OK" || arg == "Cancel") close();
-		else if (arg == "Help") new HelpWindow(static_cast<GUI::Screen*>(parent), getX()-10, getY()-10, section);
+		else if (arg == "Help") new HelpWindow(static_cast<GUI::Screen*>(parent), getX() - 10, getY() - 10, section);
 		else ToplevelWindow::actionExecuted(b, arg);
 	}
 };
@@ -440,7 +440,7 @@ public:
 		ToplevelWindow(parent, x, y, 450, 300, ""), section(section) {
 		std::string title(section->GetName());
 		title[0] = std::toupper(title[0]);
-		setTitle("Edit "+title);
+		setTitle("Edit " + title);
 		new GUI::Label(this, 5, 10, "Content:");
 		content = new GUI::Input(this, 5, 30, 420, 185);
 		content->setText(section->data);
@@ -516,18 +516,18 @@ public:
 
 		GUI::Menubar *bar = new GUI::Menubar(this, 0, 0, getWidth());
 		bar->addMenu("Configuration");
-		bar->addItem(0,"Save...");
-		bar->addItem(0,"Save Language File...");
-		bar->addItem(0,"");
-		bar->addItem(0,"Close");
+		bar->addItem(0, "Save...");
+		bar->addItem(0, "Save Language File...");
+		bar->addItem(0, "");
+		bar->addItem(0, "Close");
 		bar->addMenu("Settings");
 		bar->addMenu("Help");
-		bar->addItem(2,"Introduction");
-		bar->addItem(2,"Getting Started");
-		bar->addItem(2,"CD-ROM Support");
-		bar->addItem(2,"Special Keys");
-		bar->addItem(2,"");
-		bar->addItem(2,"About");
+		bar->addItem(2, "Introduction");
+		bar->addItem(2, "Getting Started");
+		bar->addItem(2, "CD-ROM Support");
+		bar->addItem(2, "Special Keys");
+		bar->addItem(2, "");
+		bar->addItem(2, "About");
 		bar->addActionHandler(this);
 
 		new GUI::Label(this, 10, 30, "Choose a settings group to configure:");
@@ -537,14 +537,14 @@ public:
 		while ((sec = control->GetSection(i))) {
 			std::string name = sec->GetName();
 			name[0] = std::toupper(name[0]);
-			GUI::Button *b = new GUI::Button(this, 12+(i/5)*160, 50+(i%5)*30, name, 100);
+			GUI::Button *b = new GUI::Button(this, 12 + (i / 5) * 160, 50 + (i % 5) * 30, name, 100);
 			b->addActionHandler(this);
 			bar->addItem(1, name);
 			i++;
 		}
 
 		if (first_shell) {
-			(new GUI::Button(this, 12+(i/5)*160, 50+(i%5)*30, "Keyboard", 100))->addActionHandler(this);
+			(new GUI::Button(this, 12 + (i / 5) * 160, 50 + (i % 5) * 30, "Keyboard", 100))->addActionHandler(this);
 			bar->addItem(1, "");
 			bar->addItem(1, "Keyboard");
 		}
