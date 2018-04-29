@@ -1,7 +1,7 @@
 #define VERSION "SVN"
 
 /* Define to 1 to enable internal debugger, requires libcurses */
-#define C_DEBUG 0
+#define C_DEBUG 1
 
 /* Define to 1 to enable output=ddraw */
 #define C_DDRAW 1 
@@ -52,14 +52,7 @@
 /* Define to 1 if you want serial passthrough support. */
 #define C_DIRECTSERIAL 1
 
-#define GCC_ATTRIBUTE(x) /* attribute not supported */
-#define x (x)
-#define GCC_LIKELY(x) (x)
-
-#define INLINE __forceinline
-#define __fastcall
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1400) 
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning(disable : 4996) 
 #endif
 

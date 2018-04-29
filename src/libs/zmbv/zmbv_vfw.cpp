@@ -89,28 +89,29 @@ DWORD Close(CodecInst* pinst) {
 
 BOOL CodecInst::QueryAbout() { return TRUE; }
 
-static BOOL CALLBACK AboutDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-  if (uMsg == WM_COMMAND) {
-    switch (LOWORD(wParam)) {
-    case IDOK:
-      EndDialog(hwndDlg, 0);
-      break;
-    case IDC_HOMEPAGE:
-      ShellExecute(NULL, NULL, "http://www.dosbox.com", NULL, NULL, SW_SHOW);
-      break;
-    case IDC_EMAIL:
-      ShellExecute(NULL, NULL, "mailto:dosbox.crew@gmail.com", NULL, NULL, SW_SHOW);
-      break;
-    }
-  }
-  return FALSE;
+static INT_PTR CALLBACK AboutDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	if (uMsg == WM_COMMAND) {
+		switch (LOWORD(wParam)) {
+		case IDOK:
+			EndDialog(hwndDlg, 0);
+			break;
+		case IDC_HOMEPAGE:
+			ShellExecute(NULL, NULL, "http://www.dosbox.com", NULL, NULL, SW_SHOW);
+			break;
+		case IDC_EMAIL:
+			ShellExecute(NULL, NULL, "mailto:dosbox.crew@gmail.com", NULL, NULL, SW_SHOW);
+			break;
+		}
+	}
+	return FALSE;
 }
+
 DWORD CodecInst::About(HWND hwnd) {
   DialogBox(hmoduleCodec, MAKEINTRESOURCE(IDD_ABOUT), hwnd, AboutDialogProc);
   return ICERR_OK;
 }
 
-static BOOL CALLBACK ConfigureDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static INT_PTR CALLBACK ConfigureDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
   if (uMsg == WM_INITDIALOG) {
 
