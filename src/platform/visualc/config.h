@@ -7,16 +7,16 @@
 #define C_DDRAW 1 
 
 /* Define to 1 to enable screenshots, requires libpng */
-#define C_SSHOT 1
+#define C_SSHOT 0
 
 /* Define to 1 to use opengl display output support */
 #define C_OPENGL 1
 
 /* Define to 1 to enable internal modem support, requires SDL_net */
-#define C_MODEM 1
+#define C_MODEM 0
 
 /* Define to 1 to enable IPX networking support, requires SDL_net */
-#define C_IPX 1
+#define C_IPX 0
 
 /* Enable some heavy debugging options */
 #define C_HEAVY_DEBUG 0
@@ -51,13 +51,6 @@
 
 /* Define to 1 if you want serial passthrough support. */
 #define C_DIRECTSERIAL 1
-
-#define GCC_ATTRIBUTE(x) /* attribute not supported */
-#define x (x)
-#define GCC_LIKELY(x) (x)
-
-#define inline __forceinline
-#define __fastcall
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400) 
 #pragma warning(disable : 4996) 

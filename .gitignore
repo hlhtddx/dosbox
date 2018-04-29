@@ -2,3 +2,7 @@
 .vscode
 cmake-build-*
 build/*
+/visualc_net/*.vcxproj.user
+/visualc_net/.vs
+/visualc_net/Debug
+/visualc_net/Release
