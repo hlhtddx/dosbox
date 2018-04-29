@@ -26,7 +26,7 @@
 #include "dos_inc.h"
 #include "support.h"
 #include "drives.h" //Wildcmp
-/* Include all the devices */
+ /* Include all the devices */
 
 #include "dev_con.h"
 
@@ -36,109 +36,109 @@ DOS_Device * Devices[DOS_DEVICES];
 class device_NUL : public DOS_Device {
 public:
 	device_NUL() { SetName("NUL"); };
-	virtual bool Read(Bit8u * data,Bit16u * size) {
+	virtual bool Read(Bit8u * data, Bit16u * size) {
 		*size = 0; //Return success and no data read. 
-		LOG(LOG_IOCTL,LOG_NORMAL)("%s:READ",GetName());
+		LOG(LOG_IOCTL, LOG_NORMAL)("%s:READ", GetName());
 		return true;
 	}
-	virtual bool Write(Bit8u * data,Bit16u * size) {
-		LOG(LOG_IOCTL,LOG_NORMAL)("%s:WRITE",GetName());
+	virtual bool Write(Bit8u * data, Bit16u * size) {
+		LOG(LOG_IOCTL, LOG_NORMAL)("%s:WRITE", GetName());
 		return true;
 	}
-	virtual bool Seek(Bit32u * pos,Bit32u type) {
-		LOG(LOG_IOCTL,LOG_NORMAL)("%s:SEEK",GetName());
+	virtual bool Seek(Bit32u * pos, Bit32u type) {
+		LOG(LOG_IOCTL, LOG_NORMAL)("%s:SEEK", GetName());
 		return true;
 	}
 	virtual bool Close() { return true; }
 	virtual Bit16u GetInformation(void) { return 0x8084; }
-	virtual bool ReadFromControlChannel(PhysPt bufptr,Bit16u size,Bit16u * retcode){return false;}
-	virtual bool WriteToControlChannel(PhysPt bufptr,Bit16u size,Bit16u * retcode){return false;}
+	virtual bool ReadFromControlChannel(PhysPt bufptr, Bit16u size, Bit16u * retcode) { return false; }
+	virtual bool WriteToControlChannel(PhysPt bufptr, Bit16u size, Bit16u * retcode) { return false; }
 };
 
 class device_LPT1 : public device_NUL {
 public:
-   	device_LPT1() { SetName("LPT1");}
+	device_LPT1() { SetName("LPT1"); }
 	Bit16u GetInformation(void) { return 0x80A0; }
-	bool Read(Bit8u* data,Bit16u * size){
+	bool Read(Bit8u* data, Bit16u * size) {
 		DOS_SetError(DOSERR_ACCESS_DENIED);
 		return false;
-	}	
+	}
 };
 
-bool DOS_Device::Read(Bit8u * data,Bit16u * size) {
-	return Devices[devnum]->Read(data,size);
+bool DOS_Device::Read(Bit8u * data, Bit16u * size) {
+	return Devices[devnum]->Read(data, size);
 }
 
-bool DOS_Device::Write(Bit8u * data,Bit16u * size) {
-	return Devices[devnum]->Write(data,size);
+bool DOS_Device::Write(Bit8u * data, Bit16u * size) {
+	return Devices[devnum]->Write(data, size);
 }
 
-bool DOS_Device::Seek(Bit32u * pos,Bit32u type) {
-	return Devices[devnum]->Seek(pos,type);
+bool DOS_Device::Seek(Bit32u * pos, Bit32u type) {
+	return Devices[devnum]->Seek(pos, type);
 }
 
 bool DOS_Device::Close() {
 	return Devices[devnum]->Close();
 }
 
-Bit16u DOS_Device::GetInformation(void) { 
+Bit16u DOS_Device::GetInformation(void) {
 	return Devices[devnum]->GetInformation();
 }
 
-bool DOS_Device::ReadFromControlChannel(PhysPt bufptr,Bit16u size,Bit16u * retcode) { 
-	return Devices[devnum]->ReadFromControlChannel(bufptr,size,retcode);
+bool DOS_Device::ReadFromControlChannel(PhysPt bufptr, Bit16u size, Bit16u * retcode) {
+	return Devices[devnum]->ReadFromControlChannel(bufptr, size, retcode);
 }
 
-bool DOS_Device::WriteToControlChannel(PhysPt bufptr,Bit16u size,Bit16u * retcode) { 
-	return Devices[devnum]->WriteToControlChannel(bufptr,size,retcode);
+bool DOS_Device::WriteToControlChannel(PhysPt bufptr, Bit16u size, Bit16u * retcode) {
+	return Devices[devnum]->WriteToControlChannel(bufptr, size, retcode);
 }
 
 DOS_File::DOS_File(const DOS_File& orig) {
-	flags=orig.flags;
-	time=orig.time;
-	date=orig.date;
-	attr=orig.attr;
-	refCtr=orig.refCtr;
-	open=orig.open;
-	hdrive=orig.hdrive;
-	name=0;
-	if(orig.name) {
-		name=new char [strlen(orig.name) + 1];strcpy(name,orig.name);
+	flags = orig.flags;
+	time = orig.time;
+	date = orig.date;
+	attr = orig.attr;
+	refCtr = orig.refCtr;
+	open = orig.open;
+	hdrive = orig.hdrive;
+	name = 0;
+	if (orig.name) {
+		name = new char[strlen(orig.name) + 1]; strcpy(name, orig.name);
 	}
 }
 
 DOS_File & DOS_File::operator= (const DOS_File & orig) {
-	flags=orig.flags;
-	time=orig.time;
-	date=orig.date;
-	attr=orig.attr;
-	refCtr=orig.refCtr;
-	open=orig.open;
-	hdrive=orig.hdrive;
-	if(name) {
-		delete [] name; name=0;
+	flags = orig.flags;
+	time = orig.time;
+	date = orig.date;
+	attr = orig.attr;
+	refCtr = orig.refCtr;
+	open = orig.open;
+	hdrive = orig.hdrive;
+	if (name) {
+		delete[] name; name = 0;
 	}
-	if(orig.name) {
-		name=new char [strlen(orig.name) + 1];strcpy(name,orig.name);
+	if (orig.name) {
+		name = new char[strlen(orig.name) + 1]; strcpy(name, orig.name);
 	}
 	return *this;
 }
 
 Bit8u DOS_FindDevice(char const * name) {
 	/* should only check for the names before the dot and spacepadded */
-	char fullname[DOS_PATHLENGTH];Bit8u drive;
-//	if(!name || !(*name)) return DOS_DEVICES; //important, but makename does it
-	if (!DOS_MakeName(name,fullname,&drive)) return DOS_DEVICES;
+	char fullname[DOS_PATHLENGTH]; Bit8u drive;
+	//	if(!name || !(*name)) return DOS_DEVICES; //important, but makename does it
+	if (!DOS_MakeName(name, fullname, &drive)) return DOS_DEVICES;
 
-	char* name_part = strrchr(fullname,'\\');
-	if(name_part) {
+	char* name_part = strrchr(fullname, '\\');
+	if (name_part) {
 		*name_part++ = 0;
 		//Check validity of leading directory.
-		if(!Drives[drive]->TestDir(fullname)) return DOS_DEVICES;
+		if (!Drives[drive]->TestDir(fullname)) return DOS_DEVICES;
 	} else name_part = fullname;
-   
-	char* dot = strrchr(name_part,'.');
-	if(dot) *dot = 0; //no ext checking
+
+	char* dot = strrchr(name_part, '.');
+	if (dot) *dot = 0; //no ext checking
 
 	static char com[5] = { 'C','O','M','1',0 };
 	static char lpt[5] = { 'L','P','T','1',0 };
@@ -149,9 +149,9 @@ Bit8u DOS_FindDevice(char const * name) {
 	if (strcmp(name_part, "PRN") == 0) name_part = lpt;
 
 	/* loop through devices */
-	for(Bit8u index = 0;index < DOS_DEVICES;index++) {
+	for (Bit8u index = 0; index < DOS_DEVICES; index++) {
 		if (Devices[index]) {
-			if (WildFileCmp(name_part,Devices[index]->name)) return index;
+			if (WildFileCmp(name_part, Devices[index]->name)) return index;
 		}
 	}
 	return DOS_DEVICES;
@@ -159,10 +159,10 @@ Bit8u DOS_FindDevice(char const * name) {
 
 
 void DOS_AddDevice(DOS_Device * adddev) {
-//Caller creates the device. We store a pointer to it
-//TODO Give the Device a real handler in low memory that responds to calls
-	for(Bitu i = 0; i < DOS_DEVICES;i++) {
-		if(!Devices[i]){
+	//Caller creates the device. We store a pointer to it
+	//TODO Give the Device a real handler in low memory that responds to calls
+	for (Bitu i = 0; i < DOS_DEVICES; i++) {
+		if (!Devices[i]) {
 			Devices[i] = adddev;
 			Devices[i]->SetDeviceNumber(i);
 			return;
@@ -172,10 +172,10 @@ void DOS_AddDevice(DOS_Device * adddev) {
 }
 
 void DOS_DelDevice(DOS_Device * dev) {
-// We will destroy the device if we find it in our list.
-// TODO:The file table is not checked to see the device is opened somewhere!
-	for (Bitu i = 0; i <DOS_DEVICES;i++) {
-		if(Devices[i] && !strcasecmp(Devices[i]->name,dev->name)){
+	// We will destroy the device if we find it in our list.
+	// TODO:The file table is not checked to see the device is opened somewhere!
+	for (Bitu i = 0; i < DOS_DEVICES; i++) {
+		if (Devices[i] && !strcasecmp(Devices[i]->name, dev->name)) {
 			delete Devices[i];
 			Devices[i] = 0;
 			return;
@@ -185,12 +185,12 @@ void DOS_DelDevice(DOS_Device * dev) {
 
 void DOS_SetupDevices(void) {
 	DOS_Device * newdev;
-	newdev=new device_CON();
+	newdev = new device_CON();
 	DOS_AddDevice(newdev);
 	DOS_Device * newdev2;
-	newdev2=new device_NUL();
+	newdev2 = new device_NUL();
 	DOS_AddDevice(newdev2);
 	DOS_Device * newdev3;
-	newdev3=new device_LPT1();
+	newdev3 = new device_LPT1();
 	DOS_AddDevice(newdev3);
 }

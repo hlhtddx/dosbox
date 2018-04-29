@@ -29,20 +29,20 @@
 #include "cpu.h"
 
 
-static void FPU_FDECSTP(){
+static void FPU_FDECSTP() {
 	TOP = (TOP - 1) & 7;
 }
 
-static void FPU_FINCSTP(){
+static void FPU_FINCSTP() {
 	TOP = (TOP + 1) & 7;
 }
 
-static void FPU_FNSTCW(PhysPt addr){
-	mem_writew(addr,fpu.cw);
+static void FPU_FNSTCW(PhysPt addr) {
+	mem_writew(addr, fpu.cw);
 }
 
 static void FPU_FFREE(Bitu st) {
-	fpu.tags[st]=TAG_Empty;
+	fpu.tags[st] = TAG_Empty;
 }
 
 
@@ -54,122 +54,122 @@ static void FPU_FFREE(Bitu st) {
 
 
 static inline void dyn_fpu_top() {
-	gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
-	gen_add_imm(FC_OP2,decode.modrm.rm);
-	gen_and_imm(FC_OP2,7);
-	gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
+	gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
+	gen_add_imm(FC_OP2, decode.modrm.rm);
+	gen_and_imm(FC_OP2, 7);
+	gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
 }
 
 static inline void dyn_fpu_top_swapped() {
-	gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
-	gen_add_imm(FC_OP1,decode.modrm.rm);
-	gen_and_imm(FC_OP1,7);
-	gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
+	gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
+	gen_add_imm(FC_OP1, decode.modrm.rm);
+	gen_and_imm(FC_OP1, 7);
+	gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
 }
 
 static void dyn_eatree() {
-	Bitu group=(decode.modrm.val >> 3) & 7;
-	switch (group){
+	Bitu group = (decode.modrm.val >> 3) & 7;
+	switch (group) {
 	case 0x00:		// FADD ST,STi
-		gen_call_function_R((void*)&FPU_FADD_EA,FC_OP1);
+		gen_call_function_R((void*)&FPU_FADD_EA, FC_OP1);
 		break;
 	case 0x01:		// FMUL  ST,STi
-		gen_call_function_R((void*)&FPU_FMUL_EA,FC_OP1);
+		gen_call_function_R((void*)&FPU_FMUL_EA, FC_OP1);
 		break;
 	case 0x02:		// FCOM  STi
-		gen_call_function_R((void*)&FPU_FCOM_EA,FC_OP1);
+		gen_call_function_R((void*)&FPU_FCOM_EA, FC_OP1);
 		break;
 	case 0x03:		// FCOMP STi
-		gen_call_function_R((void*)&FPU_FCOM_EA,FC_OP1);
+		gen_call_function_R((void*)&FPU_FCOM_EA, FC_OP1);
 		gen_call_function_raw((void*)&FPU_FPOP);
 		break;
 	case 0x04:		// FSUB  ST,STi
-		gen_call_function_R((void*)&FPU_FSUB_EA,FC_OP1);
-		break;	
+		gen_call_function_R((void*)&FPU_FSUB_EA, FC_OP1);
+		break;
 	case 0x05:		// FSUBR ST,STi
-		gen_call_function_R((void*)&FPU_FSUBR_EA,FC_OP1);
+		gen_call_function_R((void*)&FPU_FSUBR_EA, FC_OP1);
 		break;
 	case 0x06:		// FDIV  ST,STi
-		gen_call_function_R((void*)&FPU_FDIV_EA,FC_OP1);
+		gen_call_function_R((void*)&FPU_FDIV_EA, FC_OP1);
 		break;
 	case 0x07:		// FDIVR ST,STi
-		gen_call_function_R((void*)&FPU_FDIVR_EA,FC_OP1);
+		gen_call_function_R((void*)&FPU_FDIVR_EA, FC_OP1);
 		break;
 	default:
 		break;
 	}
 }
 
-static void dyn_fpu_esc0(){
-	dyn_get_modrm(); 
-	if (decode.modrm.val >= 0xc0) { 
+static void dyn_fpu_esc0() {
+	dyn_get_modrm();
+	if (decode.modrm.val >= 0xc0) {
 		dyn_fpu_top();
-		switch (decode.modrm.reg){
+		switch (decode.modrm.reg) {
 		case 0x00:		//FADD ST,STi
-			gen_call_function_RR((void*)&FPU_FADD,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FADD, FC_OP1, FC_OP2);
 			break;
 		case 0x01:		// FMUL  ST,STi
-			gen_call_function_RR((void*)&FPU_FMUL,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FMUL, FC_OP1, FC_OP2);
 			break;
 		case 0x02:		// FCOM  STi
-			gen_call_function_RR((void*)&FPU_FCOM,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FCOM, FC_OP1, FC_OP2);
 			break;
 		case 0x03:		// FCOMP STi
-			gen_call_function_RR((void*)&FPU_FCOM,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FCOM, FC_OP1, FC_OP2);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		case 0x04:		// FSUB  ST,STi
-			gen_call_function_RR((void*)&FPU_FSUB,FC_OP1,FC_OP2);
-			break;	
+			gen_call_function_RR((void*)&FPU_FSUB, FC_OP1, FC_OP2);
+			break;
 		case 0x05:		// FSUBR ST,STi
-			gen_call_function_RR((void*)&FPU_FSUBR,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FSUBR, FC_OP1, FC_OP2);
 			break;
 		case 0x06:		// FDIV  ST,STi
-			gen_call_function_RR((void*)&FPU_FDIV,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FDIV, FC_OP1, FC_OP2);
 			break;
 		case 0x07:		// FDIVR ST,STi
-			gen_call_function_RR((void*)&FPU_FDIVR,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FDIVR, FC_OP1, FC_OP2);
 			break;
 		default:
 			break;
 		}
-	} else { 
+	} else {
 		dyn_fill_ea(FC_ADDR);
-		gen_call_function_R((void*)&FPU_FLD_F32_EA,FC_ADDR); 
-		gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
+		gen_call_function_R((void*)&FPU_FLD_F32_EA, FC_ADDR);
+		gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
 		dyn_eatree();
 	}
 }
 
 
-static void dyn_fpu_esc1(){
-	dyn_get_modrm();  
-	if (decode.modrm.val >= 0xc0) { 
-		switch (decode.modrm.reg){
+static void dyn_fpu_esc1() {
+	dyn_get_modrm();
+	if (decode.modrm.val >= 0xc0) {
+		switch (decode.modrm.reg) {
 		case 0x00: /* FLD STi */
-			gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
-			gen_add_imm(FC_OP1,decode.modrm.rm);
-			gen_and_imm(FC_OP1,7);
+			gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
+			gen_add_imm(FC_OP1, decode.modrm.rm);
+			gen_and_imm(FC_OP1, 7);
 			gen_protect_reg(FC_OP1);
-			gen_call_function_raw((void*)&FPU_PREP_PUSH); 
-			gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
+			gen_call_function_raw((void*)&FPU_PREP_PUSH);
+			gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
 			gen_restore_reg(FC_OP1);
-			gen_call_function_RR((void*)&FPU_FST,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FST, FC_OP1, FC_OP2);
 			break;
 		case 0x01: /* FXCH STi */
 			dyn_fpu_top();
-			gen_call_function_RR((void*)&FPU_FXCH,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FXCH, FC_OP1, FC_OP2);
 			break;
 		case 0x02: /* FNOP */
 			gen_call_function_raw((void*)&FPU_FNOP);
 			break;
 		case 0x03: /* FSTP STi */
 			dyn_fpu_top();
-			gen_call_function_RR((void*)&FPU_FST,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FST, FC_OP1, FC_OP2);
 			gen_call_function_raw((void*)&FPU_FPOP);
-			break;   
+			break;
 		case 0x04:
-			switch(decode.modrm.rm){
+			switch (decode.modrm.rm) {
 			case 0x00:       /* FCHS */
 				gen_call_function_raw((void*)&FPU_FCHS);
 				break;
@@ -178,7 +178,7 @@ static void dyn_fpu_esc1(){
 				break;
 			case 0x02:       /* UNKNOWN */
 			case 0x03:       /* ILLEGAL */
-				LOG(LOG_FPU,LOG_WARN)("ESC 1:Unhandled group %X subfunction %X",decode.modrm.reg,decode.modrm.rm);
+				LOG(LOG_FPU, LOG_WARN)("ESC 1:Unhandled group %X subfunction %X", decode.modrm.reg, decode.modrm.rm);
 				break;
 			case 0x04:       /* FTST */
 				gen_call_function_raw((void*)&FPU_FTST);
@@ -188,12 +188,12 @@ static void dyn_fpu_esc1(){
 				break;
 			case 0x06:       /* FTSTP (cyrix)*/
 			case 0x07:       /* UNKNOWN */
-				LOG(LOG_FPU,LOG_WARN)("ESC 1:Unhandled group %X subfunction %X",decode.modrm.reg,decode.modrm.rm);
+				LOG(LOG_FPU, LOG_WARN)("ESC 1:Unhandled group %X subfunction %X", decode.modrm.reg, decode.modrm.rm);
 				break;
 			}
 			break;
 		case 0x05:
-			switch(decode.modrm.rm){	
+			switch (decode.modrm.rm) {
 			case 0x00:       /* FLD1 */
 				gen_call_function_raw((void*)&FPU_FLD1);
 				break;
@@ -216,12 +216,12 @@ static void dyn_fpu_esc1(){
 				gen_call_function_raw((void*)&FPU_FLDZ);
 				break;
 			case 0x07:       /* ILLEGAL */
-				LOG(LOG_FPU,LOG_WARN)("ESC 1:Unhandled group %X subfunction %X",decode.modrm.reg,decode.modrm.rm);
+				LOG(LOG_FPU, LOG_WARN)("ESC 1:Unhandled group %X subfunction %X", decode.modrm.reg, decode.modrm.rm);
 				break;
 			}
 			break;
 		case 0x06:
-			switch(decode.modrm.rm){
+			switch (decode.modrm.rm) {
 			case 0x00:	/* F2XM1 */
 				gen_call_function_raw((void*)&FPU_F2XM1);
 				break;
@@ -247,12 +247,12 @@ static void dyn_fpu_esc1(){
 				gen_call_function_raw((void*)&FPU_FINCSTP);
 				break;
 			default:
-				LOG(LOG_FPU,LOG_WARN)("ESC 1:Unhandled group %X subfunction %X",decode.modrm.reg,decode.modrm.rm);
+				LOG(LOG_FPU, LOG_WARN)("ESC 1:Unhandled group %X subfunction %X", decode.modrm.reg, decode.modrm.rm);
 				break;
 			}
 			break;
 		case 0x07:
-			switch(decode.modrm.rm){
+			switch (decode.modrm.rm) {
 			case 0x00:		/* FPREM */
 				gen_call_function_raw((void*)&FPU_FPREM);
 				break;
@@ -278,98 +278,98 @@ static void dyn_fpu_esc1(){
 				gen_call_function_raw((void*)&FPU_FCOS);
 				break;
 			default:
-				LOG(LOG_FPU,LOG_WARN)("ESC 1:Unhandled group %X subfunction %X",decode.modrm.reg,decode.modrm.rm);
+				LOG(LOG_FPU, LOG_WARN)("ESC 1:Unhandled group %X subfunction %X", decode.modrm.reg, decode.modrm.rm);
 				break;
 			}
 			break;
 		default:
-			LOG(LOG_FPU,LOG_WARN)("ESC 1:Unhandled group %X subfunction %X",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 1:Unhandled group %X subfunction %X", decode.modrm.reg, decode.modrm.rm);
 			break;
 		}
 	} else {
-		switch(decode.modrm.reg){
+		switch (decode.modrm.reg) {
 		case 0x00: /* FLD float*/
 			gen_call_function_raw((void*)&FPU_PREP_PUSH);
 			dyn_fill_ea(FC_OP1);
-			gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
-			gen_call_function_RR((void*)&FPU_FLD_F32,FC_OP1,FC_OP2);
+			gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
+			gen_call_function_RR((void*)&FPU_FLD_F32, FC_OP1, FC_OP2);
 			break;
 		case 0x01: /* UNKNOWN */
-			LOG(LOG_FPU,LOG_WARN)("ESC EA 1:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC EA 1:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			break;
 		case 0x02: /* FST float*/
 			dyn_fill_ea(FC_ADDR);
-			gen_call_function_R((void*)&FPU_FST_F32,FC_ADDR);
+			gen_call_function_R((void*)&FPU_FST_F32, FC_ADDR);
 			break;
 		case 0x03: /* FSTP float*/
 			dyn_fill_ea(FC_ADDR);
-			gen_call_function_R((void*)&FPU_FST_F32,FC_ADDR);
+			gen_call_function_R((void*)&FPU_FST_F32, FC_ADDR);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		case 0x04: /* FLDENV */
 			dyn_fill_ea(FC_ADDR);
-			gen_call_function_R((void*)&FPU_FLDENV,FC_ADDR);
+			gen_call_function_R((void*)&FPU_FLDENV, FC_ADDR);
 			break;
 		case 0x05: /* FLDCW */
 			dyn_fill_ea(FC_ADDR);
-			gen_call_function_R((void *)&FPU_FLDCW,FC_ADDR);
+			gen_call_function_R((void *)&FPU_FLDCW, FC_ADDR);
 			break;
 		case 0x06: /* FSTENV */
 			dyn_fill_ea(FC_ADDR);
-			gen_call_function_R((void *)&FPU_FSTENV,FC_ADDR);
+			gen_call_function_R((void *)&FPU_FSTENV, FC_ADDR);
 			break;
 		case 0x07:  /* FNSTCW*/
 			dyn_fill_ea(FC_ADDR);
-			gen_call_function_R((void *)&FPU_FNSTCW,FC_ADDR);
+			gen_call_function_R((void *)&FPU_FNSTCW, FC_ADDR);
 			break;
 		default:
-			LOG(LOG_FPU,LOG_WARN)("ESC EA 1:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC EA 1:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			break;
 		}
 	}
 }
 
-static void dyn_fpu_esc2(){
-	dyn_get_modrm();  
-	if (decode.modrm.val >= 0xc0) { 
-		switch(decode.modrm.reg){
+static void dyn_fpu_esc2() {
+	dyn_get_modrm();
+	if (decode.modrm.val >= 0xc0) {
+		switch (decode.modrm.reg) {
 		case 0x05:
-			switch(decode.modrm.rm){
+			switch (decode.modrm.rm) {
 			case 0x01:		/* FUCOMPP */
-				gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
-				gen_add_imm(FC_OP2,1);
-				gen_and_imm(FC_OP2,7);
-				gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
-				gen_call_function_RR((void *)&FPU_FUCOM,FC_OP1,FC_OP2);
+				gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
+				gen_add_imm(FC_OP2, 1);
+				gen_and_imm(FC_OP2, 7);
+				gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
+				gen_call_function_RR((void *)&FPU_FUCOM, FC_OP1, FC_OP2);
 				gen_call_function_raw((void *)&FPU_FPOP);
 				gen_call_function_raw((void *)&FPU_FPOP);
 				break;
 			default:
-				LOG(LOG_FPU,LOG_WARN)("ESC 2:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm); 
+				LOG(LOG_FPU, LOG_WARN)("ESC 2:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 				break;
 			}
 			break;
 		default:
-	   		LOG(LOG_FPU,LOG_WARN)("ESC 2:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 2:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			break;
 		}
 	} else {
 		dyn_fill_ea(FC_ADDR);
-		gen_call_function_R((void*)&FPU_FLD_I32_EA,FC_ADDR); 
-		gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
+		gen_call_function_R((void*)&FPU_FLD_I32_EA, FC_ADDR);
+		gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
 		dyn_eatree();
 	}
 }
 
-static void dyn_fpu_esc3(){
-	dyn_get_modrm();  
-	if (decode.modrm.val >= 0xc0) { 
+static void dyn_fpu_esc3() {
+	dyn_get_modrm();
+	if (decode.modrm.val >= 0xc0) {
 		switch (decode.modrm.reg) {
 		case 0x04:
 			switch (decode.modrm.rm) {
 			case 0x00:				//FNENI
 			case 0x01:				//FNDIS
-				LOG(LOG_FPU,LOG_ERROR)("8087 only fpu code used esc 3: group 4: subfuntion: %d",decode.modrm.rm);
+				LOG(LOG_FPU, LOG_ERROR)("8087 only fpu code used esc 3: group 4: subfuntion: %d", decode.modrm.rm);
 				break;
 			case 0x02:				//FNCLEX FCLEX
 				gen_call_function_raw((void*)&FPU_FCLEX);
@@ -382,303 +382,303 @@ static void dyn_fpu_esc3(){
 //				LOG(LOG_FPU,LOG_ERROR)("80267 protected mode (un)set. Nothing done");
 				break;
 			default:
-				E_Exit("ESC 3:ILLEGAL OPCODE group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+				E_Exit("ESC 3:ILLEGAL OPCODE group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			}
 			break;
 		default:
-			LOG(LOG_FPU,LOG_WARN)("ESC 3:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 3:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			break;
 		}
 	} else {
-		switch(decode.modrm.reg){
+		switch (decode.modrm.reg) {
 		case 0x00:	/* FILD */
 			gen_call_function_raw((void*)&FPU_PREP_PUSH);
-			dyn_fill_ea(FC_OP1); 
-			gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
-			gen_call_function_RR((void*)&FPU_FLD_I32,FC_OP1,FC_OP2);
+			dyn_fill_ea(FC_OP1);
+			gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
+			gen_call_function_RR((void*)&FPU_FLD_I32, FC_OP1, FC_OP2);
 			break;
 		case 0x01:	/* FISTTP */
-			LOG(LOG_FPU,LOG_WARN)("ESC 3 EA:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 3 EA:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			break;
 		case 0x02:	/* FIST */
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FST_I32,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FST_I32, FC_ADDR);
 			break;
 		case 0x03:	/* FISTP */
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FST_I32,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FST_I32, FC_ADDR);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		case 0x05:	/* FLD 80 Bits Real */
 			gen_call_function_raw((void*)&FPU_PREP_PUSH);
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FLD_F80,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FLD_F80, FC_ADDR);
 			break;
 		case 0x07:	/* FSTP 80 Bits Real */
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FST_F80,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FST_F80, FC_ADDR);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		default:
-			LOG(LOG_FPU,LOG_WARN)("ESC 3 EA:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 3 EA:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 		}
 	}
 }
 
-static void dyn_fpu_esc4(){
-	dyn_get_modrm();  
-	if (decode.modrm.val >= 0xc0) { 
-		switch(decode.modrm.reg){
+static void dyn_fpu_esc4() {
+	dyn_get_modrm();
+	if (decode.modrm.val >= 0xc0) {
+		switch (decode.modrm.reg) {
 		case 0x00:	/* FADD STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FADD,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FADD, FC_OP1, FC_OP2);
 			break;
 		case 0x01:	/* FMUL STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FMUL,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FMUL, FC_OP1, FC_OP2);
 			break;
 		case 0x02:  /* FCOM*/
 			dyn_fpu_top();
-			gen_call_function_RR((void*)&FPU_FCOM,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FCOM, FC_OP1, FC_OP2);
 			break;
 		case 0x03:  /* FCOMP*/
 			dyn_fpu_top();
-			gen_call_function_RR((void*)&FPU_FCOM,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FCOM, FC_OP1, FC_OP2);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		case 0x04:  /* FSUBR STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FSUBR,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FSUBR, FC_OP1, FC_OP2);
 			break;
 		case 0x05:  /* FSUB  STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FSUB,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FSUB, FC_OP1, FC_OP2);
 			break;
 		case 0x06:  /* FDIVR STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FDIVR,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FDIVR, FC_OP1, FC_OP2);
 			break;
 		case 0x07:  /* FDIV STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FDIV,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FDIV, FC_OP1, FC_OP2);
 			break;
 		default:
 			break;
 		}
-	} else { 
+	} else {
 		dyn_fill_ea(FC_ADDR);
-		gen_call_function_R((void*)&FPU_FLD_F64_EA,FC_ADDR); 
-		gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
+		gen_call_function_R((void*)&FPU_FLD_F64_EA, FC_ADDR);
+		gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
 		dyn_eatree();
 	}
 }
 
-static void dyn_fpu_esc5(){
-	dyn_get_modrm();  
-	if (decode.modrm.val >= 0xc0) { 
+static void dyn_fpu_esc5() {
+	dyn_get_modrm();
+	if (decode.modrm.val >= 0xc0) {
 		dyn_fpu_top();
-		switch(decode.modrm.reg){
+		switch (decode.modrm.reg) {
 		case 0x00: /* FFREE STi */
-			gen_call_function_R((void*)&FPU_FFREE,FC_OP2);
+			gen_call_function_R((void*)&FPU_FFREE, FC_OP2);
 			break;
 		case 0x01: /* FXCH STi*/
-			gen_call_function_RR((void*)&FPU_FXCH,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FXCH, FC_OP1, FC_OP2);
 			break;
 		case 0x02: /* FST STi */
-			gen_call_function_RR((void*)&FPU_FST,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FST, FC_OP1, FC_OP2);
 			break;
 		case 0x03:  /* FSTP STi*/
-			gen_call_function_RR((void*)&FPU_FST,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FST, FC_OP1, FC_OP2);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		case 0x04:	/* FUCOM STi */
-			gen_call_function_RR((void*)&FPU_FUCOM,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FUCOM, FC_OP1, FC_OP2);
 			break;
 		case 0x05:	/*FUCOMP STi */
-			gen_call_function_RR((void*)&FPU_FUCOM,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FUCOM, FC_OP1, FC_OP2);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		default:
-			LOG(LOG_FPU,LOG_WARN)("ESC 5:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 5:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			break;
-        }
+		}
 	} else {
-		switch(decode.modrm.reg){
+		switch (decode.modrm.reg) {
 		case 0x00:  /* FLD double real*/
 			gen_call_function_raw((void*)&FPU_PREP_PUSH);
-			dyn_fill_ea(FC_OP1); 
-			gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
-			gen_call_function_RR((void*)&FPU_FLD_F64,FC_OP1,FC_OP2);
+			dyn_fill_ea(FC_OP1);
+			gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
+			gen_call_function_RR((void*)&FPU_FLD_F64, FC_OP1, FC_OP2);
 			break;
 		case 0x01:  /* FISTTP longint*/
-			LOG(LOG_FPU,LOG_WARN)("ESC 5 EA:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 5 EA:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			break;
 		case 0x02:   /* FST double real*/
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FST_F64,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FST_F64, FC_ADDR);
 			break;
 		case 0x03:	/* FSTP double real*/
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FST_F64,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FST_F64, FC_ADDR);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		case 0x04:	/* FRSTOR */
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FRSTOR,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FRSTOR, FC_ADDR);
 			break;
 		case 0x06:	/* FSAVE */
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FSAVE,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FSAVE, FC_ADDR);
 			break;
 		case 0x07:   /*FNSTSW */
-			gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
-			gen_call_function_R((void*)&FPU_SET_TOP,FC_OP1);
-			dyn_fill_ea(FC_OP1); 
-			gen_mov_word_to_reg(FC_OP2,(void*)(&fpu.sw),false);
-			gen_call_function_RR((void*)&mem_writew,FC_OP1,FC_OP2);
+			gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
+			gen_call_function_R((void*)&FPU_SET_TOP, FC_OP1);
+			dyn_fill_ea(FC_OP1);
+			gen_mov_word_to_reg(FC_OP2, (void*)(&fpu.sw), false);
+			gen_call_function_RR((void*)&mem_writew, FC_OP1, FC_OP2);
 			break;
 		default:
-			LOG(LOG_FPU,LOG_WARN)("ESC 5 EA:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 5 EA:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 		}
 	}
 }
 
-static void dyn_fpu_esc6(){
-	dyn_get_modrm();  
-	if (decode.modrm.val >= 0xc0) { 
-		switch(decode.modrm.reg){
+static void dyn_fpu_esc6() {
+	dyn_get_modrm();
+	if (decode.modrm.val >= 0xc0) {
+		switch (decode.modrm.reg) {
 		case 0x00:	/*FADDP STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FADD,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FADD, FC_OP1, FC_OP2);
 			break;
 		case 0x01:	/* FMULP STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FMUL,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FMUL, FC_OP1, FC_OP2);
 			break;
 		case 0x02:  /* FCOMP5*/
 			dyn_fpu_top();
-			gen_call_function_RR((void*)&FPU_FCOM,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FCOM, FC_OP1, FC_OP2);
 			break;	/* TODO IS THIS ALLRIGHT ????????? */
 		case 0x03:  /*FCOMPP*/
-			if(decode.modrm.rm != 1) {
-				LOG(LOG_FPU,LOG_WARN)("ESC 6:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			if (decode.modrm.rm != 1) {
+				LOG(LOG_FPU, LOG_WARN)("ESC 6:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 				return;
 			}
-			gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
-			gen_add_imm(FC_OP2,1);
-			gen_and_imm(FC_OP2,7);
-			gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
-			gen_call_function_RR((void*)&FPU_FCOM,FC_OP1,FC_OP2);
+			gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
+			gen_add_imm(FC_OP2, 1);
+			gen_and_imm(FC_OP2, 7);
+			gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
+			gen_call_function_RR((void*)&FPU_FCOM, FC_OP1, FC_OP2);
 			gen_call_function_raw((void*)&FPU_FPOP); /* extra pop at the bottom*/
 			break;
 		case 0x04:  /* FSUBRP STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FSUBR,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FSUBR, FC_OP1, FC_OP2);
 			break;
 		case 0x05:  /* FSUBP  STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FSUB,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FSUB, FC_OP1, FC_OP2);
 			break;
 		case 0x06:	/* FDIVRP STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FDIVR,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FDIVR, FC_OP1, FC_OP2);
 			break;
 		case 0x07:  /* FDIVP STi,ST*/
 			dyn_fpu_top_swapped();
-			gen_call_function_RR((void*)&FPU_FDIV,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FDIV, FC_OP1, FC_OP2);
 			break;
 		default:
 			break;
 		}
-		gen_call_function_raw((void*)&FPU_FPOP);		
+		gen_call_function_raw((void*)&FPU_FPOP);
 	} else {
 		dyn_fill_ea(FC_ADDR);
-		gen_call_function_R((void*)&FPU_FLD_I16_EA,FC_ADDR); 
-		gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
+		gen_call_function_R((void*)&FPU_FLD_I16_EA, FC_ADDR);
+		gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
 		dyn_eatree();
 	}
 }
 
-static void dyn_fpu_esc7(){
-	dyn_get_modrm();  
-	if (decode.modrm.val >= 0xc0) { 
-		switch (decode.modrm.reg){
+static void dyn_fpu_esc7() {
+	dyn_get_modrm();
+	if (decode.modrm.val >= 0xc0) {
+		switch (decode.modrm.reg) {
 		case 0x00: /* FFREEP STi */
 			dyn_fpu_top();
-			gen_call_function_R((void*)&FPU_FFREE,FC_OP2);
+			gen_call_function_R((void*)&FPU_FFREE, FC_OP2);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		case 0x01: /* FXCH STi*/
 			dyn_fpu_top();
-			gen_call_function_RR((void*)&FPU_FXCH,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FXCH, FC_OP1, FC_OP2);
 			break;
 		case 0x02:  /* FSTP STi*/
 		case 0x03:  /* FSTP STi*/
 			dyn_fpu_top();
-			gen_call_function_RR((void*)&FPU_FST,FC_OP1,FC_OP2);
+			gen_call_function_RR((void*)&FPU_FST, FC_OP1, FC_OP2);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		case 0x04:
-			switch(decode.modrm.rm){
-				case 0x00:     /* FNSTSW AX*/
-					gen_mov_word_to_reg(FC_OP1,(void*)(&TOP),true);
-					gen_call_function_R((void*)&FPU_SET_TOP,FC_OP1); 
-					gen_mov_word_to_reg(FC_OP1,(void*)(&fpu.sw),false);
-					MOV_REG_WORD16_FROM_HOST_REG(FC_OP1,DRC_REG_EAX);
-					break;
-				default:
-					LOG(LOG_FPU,LOG_WARN)("ESC 7:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
-					break;
+			switch (decode.modrm.rm) {
+			case 0x00:     /* FNSTSW AX*/
+				gen_mov_word_to_reg(FC_OP1, (void*)(&TOP), true);
+				gen_call_function_R((void*)&FPU_SET_TOP, FC_OP1);
+				gen_mov_word_to_reg(FC_OP1, (void*)(&fpu.sw), false);
+				MOV_REG_WORD16_FROM_HOST_REG(FC_OP1, DRC_REG_EAX);
+				break;
+			default:
+				LOG(LOG_FPU, LOG_WARN)("ESC 7:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
+				break;
 			}
 			break;
 		default:
-			LOG(LOG_FPU,LOG_WARN)("ESC 7:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 7:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			break;
 		}
 	} else {
-		switch(decode.modrm.reg){
+		switch (decode.modrm.reg) {
 		case 0x00:  /* FILD Bit16s */
 			gen_call_function_raw((void*)&FPU_PREP_PUSH);
-			dyn_fill_ea(FC_OP1); 
-			gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
-			gen_call_function_RR((void*)&FPU_FLD_I16,FC_OP1,FC_OP2);
+			dyn_fill_ea(FC_OP1);
+			gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
+			gen_call_function_RR((void*)&FPU_FLD_I16, FC_OP1, FC_OP2);
 			break;
 		case 0x01:
-			LOG(LOG_FPU,LOG_WARN)("ESC 7 EA:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 7 EA:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			break;
 		case 0x02:   /* FIST Bit16s */
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FST_I16,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FST_I16, FC_ADDR);
 			break;
 		case 0x03:	/* FISTP Bit16s */
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FST_I16,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FST_I16, FC_ADDR);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		case 0x04:   /* FBLD packed BCD */
 			gen_call_function_raw((void*)&FPU_PREP_PUSH);
 			dyn_fill_ea(FC_OP1);
-			gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
-			gen_call_function_RR((void*)&FPU_FBLD,FC_OP1,FC_OP2);
+			gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
+			gen_call_function_RR((void*)&FPU_FBLD, FC_OP1, FC_OP2);
 			break;
 		case 0x05:  /* FILD Bit64s */
 			gen_call_function_raw((void*)&FPU_PREP_PUSH);
 			dyn_fill_ea(FC_OP1);
-			gen_mov_word_to_reg(FC_OP2,(void*)(&TOP),true);
-			gen_call_function_RR((void*)&FPU_FLD_I64,FC_OP1,FC_OP2);
+			gen_mov_word_to_reg(FC_OP2, (void*)(&TOP), true);
+			gen_call_function_RR((void*)&FPU_FLD_I64, FC_OP1, FC_OP2);
 			break;
 		case 0x06:	/* FBSTP packed BCD */
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FBST,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FBST, FC_ADDR);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		case 0x07:  /* FISTP Bit64s */
-			dyn_fill_ea(FC_ADDR); 
-			gen_call_function_R((void*)&FPU_FST_I64,FC_ADDR);
+			dyn_fill_ea(FC_ADDR);
+			gen_call_function_R((void*)&FPU_FST_I64, FC_ADDR);
 			gen_call_function_raw((void*)&FPU_FPOP);
 			break;
 		default:
-			LOG(LOG_FPU,LOG_WARN)("ESC 7 EA:Unhandled group %d subfunction %d",decode.modrm.reg,decode.modrm.rm);
+			LOG(LOG_FPU, LOG_WARN)("ESC 7 EA:Unhandled group %d subfunction %d", decode.modrm.reg, decode.modrm.rm);
 			break;
 		}
 	}

@@ -56,7 +56,7 @@ struct Segment {
 	PhysPt phys;							/* The phyiscal address start in emulated machine */
 };
 
-enum SegNames { es=0,cs,ss,ds,fs,gs};
+enum SegNames { es = 0, cs, ss, ds, fs, gs };
 
 struct Segments {
 	Bit16u val[8];
@@ -86,7 +86,7 @@ union GenReg32 {
 #endif
 
 struct CPU_Regs {
-	GenReg32 regs[8],ip;
+	GenReg32 regs[8], ip;
 	Bitu flags;
 };
 
@@ -100,15 +100,15 @@ static inline PhysPt SegPhys(SegNames index) {
 static inline Bit16u SegValue(SegNames index) {
 	return (Bit16u)Segs.val[index];
 }
-	
-static inline RealPt RealMakeSeg(SegNames index,Bit16u off) {
-	return RealMake(SegValue(index),off);	
+
+static inline RealPt RealMakeSeg(SegNames index, Bit16u off) {
+	return RealMake(SegValue(index), off);
 }
 
 
-static inline void SegSet16(Bitu index,Bit16u val) {
-	Segs.val[index]=val;
-	Segs.phys[index]=val << 4;
+static inline void SegSet16(Bitu index, Bit16u val) {
+	Segs.val[index] = val;
+	Segs.phys[index] = val << 4;
 }
 
 enum {

@@ -18,13 +18,13 @@
 
 #ifndef DOSBOX_JOYSTICK_H
 #define DOSBOX_JOYSTICK_H
-void JOYSTICK_Enable(Bitu which,bool enabled);
+void JOYSTICK_Enable(Bitu which, bool enabled);
 
-void JOYSTICK_Button(Bitu which,Bitu num,bool pressed);
+void JOYSTICK_Button(Bitu which, Bitu num, bool pressed);
 
-void JOYSTICK_Move_X(Bitu which,float x);
+void JOYSTICK_Move_X(Bitu which, float x);
 
-void JOYSTICK_Move_Y(Bitu which,float y);
+void JOYSTICK_Move_Y(Bitu which, float y);
 
 bool JOYSTICK_IsEnabled(Bitu which);
 

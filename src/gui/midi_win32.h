@@ -25,20 +25,20 @@
 #include <string>
 #include <sstream>
 
-class MidiHandler_win32: public MidiHandler {
+class MidiHandler_win32 : public MidiHandler {
 private:
 	HMIDIOUT m_out;
 	MIDIHDR m_hdr;
 	HANDLE m_event;
 	bool isOpen;
 public:
-	MidiHandler_win32() : MidiHandler(),isOpen(false) {};
-	const char * GetName(void) { return "win32";};
+	MidiHandler_win32() : MidiHandler(), isOpen(false) {};
+	const char * GetName(void) { return "win32"; };
 	bool Open(const char * conf) {
 		if (isOpen) return false;
-		m_event = CreateEvent (NULL, true, true, NULL);
+		m_event = CreateEvent(NULL, true, true, NULL);
 		MMRESULT res = MMSYSERR_NOERROR;
-		if(conf && *conf) {
+		if (conf && *conf) {
 			std::string strconf(conf);
 			std::istringstream configmidi(strconf);
 			unsigned int total = midiOutGetNumDevs();
@@ -46,7 +46,7 @@ public:
 			configmidi >> nummer;
 			if (configmidi.fail() && total) {
 				lowcase(strconf);
-				for(unsigned int i = 0; i< total;i++) {
+				for (unsigned int i = 0; i < total; i++) {
 					MIDIOUTCAPS mididev;
 					midiOutGetDevCaps(i, &mididev, sizeof(MIDIOUTCAPS));
 					std::string devname(mididev.szPname);
@@ -61,53 +61,53 @@ public:
 			if (nummer < total) {
 				MIDIOUTCAPS mididev;
 				midiOutGetDevCaps(nummer, &mididev, sizeof(MIDIOUTCAPS));
-				LOG_MSG("MIDI: win32 selected %s",mididev.szPname);
+				LOG_MSG("MIDI: win32 selected %s", mididev.szPname);
 				res = midiOutOpen(&m_out, nummer, (DWORD_PTR)m_event, 0, CALLBACK_EVENT);
 			}
 		} else {
 			res = midiOutOpen(&m_out, MIDI_MAPPER, (DWORD_PTR)m_event, 0, CALLBACK_EVENT);
 		}
 		if (res != MMSYSERR_NOERROR) return false;
-		isOpen=true;
+		isOpen = true;
 		return true;
 	};
 
 	void Close(void) {
 		if (!isOpen) return;
-		isOpen=false;
+		isOpen = false;
 		midiOutClose(m_out);
-		CloseHandle (m_event);
+		CloseHandle(m_event);
 	};
 	void PlayMsg(Bit8u * msg) {
 		midiOutShortMsg(m_out, *(Bit32u*)msg);
 	};
-	void PlaySysex(Bit8u * sysex,Bitu len) {
-		if (WaitForSingleObject (m_event, 2000) == WAIT_TIMEOUT) {
-			LOG(LOG_MISC,LOG_ERROR)("Can't send midi message");
+	void PlaySysex(Bit8u * sysex, Bitu len) {
+		if (WaitForSingleObject(m_event, 2000) == WAIT_TIMEOUT) {
+			LOG(LOG_MISC, LOG_ERROR)("Can't send midi message");
 			return;
 		}
-		midiOutUnprepareHeader (m_out, &m_hdr, sizeof (m_hdr));
+		midiOutUnprepareHeader(m_out, &m_hdr, sizeof(m_hdr));
 
-		m_hdr.lpData = (char *) sysex;
-		m_hdr.dwBufferLength = len ;
-		m_hdr.dwBytesRecorded = len ;
+		m_hdr.lpData = (char *)sysex;
+		m_hdr.dwBufferLength = len;
+		m_hdr.dwBytesRecorded = len;
 		m_hdr.dwUser = 0;
 
-		MMRESULT result = midiOutPrepareHeader (m_out, &m_hdr, sizeof (m_hdr));
+		MMRESULT result = midiOutPrepareHeader(m_out, &m_hdr, sizeof(m_hdr));
 		if (result != MMSYSERR_NOERROR) return;
-		ResetEvent (m_event);
-		result = midiOutLongMsg (m_out,&m_hdr,sizeof(m_hdr));
+		ResetEvent(m_event);
+		result = midiOutLongMsg(m_out, &m_hdr, sizeof(m_hdr));
 		if (result != MMSYSERR_NOERROR) {
-			SetEvent (m_event);
+			SetEvent(m_event);
 			return;
 		}
 	}
 	void ListAll(Program* base) {
 		unsigned int total = midiOutGetNumDevs();
-		for(unsigned int i = 0;i < total;i++) {
+		for (unsigned int i = 0; i < total; i++) {
 			MIDIOUTCAPS mididev;
 			midiOutGetDevCaps(i, &mididev, sizeof(MIDIOUTCAPS));
-			base->WriteOut("%2d\t \"%s\"\n",i,mididev.szPname);
+			base->WriteOut("%2d\t \"%s\"\n", i, mididev.szPname);
 		}
 	}
 };

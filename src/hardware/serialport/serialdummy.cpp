@@ -23,13 +23,13 @@
 #include "serialdummy.h"
 #include "serialport.h"
 
-CSerialDummy::CSerialDummy(Bitu id,	CommandLine* cmd):CSerial(id, cmd) {
+CSerialDummy::CSerialDummy(Bitu id, CommandLine* cmd) :CSerial(id, cmd) {
 	CSerial::Init_Registers();
 	setRI(false);
 	setDSR(false);
 	setCD(false);
 	setCTS(false);
-	InstallationSuccessful=true;
+	InstallationSuccessful = true;
 }
 
 CSerialDummy::~CSerialDummy() {
@@ -38,17 +38,16 @@ CSerialDummy::~CSerialDummy() {
 }
 
 void CSerialDummy::handleUpperEvent(Bit16u type) {
-	if(type==SERIAL_TX_EVENT) {
-	//LOG_MSG("SERIAL_TX_EVENT");
+	if (type == SERIAL_TX_EVENT) {
+		//LOG_MSG("SERIAL_TX_EVENT");
 #ifdef CHECKIT_TESTPLUG
 		receiveByte(loopbackdata);
 #endif
 		ByteTransmitted(); // tx timeout
-	}
-	else if(type==SERIAL_THR_EVENT){
+	} else if (type == SERIAL_THR_EVENT) {
 		//LOG_MSG("SERIAL_THR_EVENT");
 		ByteTransmitting();
-		setEvent(SERIAL_TX_EVENT,bytetime);
+		setEvent(SERIAL_TX_EVENT, bytetime);
 	}
 
 }
@@ -65,11 +64,11 @@ void CSerialDummy::updateMSR() {
 }
 void CSerialDummy::transmitByte(Bit8u val, bool first) {
 
-	if(first) setEvent(SERIAL_THR_EVENT, bytetime/10); 
+	if (first) setEvent(SERIAL_THR_EVENT, bytetime / 10);
 	else setEvent(SERIAL_TX_EVENT, bytetime);
 
 #ifdef CHECKIT_TESTPLUG
-	loopbackdata=val;
+	loopbackdata = val;
 #endif
 }
 

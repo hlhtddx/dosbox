@@ -30,7 +30,7 @@
 #define snd_seq_set_client_group(x,name)	/*nop */
 #define my_snd_seq_open(seqp) snd_seq_open(seqp, "hw", SND_SEQ_OPEN_OUTPUT, 0)
 #else
-/* SND_SEQ_OPEN_OUT causes oops on early version of ALSA */
+ /* SND_SEQ_OPEN_OUT causes oops on early version of ALSA */
 #define my_snd_seq_open(seqp) snd_seq_open(seqp, SND_SEQ_OPEN)
 #endif
 
@@ -52,27 +52,27 @@ private:
 
 	bool parse_addr(const char *arg, int *client, int *port) {
 		std::string in(arg);
-		if(in.empty()) return false;
+		if (in.empty()) return false;
 
-		if(in[0] == 's' || in[0] == 'S') {
+		if (in[0] == 's' || in[0] == 'S') {
 			*client = SND_SEQ_ADDRESS_SUBSCRIBERS;
 			*port = 0;
 			return true;
 		}
 
-		if(in.find_first_of(ADDR_DELIM) == std::string::npos) return false;
+		if (in.find_first_of(ADDR_DELIM) == std::string::npos) return false;
 		std::istringstream inp(in);
 		int val1, val2; char c;
-		if(!(inp >> val1)) return false;
-		if(!(inp >> c   )) return false;
-		if(!(inp >> val2)) return false;
+		if (!(inp >> val1)) return false;
+		if (!(inp >> c)) return false;
+		if (!(inp >> val2)) return false;
 		*client = val1; *port = val2;
 		return true;
 	}
 public:
 	MidiHandler_alsa() : MidiHandler() {};
 	const char* GetName(void) { return "alsa"; }
-	void PlaySysex(Bit8u * sysex,Bitu len) {
+	void PlaySysex(Bit8u * sysex, Bitu len) {
 		snd_seq_ev_set_sysex(&ev, len, sysex);
 		send_event(1);
 	}
@@ -110,19 +110,19 @@ public:
 			snd_seq_ev_set_chanpress(&ev, chanID, msg[1]);
 			send_event(0);
 			break;
-		case 0xE0:{
-				long theBend = ((long)msg[1] + (long)(msg[2] << 7)) - 0x2000;
-				snd_seq_ev_set_pitchbend(&ev, chanID, theBend);
-				send_event(1);
-			}
-			break;
+		case 0xE0: {
+			long theBend = ((long)msg[1] + (long)(msg[2] << 7)) - 0x2000;
+			snd_seq_ev_set_pitchbend(&ev, chanID, theBend);
+			send_event(1);
+		}
+				   break;
 		default:
 			//Maybe filter out FC as it leads for at least one user to crash, but the entire midi stream has not yet been checked.
-			LOG(LOG_MISC,LOG_WARN)("ALSA:Unknown Command: %02X %02X %02X", msg[0],msg[1],msg[2]);
+			LOG(LOG_MISC, LOG_WARN)("ALSA:Unknown Command: %02X %02X %02X", msg[0], msg[1], msg[2]);
 			send_event(1);
 			break;
 		}
-	}	
+	}
 
 	void Close(void) {
 		if (seq_handle)
@@ -135,7 +135,7 @@ public:
 		bool defaultport = true; //try 17:0. Seems to be default nowadays
 
 		// try to use port specified in config file
-		if (conf && conf[0]) { 
+		if (conf && conf[0]) {
 			safe_strncpy(var, conf, 10);
 			if (!parse_addr(var, &seq_client, &seq_port)) {
 				LOG_MSG("ALSA:Invalid alsa port %s", var);
@@ -145,43 +145,43 @@ public:
 		}
 		// default port if none specified
 		else if (!parse_addr("65:0", &seq_client, &seq_port)) {
-				LOG_MSG("ALSA:Invalid alsa port 65:0");
-				return false;
+			LOG_MSG("ALSA:Invalid alsa port 65:0");
+			return false;
 		}
 
 		if (my_snd_seq_open(&seq_handle)) {
 			LOG_MSG("ALSA:Can't open sequencer");
 			return false;
 		}
-	
+
 		my_client = snd_seq_client_id(seq_handle);
 		snd_seq_set_client_name(seq_handle, "DOSBOX");
 		snd_seq_set_client_group(seq_handle, "input");
-	
+
 		caps = SND_SEQ_PORT_CAP_READ;
 		if (seq_client == SND_SEQ_ADDRESS_SUBSCRIBERS)
 			caps = ~SND_SEQ_PORT_CAP_SUBS_READ;
 		my_port =
-		          snd_seq_create_simple_port(seq_handle, "DOSBOX", caps,
-		          SND_SEQ_PORT_TYPE_MIDI_GENERIC | SND_SEQ_PORT_TYPE_APPLICATION);
+			snd_seq_create_simple_port(seq_handle, "DOSBOX", caps,
+				SND_SEQ_PORT_TYPE_MIDI_GENERIC | SND_SEQ_PORT_TYPE_APPLICATION);
 		if (my_port < 0) {
 			snd_seq_close(seq_handle);
 			LOG_MSG("ALSA:Can't create ALSA port");
 			return false;
 		}
-	
+
 		if (seq_client != SND_SEQ_ADDRESS_SUBSCRIBERS) {
 			/* subscribe to MIDI port */
 			if (snd_seq_connect_to(seq_handle, my_port, seq_client, seq_port) < 0) {
 				if (defaultport) { //if port "65:0" (default) try "17:0" as well
 					seq_client = 17; seq_port = 0; //Update reported values
-					if(snd_seq_connect_to(seq_handle,my_port,seq_client,seq_port) < 0) { //Try 128:0 Timidity port as well
+					if (snd_seq_connect_to(seq_handle, my_port, seq_client, seq_port) < 0) { //Try 128:0 Timidity port as well
 //						seq_client = 128; seq_port = 0; //Update reported values
 //						if(snd_seq_connect_to(seq_handle,my_port,seq_client,seq_port) < 0) {
-							snd_seq_close(seq_handle);
-							LOG_MSG("ALSA:Can't subscribe to MIDI port (65:0) nor (17:0)");
-							return false;
-//						}
+						snd_seq_close(seq_handle);
+						LOG_MSG("ALSA:Can't subscribe to MIDI port (65:0) nor (17:0)");
+						return false;
+						//						}
 					}
 				} else {
 					snd_seq_close(seq_handle);

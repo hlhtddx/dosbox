@@ -17,7 +17,7 @@
  */
 
 
-// include guard
+ // include guard
 #ifndef DOSBOX_NULLMODEM_WIN32_H
 #define DOSBOX_NULLMODEM_WIN32_H
 
@@ -42,14 +42,14 @@ public:
 	void updateMSR();
 	void transmitByte(Bit8u val, bool first);
 	void setBreak(bool value);
-	
+
 	void setRTSDTR(bool rts, bool dtr);
 	void setRTS(bool val);
 	void setDTR(bool val);
 	void handleUpperEvent(Bit16u type);
 
 private:
-	TCPServerSocket* serversocket;
+	TCPServerSocket * serversocket;
 	TCPClientSocket* clientsocket;
 
 	bool receiveblock;		// It's not a block of data it rather blocks
@@ -69,7 +69,7 @@ private:
 	bool ClientConnect(TCPClientSocket* newsocket);
 	bool ServerListen();
 	bool ServerConnect();
-    void Disconnect();
+	void Disconnect();
 	Bits readChar();
 	void WriteChar(Bit8u data);
 
@@ -88,7 +88,7 @@ private:
 	Bitu tx_gather;		// how long to gather tx data before
 						// sending all of them [milliseconds]
 
-	
+
 	bool dtrrespect;	// dtr behavior - only send data to the serial
 						// port when DTR is on
 
@@ -109,7 +109,7 @@ private:
 		bool echo[2];
 		bool supressGA[2];
 		bool timingMark[2];
-					
+
 		bool inIAC;
 		bool recCommand;
 		Bit8u command;

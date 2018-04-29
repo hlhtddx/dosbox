@@ -30,7 +30,7 @@ void SERIAL_getErrorString(char* buffer, int length);
 // parity: n, o, e, m, s
 
 bool SERIAL_setCommParameters(COMPORT port,
-			int baudrate, char parity, int stopbits, int length);
+	int baudrate, char parity, int stopbits, int length);
 
 void SERIAL_setDTR(COMPORT port, bool value);
 void SERIAL_setRTS(COMPORT port, bool value);

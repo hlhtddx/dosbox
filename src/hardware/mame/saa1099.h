@@ -1,7 +1,7 @@
 // license:BSD-3-Clause
 // copyright-holders:Juergen Buchmueller, Manuel Abadia
 /**********************************************
-    Philips SAA1099 Sound driver
+	Philips SAA1099 Sound driver
 **********************************************/
 
 #ifndef MAME_SOUND_SAA1099_H
@@ -25,36 +25,36 @@
 
 //Container class for int that just initalizes to 0
 class NullInt {
-    int value;
+	int value;
 public:
-    operator int& () {
-	return value;
-    }
-    
-    int& operator= ( int set ) {
-	value = set;
-	return value;
-    }
-    
-    NullInt( int set = 0 ) : value( set ) {
-    }
+	operator int& () {
+		return value;
+	}
+
+	int& operator= (int set) {
+		value = set;
+		return value;
+	}
+
+	NullInt(int set = 0) : value(set) {
+	}
 };
 
 // ======================> saa1099_device
 
 class saa1099_device : public device_t,
-						public device_sound_interface
+	public device_sound_interface
 {
 public:
 	saa1099_device(const machine_config &mconfig, const char *tag, device_t *owner, uint32_t clock);
 
-	DECLARE_WRITE8_MEMBER( control_w );
-	DECLARE_WRITE8_MEMBER( data_w );
+	DECLARE_WRITE8_MEMBER(control_w);
+	DECLARE_WRITE8_MEMBER(data_w);
 
-	DECLARE_WRITE8_MEMBER( write );
+	DECLARE_WRITE8_MEMBER(write);
 
-//protected:
-	// device-level overrides
+	//protected:
+		// device-level overrides
 	virtual void device_start();
 
 	// sound stream update overrides
@@ -64,30 +64,30 @@ private:
 	struct saa1099_channel
 	{
 		saa1099_channel() {
-		    //Quite hacky, but let's see how it goes
-		    memset( this, 0, sizeof( *this ) );
+			//Quite hacky, but let's see how it goes
+			memset(this, 0, sizeof(*this));
 		}
 
-		int frequency    ;   /* frequency (0x00..0xff) */
-		int freq_enable  ;   /* frequency enable */
-		int noise_enable ;   /* noise enable */
-		int octave       ;   /* octave (0x00..0x07) */
+		int frequency;   /* frequency (0x00..0xff) */
+		int freq_enable;   /* frequency enable */
+		int noise_enable;   /* noise enable */
+		int octave;   /* octave (0x00..0x07) */
 		int amplitude[2];       /* amplitude (0x00..0x0f) */
 		int envelope[2];        /* envelope (0x00..0x0f or 0x10 == off) */
 
 		/* vars to simulate the square wave */
-		double counter ;
-		double freq ;
-		int level ;
-		
+		double counter;
+		double freq;
+		int level;
+
 	};
 
 	struct saa1099_noise
 	{
-		saa1099_noise() { 
-		    counter = 0;
-		    freq = 0;
-		    level = 0xFFFFFFFF;
+		saa1099_noise() {
+			counter = 0;
+			freq = 0;
+			level = 0xFFFFFFFF;
 		}
 
 		/* vars to simulate the noise generator output */

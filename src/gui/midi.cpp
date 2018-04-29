@@ -61,7 +61,7 @@ Bit8u MIDI_evt_len[256] = {
 
 MidiHandler * handler_list = 0;
 
-MidiHandler::MidiHandler(){
+MidiHandler::MidiHandler() {
 	next = handler_list;
 	handler_list = this;
 };
@@ -100,23 +100,23 @@ void MIDI_RawOutByte(Bit8u data) {
 	}
 
 	/* Test for a realtime MIDI message */
-	if (data>=0xf8) {
-		midi.rt_buf[0]=data;
+	if (data >= 0xf8) {
+		midi.rt_buf[0] = data;
 		midi.handler->PlayMsg(midi.rt_buf);
 		return;
 	}
 	/* Test for a active sysex tranfer */
-	if (midi.status==0xf0) {
-		if (!(data&0x80)) {
-			if (midi.sysex.used<(SYSEX_SIZE-1)) midi.sysex.buf[midi.sysex.used++] = data;
+	if (midi.status == 0xf0) {
+		if (!(data & 0x80)) {
+			if (midi.sysex.used < (SYSEX_SIZE - 1)) midi.sysex.buf[midi.sysex.used++] = data;
 			return;
 		} else {
 			midi.sysex.buf[midi.sysex.used++] = 0xf7;
 
 			if ((midi.sysex.start) && (midi.sysex.used >= 4) && (midi.sysex.used <= 9) && (midi.sysex.buf[1] == 0x41) && (midi.sysex.buf[3] == 0x16)) {
-				LOG(LOG_ALL,LOG_ERROR)("MIDI:Skipping invalid MT-32 SysEx midi message (too short to contain a checksum)");
+				LOG(LOG_ALL, LOG_ERROR)("MIDI:Skipping invalid MT-32 SysEx midi message (too short to contain a checksum)");
 			} else {
-//				LOG(LOG_ALL,LOG_NORMAL)("Play sysex; address:%02X %02X %02X, length:%4d, delay:%3d", midi.sysex.buf[5], midi.sysex.buf[6], midi.sysex.buf[7], midi.sysex.used, midi.sysex.delay);
+				//				LOG(LOG_ALL,LOG_NORMAL)("Play sysex; address:%02X %02X %02X, length:%4d, delay:%3d", midi.sysex.buf[5], midi.sysex.buf[6], midi.sysex.buf[7], midi.sysex.used, midi.sysex.delay);
 				midi.handler->PlaySysex(midi.sysex.buf, midi.sysex.used);
 				if (midi.sysex.start) {
 					if (midi.sysex.buf[5] == 0x7F) {
@@ -130,46 +130,46 @@ void MIDI_RawOutByte(Bit8u data) {
 				}
 			}
 
-			LOG(LOG_ALL,LOG_NORMAL)("Sysex message size %d", static_cast<int>(midi.sysex.used));
+			LOG(LOG_ALL, LOG_NORMAL)("Sysex message size %d", static_cast<int>(midi.sysex.used));
 			if (CaptureState & CAPTURE_MIDI) {
-				CAPTURE_AddMidi( true, midi.sysex.used-1, &midi.sysex.buf[1]);
+				CAPTURE_AddMidi(true, midi.sysex.used - 1, &midi.sysex.buf[1]);
 			}
 		}
 	}
-	if (data&0x80) {
-		midi.status=data;
-		midi.cmd_pos=0;
-		midi.cmd_len=MIDI_evt_len[data];
-		if (midi.status==0xf0) {
-			midi.sysex.buf[0]=0xf0;
-			midi.sysex.used=1;
+	if (data & 0x80) {
+		midi.status = data;
+		midi.cmd_pos = 0;
+		midi.cmd_len = MIDI_evt_len[data];
+		if (midi.status == 0xf0) {
+			midi.sysex.buf[0] = 0xf0;
+			midi.sysex.used = 1;
 		}
 	}
 	if (midi.cmd_len) {
-		midi.cmd_buf[midi.cmd_pos++]=data;
+		midi.cmd_buf[midi.cmd_pos++] = data;
 		if (midi.cmd_pos >= midi.cmd_len) {
 			if (CaptureState & CAPTURE_MIDI) {
 				CAPTURE_AddMidi(false, midi.cmd_len, midi.cmd_buf);
 			}
 			midi.handler->PlayMsg(midi.cmd_buf);
-			midi.cmd_pos=1;		//Use Running status
+			midi.cmd_pos = 1;		//Use Running status
 		}
 	}
 }
 
-bool MIDI_Available(void)  {
+bool MIDI_Available(void) {
 	return midi.available;
 }
 
-class MIDI:public Module_base{
+class MIDI :public Module_base {
 public:
-	MIDI(Section* configuration):Module_base(configuration){
-		Section_prop * section=static_cast<Section_prop *>(configuration);
-		const char * dev=section->Get_string("mididevice");
-		std::string fullconf=section->Get_string("midiconfig");
+	MIDI(Section* configuration) :Module_base(configuration) {
+		Section_prop * section = static_cast<Section_prop *>(configuration);
+		const char * dev = section->Get_string("mididevice");
+		std::string fullconf = section->Get_string("midiconfig");
 		/* If device = "default" go for first handler that works */
 		MidiHandler * handler;
-//		MAPPER_AddHandler(MIDI_SaveRawEvent,MK_f8,MMOD1|MMOD2,"caprawmidi","Cap MIDI");
+		//		MAPPER_AddHandler(MIDI_SaveRawEvent,MK_f8,MMOD1|MMOD2,"caprawmidi","Cap MIDI");
 		midi.sysex.delay = 0;
 		midi.sysex.start = 0;
 		if (fullconf.find("delaysysex") != std::string::npos) {
@@ -179,40 +179,40 @@ public:
 		}
 		std::remove(fullconf.begin(), fullconf.end(), ' ');
 		const char * conf = fullconf.c_str();
-		midi.status=0x00;
-		midi.cmd_pos=0;
-		midi.cmd_len=0;
-		if (!strcasecmp(dev,"default")) goto getdefault;
-		handler=handler_list;
+		midi.status = 0x00;
+		midi.cmd_pos = 0;
+		midi.cmd_len = 0;
+		if (!strcasecmp(dev, "default")) goto getdefault;
+		handler = handler_list;
 		while (handler) {
-			if (!strcasecmp(dev,handler->GetName())) {
+			if (!strcasecmp(dev, handler->GetName())) {
 				if (!handler->Open(conf)) {
-					LOG_MSG("MIDI: Can't open device:%s with config:%s.",dev,conf);
+					LOG_MSG("MIDI: Can't open device:%s with config:%s.", dev, conf);
 					goto getdefault;
 				}
-				midi.handler=handler;
-				midi.available=true;
-				LOG_MSG("MIDI: Opened device:%s",handler->GetName());
+				midi.handler = handler;
+				midi.available = true;
+				LOG_MSG("MIDI: Opened device:%s", handler->GetName());
 				return;
 			}
-			handler=handler->next;
+			handler = handler->next;
 		}
-		LOG_MSG("MIDI: Can't find device:%s, finding default handler.",dev);
-getdefault:
-		handler=handler_list;
+		LOG_MSG("MIDI: Can't find device:%s, finding default handler.", dev);
+	getdefault:
+		handler = handler_list;
 		while (handler) {
 			if (handler->Open(conf)) {
-				midi.available=true;
-				midi.handler=handler;
-				LOG_MSG("MIDI: Opened device:%s",handler->GetName());
+				midi.available = true;
+				midi.handler = handler;
+				LOG_MSG("MIDI: Opened device:%s", handler->GetName());
 				return;
 			}
-			handler=handler->next;
+			handler = handler->next;
 		}
 		/* This shouldn't be possible */
 	}
-	~MIDI(){
-		if(midi.available) midi.handler->Close();
+	~MIDI() {
+		if (midi.available) midi.handler->Close();
 		midi.available = false;
 		midi.handler = 0;
 	}
@@ -220,10 +220,10 @@ getdefault:
 
 
 static MIDI* test;
-void MIDI_Destroy(Section* /*sec*/){
+void MIDI_Destroy(Section* /*sec*/) {
 	delete test;
 }
 void MIDI_Init(Section * sec) {
 	test = new MIDI(sec);
-	sec->AddDestroyFunction(&MIDI_Destroy,true);
+	sec->AddDestroyFunction(&MIDI_Destroy, true);
 }

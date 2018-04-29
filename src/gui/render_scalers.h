@@ -19,7 +19,7 @@
 #ifndef _RENDER_SCALERS_H
 #define _RENDER_SCALERS_H
 
-//#include "render.h"
+ //#include "render.h"
 #include "video.h"
 #if RENDER_USE_ADVANCED_SCALERS>0
 #define SCALER_MAXWIDTH		1280 
@@ -59,8 +59,8 @@ typedef enum scalerOperation {
 	scalerLast
 } scalerOperation_t;
 
-typedef void (*ScalerLineHandler_t)(const void *src);
-typedef void (*ScalerComplexHandler_t)(void);
+typedef void(*ScalerLineHandler_t)(const void *src);
+typedef void(*ScalerComplexHandler_t)(void);
 
 extern Bit8u Scaler_Aspect[];
 extern Bit8u diff_table[];
@@ -68,17 +68,17 @@ extern Bitu Scaler_ChangedLineIndex;
 extern Bit16u Scaler_ChangedLines[];
 #if RENDER_USE_ADVANCED_SCALERS>1
 /* Not entirely happy about those +2's since they make a non power of 2, with muls instead of shift */
-typedef Bit8u scalerChangeCache_t [SCALER_COMPLEXHEIGHT][SCALER_COMPLEXWIDTH / SCALER_BLOCKSIZE] ;
+typedef Bit8u scalerChangeCache_t[SCALER_COMPLEXHEIGHT][SCALER_COMPLEXWIDTH / SCALER_BLOCKSIZE];
 typedef union {
-	Bit32u b32	[SCALER_COMPLEXHEIGHT] [SCALER_COMPLEXWIDTH];
-	Bit16u b16	[SCALER_COMPLEXHEIGHT] [SCALER_COMPLEXWIDTH];
-	Bit8u b8	[SCALER_COMPLEXHEIGHT] [SCALER_COMPLEXWIDTH];
+	Bit32u b32[SCALER_COMPLEXHEIGHT][SCALER_COMPLEXWIDTH];
+	Bit16u b16[SCALER_COMPLEXHEIGHT][SCALER_COMPLEXWIDTH];
+	Bit8u b8[SCALER_COMPLEXHEIGHT][SCALER_COMPLEXWIDTH];
 } scalerFrameCache_t;
 #endif
 typedef union {
-	Bit32u b32	[SCALER_MAXHEIGHT] [SCALER_MAXWIDTH];
-	Bit16u b16	[SCALER_MAXHEIGHT] [SCALER_MAXWIDTH];
-	Bit8u b8	[SCALER_MAXHEIGHT] [SCALER_MAXWIDTH];
+	Bit32u b32[SCALER_MAXHEIGHT][SCALER_MAXWIDTH];
+	Bit16u b16[SCALER_MAXHEIGHT][SCALER_MAXWIDTH];
+	Bit8u b8[SCALER_MAXHEIGHT][SCALER_MAXWIDTH];
 } scalerSourceCache_t;
 extern scalerSourceCache_t scalerSourceCache;
 #if RENDER_USE_ADVANCED_SCALERS>1
@@ -89,7 +89,7 @@ typedef ScalerLineHandler_t ScalerLineBlock_t[5][4];
 typedef struct {
 	const char *name;
 	Bitu gfxFlags;
-	Bitu xscale,yscale;
+	Bitu xscale, yscale;
 	ScalerComplexHandler_t Linear[4];
 	ScalerComplexHandler_t Random[4];
 } ScalerComplexBlock_t;
@@ -97,7 +97,7 @@ typedef struct {
 typedef struct {
 	const char *name;
 	Bitu gfxFlags;
-	Bitu xscale,yscale;
+	Bitu xscale, yscale;
 	ScalerLineBlock_t	Linear;
 	ScalerLineBlock_t	Random;
 } ScalerSimpleBlock_t;

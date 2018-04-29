@@ -39,54 +39,54 @@
 
 class CommandLine {
 public:
-	CommandLine(int argc,char const * const argv[]);
-	CommandLine(char const * const name,char const * const cmdline);
-	const char * GetFileName(){ return file_name.c_str();}
+	CommandLine(int argc, char const * const argv[]);
+	CommandLine(char const * const name, char const * const cmdline);
+	const char * GetFileName() { return file_name.c_str(); }
 
-	bool FindExist(char const * const name,bool remove=false);
-	bool FindHex(char const * const name,int & value,bool remove=false);
-	bool FindInt(char const * const name,int & value,bool remove=false);
-	bool FindString(char const * const name,std::string & value,bool remove=false);
-	bool FindCommand(unsigned int which,std::string & value);
-	bool FindStringBegin(char const * const begin,std::string & value, bool remove=false);
-	bool FindStringRemain(char const * const name,std::string & value);
-	bool FindStringRemainBegin(char const * const name,std::string & value);
+	bool FindExist(char const * const name, bool remove = false);
+	bool FindHex(char const * const name, int & value, bool remove = false);
+	bool FindInt(char const * const name, int & value, bool remove = false);
+	bool FindString(char const * const name, std::string & value, bool remove = false);
+	bool FindCommand(unsigned int which, std::string & value);
+	bool FindStringBegin(char const * const begin, std::string & value, bool remove = false);
+	bool FindStringRemain(char const * const name, std::string & value);
+	bool FindStringRemainBegin(char const * const name, std::string & value);
 	bool GetStringRemain(std::string & value);
 	int GetParameterFromList(const char* const params[], std::vector<std::string> & output);
 	void FillVector(std::vector<std::string> & vector);
 	unsigned int GetCount(void);
-	void Shift(unsigned int amount=1);
+	void Shift(unsigned int amount = 1);
 	Bit16u Get_arglength();
 
 private:
 	typedef std::list<std::string>::iterator cmd_it;
 	std::list<std::string> cmds;
 	std::string file_name;
-	bool FindEntry(char const * const name,cmd_it & it,bool neednext=false);
+	bool FindEntry(char const * const name, cmd_it & it, bool neednext = false);
 };
 
 class Program {
 public:
 	Program();
-	virtual ~Program(){
+	virtual ~Program() {
 		delete cmd;
 		delete psp;
 	}
 	std::string temp_line;
 	CommandLine * cmd;
 	DOS_PSP * psp;
-	virtual void Run(void)=0;
-	bool GetEnvStr(const char * entry,std::string & result);
-	bool GetEnvNum(Bitu num,std::string & result);
+	virtual void Run(void) = 0;
+	bool GetEnvStr(const char * entry, std::string & result);
+	bool GetEnvNum(Bitu num, std::string & result);
 	Bitu GetEnvCount(void);
-	bool SetEnv(const char * entry,const char * new_string);
-	void WriteOut(const char * format,...);				/* Write to standard output */
+	bool SetEnv(const char * entry, const char * new_string);
+	void WriteOut(const char * format, ...);				/* Write to standard output */
 	void WriteOut_NoParsing(const char * format);				/* Write to standard output, no parsing */
 	void ChangeToLongCmd();
 
 };
 
 typedef void (PROGRAMS_Main)(Program * * make);
-void PROGRAMS_MakeFile(char const * const name,PROGRAMS_Main * main);
+void PROGRAMS_MakeFile(char const * const name, PROGRAMS_Main * main);
 
 #endif

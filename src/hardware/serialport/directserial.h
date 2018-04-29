@@ -17,7 +17,7 @@
  */
 
 
-// include guard
+ // include guard
 #ifndef DOSBOX_DIRECTSERIAL_WIN32_H
 #define DOSBOX_DIRECTSERIAL_WIN32_H
 
@@ -39,7 +39,7 @@ public:
 	void updateMSR();
 	void transmitByte(Bit8u val, bool first);
 	void setBreak(bool value);
-	
+
 	void setRTSDTR(bool rts, bool dtr);
 	void setRTS(bool val);
 	void setDTR(bool val);

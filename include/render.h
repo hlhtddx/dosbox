@@ -19,10 +19,10 @@
 #ifndef DOSBOX_RENDER_H
 #define DOSBOX_RENDER_H
 
-// 0: complex scalers off, scaler cache off, some simple scalers off, memory requirements reduced
-// 1: complex scalers off, scaler cache off, all simple scalers on
-// 2: complex scalers off, scaler cache on
-// 3: complex scalers on
+ // 0: complex scalers off, scaler cache off, some simple scalers off, memory requirements reduced
+ // 1: complex scalers off, scaler cache off, all simple scalers on
+ // 2: complex scalers off, scaler cache on
+ // 3: complex scalers on
 #define RENDER_USE_ADVANCED_SCALERS 3
 
 #include "../src/gui/render_scalers.h"
@@ -32,7 +32,7 @@
 //#define RENDER_NULL_INPUT
 
 typedef struct {
-	struct { 
+	struct {
 		Bit8u red;
 		Bit8u green;
 		Bit8u blue;
@@ -53,7 +53,7 @@ typedef struct {
 		Bitu width, start;
 		Bitu height;
 		Bitu bpp;
-		bool dblw,dblh;
+		bool dblw, dblh;
 		double ratio;
 		float fps;
 	} src;
@@ -89,10 +89,10 @@ typedef struct {
 
 extern Render_t render;
 extern ScalerLineHandler_t RENDER_DrawLine;
-void RENDER_SetSize(Bitu width,Bitu height,Bitu bpp,float fps,double ratio,bool dblw,bool dblh);
+void RENDER_SetSize(Bitu width, Bitu height, Bitu bpp, float fps, double ratio, bool dblw, bool dblh);
 bool RENDER_StartUpdate(void);
 void RENDER_EndUpdate(bool abort);
-void RENDER_SetPal(Bit8u entry,Bit8u red,Bit8u green,Bit8u blue);
+void RENDER_SetPal(Bit8u entry, Bit8u red, Bit8u green, Bit8u blue);
 
 
 #endif

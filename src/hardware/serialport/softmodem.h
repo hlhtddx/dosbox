@@ -29,7 +29,7 @@
 #define MODEMSPD 57600
 #define SREGS 100
 
-//If it's too high you overflow terminal clients buffers i think
+ //If it's too high you overflow terminal clients buffers i think
 #define MODEM_BUFFER_QUEUE_SIZE 1024
 
 #define MODEM_DEFAULT_PORT 23
@@ -42,9 +42,9 @@
 
 enum ResTypes {
 	ResNONE,
-	ResOK,ResERROR,
-	ResCONNECT,ResRING,
-	ResBUSY,ResNODIALTONE,ResNOCARRIER
+	ResOK, ResERROR,
+	ResCONNECT, ResRING,
+	ResBUSY, ResNODIALTONE, ResNOCARRIER
 };
 
 #define TEL_CLIENT 0
@@ -53,93 +53,93 @@ enum ResTypes {
 class CFifo {
 public:
 	CFifo(Bitu _size) {
-		size=_size;
-		pos=used=0;
-		data=new Bit8u[size];
+		size = _size;
+		pos = used = 0;
+		data = new Bit8u[size];
 	}
 	~CFifo() {
 		delete[] data;
 	}
 	inline Bitu left(void) {
-		return size-used;
+		return size - used;
 	}
 	inline Bitu inuse(void) {
 		return used;
 	}
 	void clear(void) {
-		used=pos=0;
+		used = pos = 0;
 	}
 
 	void addb(Bit8u _val) {
-		if(used>=size) {
-			static Bits lcount=0;
-			if (lcount<1000) {
+		if (used >= size) {
+			static Bits lcount = 0;
+			if (lcount < 1000) {
 				lcount++;
 				LOG_MSG("MODEM: FIFO Overflow! (addb)");
 			}
 			return;
 		}
 		//assert(used<size);
-		Bitu where=pos+used;
-		if (where>=size) where-=size;
-		data[where]=_val;
+		Bitu where = pos + used;
+		if (where >= size) where -= size;
+		data[where] = _val;
 		//LOG_MSG("+%x",_val);
 		used++;
 	}
-	void adds(Bit8u * _str,Bitu _len) {
-		if((used+_len)>size) {
-			static Bits lcount=0;
-			if (lcount<1000) {
+	void adds(Bit8u * _str, Bitu _len) {
+		if ((used + _len) > size) {
+			static Bits lcount = 0;
+			if (lcount < 1000) {
 				lcount++;
-				LOG_MSG("MODEM: FIFO Overflow! (adds len %u)",_len);
+				LOG_MSG("MODEM: FIFO Overflow! (adds len %u)", _len);
 			}
 			return;
 		}
-		
+
 		//assert((used+_len)<=size);
-		Bitu where=pos+used;
-		used+=_len;
+		Bitu where = pos + used;
+		used += _len;
 		while (_len--) {
-			if (where>=size) where-=size;
+			if (where >= size) where -= size;
 			//LOG_MSG("+'%x'",*_str);
-			data[where++]=*_str++;
+			data[where++] = *_str++;
 		}
 	}
 	Bit8u getb(void) {
 		if (!used) {
-			static Bits lcount=0;
-			if (lcount<1000) {
+			static Bits lcount = 0;
+			if (lcount < 1000) {
 				lcount++;
 				LOG_MSG("MODEM: FIFO UNDERFLOW! (getb)");
 			}
 			return data[pos];
 		}
-			Bitu where=pos;
-		if (++pos>=size) pos-=size;
+		Bitu where = pos;
+		if (++pos >= size) pos -= size;
 		used--;
 		//LOG_MSG("-%x",data[where]);
 		return data[where];
 	}
-	void gets(Bit8u * _str,Bitu _len) {
+	void gets(Bit8u * _str, Bitu _len) {
 		if (!used) {
-			static Bits lcount=0;
-			if (lcount<1000) {
+			static Bits lcount = 0;
+			if (lcount < 1000) {
 				lcount++;
-				LOG_MSG("MODEM: FIFO UNDERFLOW! (gets len %d)",_len);
+				LOG_MSG("MODEM: FIFO UNDERFLOW! (gets len %d)", _len);
 			}
 			return;
 		}
-			//assert(used>=_len);
-		used-=_len;
+		//assert(used>=_len);
+		used -= _len;
 		while (_len--) {
 			//LOG_MSG("-%x",data[pos]);
-			*_str++=data[pos];
-			if (++pos>=size) pos-=size;
+			*_str++ = data[pos];
+			if (++pos >= size) pos -= size;
 		}
 	}
 private:
 	Bit8u * data;
-	Bitu size,pos,used;
+	Bitu size, pos, used;
 };
 #define MREG_AUTOANSWER_COUNT 0
 #define MREG_RING_COUNT 1
@@ -152,7 +152,7 @@ private:
 class CSerialModem : public CSerial {
 public:
 
-	CFifo *rqueue;
+	CFifo * rqueue;
 	CFifo *tqueue;
 
 	CSerialModem(Bitu id, CommandLine* cmd);
@@ -174,7 +174,7 @@ public:
 	char GetChar(char * & scan);
 
 	void DoCommand();
-	
+
 	void MC_Changed(Bitu new_mc);
 
 	void TelnetEmulation(Bit8u * data, Bitu size);
@@ -206,7 +206,7 @@ protected:
 	bool numericresponse;	// true: send control response as number.
 							// false: send text (i.e. NO DIALTONE)
 	bool telnetmode;		// true: process IAC commands.
-	
+
 	bool connected;
 	Bitu doresponse;
 
@@ -223,8 +223,8 @@ protected:
 
 	Bitu listenport;
 	Bit8u reg[SREGS];
-	
-	
+
+
 	TCPServerSocket* serversocket;
 	TCPClientSocket* clientsocket;
 	TCPClientSocket* waitingclientsocket;
@@ -234,7 +234,7 @@ protected:
 		bool echo[2];
 		bool supressGA[2];
 		bool timingMark[2];
-					
+
 		bool inIAC;
 		bool recCommand;
 		Bit8u command;
@@ -242,7 +242,7 @@ protected:
 	struct {
 		bool active;
 		double f1, f2;
-		Bitu len,pos;
+		Bitu len, pos;
 		char str[256];
 	} dial;
 };

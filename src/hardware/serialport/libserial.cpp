@@ -35,57 +35,57 @@ struct _COMPORT {
 bool SERIAL_open(const char* portname, COMPORT* port) {
 	// allocate COMPORT structure
 	COMPORT cp = (_COMPORT*)malloc(sizeof(_COMPORT));
-	if(cp == NULL) return false;
-	
-	cp->breakstatus=false;
+	if (cp == NULL) return false;
+
+	cp->breakstatus = false;
 
 	// open the port in NT object space (recommended by Microsoft)
 	// allows the user to open COM10+ and custom port names.
 	int len = strlen(portname);
-	if(len > 240) {
+	if (len > 240) {
 		SetLastError(ERROR_BUFFER_OVERFLOW);
 		free(cp);
 		return false;
 	}
 	char extended_portname[256] = "\\\\.\\";
-	memcpy(extended_portname+4,portname,len+1);
-	
-	cp->porthandle = CreateFile (extended_portname,
-					   GENERIC_READ | GENERIC_WRITE, 0,
-									  // must be opened with exclusive-access
-	                   NULL,          // no security attributes
-	                   OPEN_EXISTING, // must use OPEN_EXISTING
-	                   0,             // non overlapped I/O
-	                   NULL           // hTemplate must be NULL for comm devices
-	                  );
+	memcpy(extended_portname + 4, portname, len + 1);
+
+	cp->porthandle = CreateFile(extended_portname,
+		GENERIC_READ | GENERIC_WRITE, 0,
+		// must be opened with exclusive-access
+		NULL,          // no security attributes
+		OPEN_EXISTING, // must use OPEN_EXISTING
+		0,             // non overlapped I/O
+		NULL           // hTemplate must be NULL for comm devices
+	);
 
 	if (cp->porthandle == INVALID_HANDLE_VALUE) goto cleanup_error;
-	
-	cp->orig_dcb.DCBlength=sizeof(DCB);
 
-	if(!GetCommState(cp->porthandle, &cp->orig_dcb)) {
+	cp->orig_dcb.DCBlength = sizeof(DCB);
+
+	if (!GetCommState(cp->porthandle, &cp->orig_dcb)) {
 		goto cleanup_error;
 	}
 
 	// configure the port for polling
 	DCB newdcb;
-	memcpy(&newdcb,&cp->orig_dcb,sizeof(DCB));
+	memcpy(&newdcb, &cp->orig_dcb, sizeof(DCB));
 
-	newdcb.fBinary=true;
-	newdcb.fParity=true;
-	newdcb.fOutxCtsFlow=false;
-	newdcb.fOutxDsrFlow=false;
-	newdcb.fDtrControl=DTR_CONTROL_DISABLE;
-	newdcb.fDsrSensitivity=false;
-	
-	newdcb.fOutX=false;
-	newdcb.fInX=false;
-	newdcb.fErrorChar=0;
-	newdcb.fNull=false;
-	newdcb.fRtsControl=RTS_CONTROL_DISABLE;
-	newdcb.fAbortOnError=false;
+	newdcb.fBinary = true;
+	newdcb.fParity = true;
+	newdcb.fOutxCtsFlow = false;
+	newdcb.fOutxDsrFlow = false;
+	newdcb.fDtrControl = DTR_CONTROL_DISABLE;
+	newdcb.fDsrSensitivity = false;
 
-	if(!SetCommState(cp->porthandle, &newdcb)) {
+	newdcb.fOutX = false;
+	newdcb.fInX = false;
+	newdcb.fErrorChar = 0;
+	newdcb.fNull = false;
+	newdcb.fRtsControl = RTS_CONTROL_DISABLE;
+	newdcb.fAbortOnError = false;
+
+	if (!SetCommState(cp->porthandle, &newdcb)) {
 		goto cleanup_error;
 	}
 
@@ -96,15 +96,15 @@ bool SERIAL_open(const char* portname, COMPORT* port) {
 	ct.ReadTotalTimeoutMultiplier = 0;
 	ct.WriteTotalTimeoutConstant = 0;
 	ct.WriteTotalTimeoutMultiplier = 0;
-	if(!SetCommTimeouts(cp->porthandle, &ct)) {
+	if (!SetCommTimeouts(cp->porthandle, &ct)) {
 		goto cleanup_error;
 	}
-	if(!ClearCommBreak(cp->porthandle)) {
+	if (!ClearCommBreak(cp->porthandle)) {
 		// Bluetooth Bluesoleil seems to not implement it
 		//goto cleanup_error;
 	}
 	DWORD errors;
-	if(!ClearCommError(cp->porthandle, &errors, NULL)) {
+	if (!ClearCommError(cp->porthandle, &errors, NULL)) {
 		goto cleanup_error;
 	}
 	*port = cp;
@@ -127,55 +127,55 @@ void SERIAL_close(COMPORT port) {
 
 void SERIAL_getErrorString(char* buffer, int length) {
 	int error = GetLastError();
-	if(length < 50) return;
-	memset(buffer,0,length);
+	if (length < 50) return;
+	memset(buffer, 0, length);
 	// get the error message text from the operating system
 	LPVOID sysmessagebuffer;
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL,
 		error,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(LPTSTR) &sysmessagebuffer,
-		0,NULL);
+		(LPTSTR)&sysmessagebuffer,
+		0, NULL);
 
 	const char* err5text = "The specified port is already in use.\n";
 	const char* err2text = "The specified port does not exist.\n";
 
 	int sysmsg_offset = 0;
 
-	if(error == 5) {
+	if (error == 5) {
 		sysmsg_offset = strlen(err5text);
-		memcpy(buffer,err5text,sysmsg_offset);
+		memcpy(buffer, err5text, sysmsg_offset);
 
-	} else if(error == 2) {
+	} else if (error == 2) {
 		sysmsg_offset = strlen(err2text);
-		memcpy(buffer,err2text,sysmsg_offset);
+		memcpy(buffer, err2text, sysmsg_offset);
 	}
 
-	if((length - sysmsg_offset - strlen((const char*)sysmessagebuffer)) >= 0)
+	if ((length - sysmsg_offset - strlen((const char*)sysmessagebuffer)) >= 0)
 		memcpy(buffer + sysmsg_offset, sysmessagebuffer,
-		strlen((const char*)sysmessagebuffer));
-		
+			strlen((const char*)sysmessagebuffer));
+
 	LocalFree(sysmessagebuffer);
 }
 
 
 void SERIAL_setDTR(COMPORT port, bool value) {
-	EscapeCommFunction(port->porthandle, value ? SETDTR:CLRDTR);
+	EscapeCommFunction(port->porthandle, value ? SETDTR : CLRDTR);
 }
 
 void SERIAL_setRTS(COMPORT port, bool value) {
-	EscapeCommFunction(port->porthandle, value ? SETRTS:CLRRTS);
+	EscapeCommFunction(port->porthandle, value ? SETRTS : CLRRTS);
 }
 
 void SERIAL_setBREAK(COMPORT port, bool value) {
-	EscapeCommFunction(port->porthandle, value ? SETBREAK:CLRBREAK);
+	EscapeCommFunction(port->porthandle, value ? SETBREAK : CLRBREAK);
 	port->breakstatus = value;
 }
 
 int SERIAL_getmodemstatus(COMPORT port) {
 	DWORD retval = 0;
-	GetCommModemStatus (port->porthandle, &retval);
+	GetCommModemStatus(port->porthandle, &retval);
 	return (int)retval;
 }
 
@@ -183,10 +183,10 @@ bool SERIAL_sendchar(COMPORT port, char data) {
 	DWORD bytesWritten;
 
 	// mean bug: with break = 1, WriteFile will never return.
-	if(port->breakstatus) return true; // true or false?!
+	if (port->breakstatus) return true; // true or false?!
 
-	WriteFile (port->porthandle, &data, 1, &bytesWritten, NULL);
-	if(bytesWritten==1) return true;
+	WriteFile(port->porthandle, &data, 1, &bytesWritten, NULL);
+	if (bytesWritten == 1) return true;
 	else return false;
 }
 
@@ -198,26 +198,26 @@ int SERIAL_getextchar(COMPORT port) {
 
 	int retval = 0;
 	// receive a byte; TODO communicate failure
-	if (ReadFile (port->porthandle, &chRead, 1, &dwRead, NULL)) {
+	if (ReadFile(port->porthandle, &chRead, 1, &dwRead, NULL)) {
 		if (dwRead) {
 			// check for errors
 			ClearCommError(port->porthandle, &errors, NULL);
 			// mask bits are identical
-			errors &= CE_BREAK|CE_FRAME|CE_RXPARITY|CE_OVERRUN;
-			retval |= (errors<<8);
+			errors &= CE_BREAK | CE_FRAME | CE_RXPARITY | CE_OVERRUN;
+			retval |= (errors << 8);
 			retval |= (chRead & 0xff);
-			retval |= 0x10000; 
+			retval |= 0x10000;
 		}
 	}
 	return retval;
 }
 
 bool SERIAL_setCommParameters(COMPORT port,
-			int baudrate, char parity, int stopbits, int length) {
-	
+	int baudrate, char parity, int stopbits, int length) {
+
 	DCB dcb;
-	dcb.DCBlength=sizeof(dcb);
-	GetCommState(port->porthandle,&dcb);
+	dcb.DCBlength = sizeof(dcb);
+	GetCommState(port->porthandle, &dcb);
 
 	// parity
 	switch (parity) {
@@ -232,7 +232,7 @@ bool SERIAL_setCommParameters(COMPORT port,
 	}
 
 	// stopbits
-	switch(stopbits) {
+	switch (stopbits) {
 	case SERIAL_1STOP: dcb.StopBits = ONESTOPBIT; break;
 	case SERIAL_2STOP: dcb.StopBits = TWOSTOPBITS; break;
 	case SERIAL_15STOP: dcb.StopBits = ONE5STOPBITS; break;
@@ -242,14 +242,14 @@ bool SERIAL_setCommParameters(COMPORT port,
 	}
 
 	// byte length
-	if(length > 8 || length < 5) {
+	if (length > 8 || length < 5) {
 		SetLastError(ERROR_INVALID_PARAMETER);
 		return false;
 	}
 	dcb.ByteSize = length;
 	dcb.BaudRate = baudrate;
 
-	if (!SetCommState (port->porthandle, &dcb)) return false;
+	if (!SetCommState(port->porthandle, &dcb)) return false;
 	return true;
 }
 #endif
@@ -280,27 +280,27 @@ bool SERIAL_open(const char* portname, COMPORT* port) {
 	int result;
 	// allocate COMPORT structure
 	COMPORT cp = (_COMPORT*)malloc(sizeof(_COMPORT));
-	if(cp == NULL) return false;
+	if (cp == NULL) return false;
 
-	cp->breakstatus=false;
+	cp->breakstatus = false;
 
 	int len = strlen(portname);
-	if(len > 240) {
+	if (len > 240) {
 		///////////////////////////////////SetLastError(ERROR_BUFFER_OVERFLOW);
 		return false;
 	}
 	char extended_portname[256] = "/dev/";
-	memcpy(extended_portname+5,portname,len);
+	memcpy(extended_portname + 5, portname, len);
 
-	cp->porthandle = open (extended_portname, O_RDWR | O_NOCTTY | O_NONBLOCK);
+	cp->porthandle = open(extended_portname, O_RDWR | O_NOCTTY | O_NONBLOCK);
 	if (cp->porthandle < 0) goto cleanup_error;
 
-	result = tcgetattr(cp->porthandle,&cp->backup);
-	if (result==-1) goto cleanup_error;
+	result = tcgetattr(cp->porthandle, &cp->backup);
+	if (result == -1) goto cleanup_error;
 
 	// get port settings
 	termios termInfo;
-	memcpy(&termInfo,&cp->backup,sizeof(termios));
+	memcpy(&termInfo, &cp->backup, sizeof(termios));
 
 	// initialize the port
 	termInfo.c_cflag = CS8 | CREAD | CLOCAL; // noparity, 1 stopbit
@@ -310,8 +310,8 @@ bool SERIAL_open(const char* portname, COMPORT* port) {
 	termInfo.c_cc[VMIN] = 0;
 	termInfo.c_cc[VTIME] = 0;
 
-	tcflush (cp->porthandle, TCIFLUSH);
-	tcsetattr (cp->porthandle, TCSANOW, &termInfo);
+	tcflush(cp->porthandle, TCIFLUSH);
+	tcsetattr(cp->porthandle, TCSANOW, &termInfo);
 
 	*port = cp;
 	return true;
@@ -333,32 +333,32 @@ void SERIAL_close(COMPORT port) {
 
 void SERIAL_getErrorString(char* buffer, int length) {
 	int error = errno;
-	if(length < 50) return;
-	memset(buffer,0,length);
+	if (length < 50) return;
+	memset(buffer, 0, length);
 	// get the error message text from the operating system
 	// TODO (or not)
-	
+
 	const char* err5text = "The specified port is already in use.\n";
 	const char* err2text = "The specified port does not exist.\n";
-	
+
 	int sysmsg_offset = 0;
 
-	if(error == EBUSY) {
+	if (error == EBUSY) {
 		sysmsg_offset = strlen(err5text);
-		memcpy(buffer,err5text,sysmsg_offset);
+		memcpy(buffer, err5text, sysmsg_offset);
 
-	} else if(error == 2) {
+	} else if (error == 2) {
 		sysmsg_offset = strlen(err2text);
-		memcpy(buffer,err2text,sysmsg_offset);
+		memcpy(buffer, err2text, sysmsg_offset);
 	}
-	
-	sprintf(buffer + sysmsg_offset, "System error %d.",error);
-	
+
+	sprintf(buffer + sysmsg_offset, "System error %d.", error);
+
 }
 
 int SERIAL_getmodemstatus(COMPORT port) {
 	long flags = 0;
-	ioctl (port->porthandle, TIOCMGET, &flags);
+	ioctl(port->porthandle, TIOCMGET, &flags);
 	int retval = 0;
 	if (flags & TIOCM_CTS) retval |= SERIAL_CTS;
 	if (flags & TIOCM_DSR) retval |= SERIAL_DSR;
@@ -368,9 +368,9 @@ int SERIAL_getmodemstatus(COMPORT port) {
 }
 
 bool SERIAL_sendchar(COMPORT port, char data) {
-	if(port->breakstatus) return true; // true or false?!; Does POSIX need this check?
+	if (port->breakstatus) return true; // true or false?!; Does POSIX need this check?
 	int bytesWritten = write(port->porthandle, &data, 1);
-	if(bytesWritten==1) return true;
+	if (bytesWritten == 1) return true;
 	else return false;
 }
 
@@ -380,36 +380,36 @@ int SERIAL_getextchar(COMPORT port) {
 	unsigned char error = 0;
 	int retval = 0;
 
-	dwRead=read(port->porthandle,&chRead,1);
-	if (dwRead==1) {
-		if(chRead==0xff) // error escape
+	dwRead = read(port->porthandle, &chRead, 1);
+	if (dwRead == 1) {
+		if (chRead == 0xff) // error escape
 		{
-			dwRead=read(port->porthandle,&chRead,1);
-			if(chRead==0x00) // an error 
+			dwRead = read(port->porthandle, &chRead, 1);
+			if (chRead == 0x00) // an error 
 			{
-				dwRead=read(port->porthandle,&chRead,1);
-				if(chRead==0x0) error=SERIAL_BREAK_ERR;
-				else error=SERIAL_FRAMING_ERR;
+				dwRead = read(port->porthandle, &chRead, 1);
+				if (chRead == 0x0) error = SERIAL_BREAK_ERR;
+				else error = SERIAL_FRAMING_ERR;
 			}
 		}
-		retval |= (error<<8);
+		retval |= (error << 8);
 		retval |= chRead;
-		retval |= 0x10000; 
+		retval |= 0x10000;
 	}
 	return retval;
 }
 
 bool SERIAL_setCommParameters(COMPORT port,
-			int baudrate, char parity, int stopbits, int length) {
-	
+	int baudrate, char parity, int stopbits, int length) {
+
 	termios termInfo;
 	int result = tcgetattr(port->porthandle, &termInfo);
-	if (result==-1) return false;
+	if (result == -1) return false;
 	termInfo.c_cflag = CREAD | CLOCAL;
 
 	// parity
 	// "works on many systems"
-	#define CMSPAR 010000000000
+#define CMSPAR 010000000000
 	switch (parity) {
 	case 'n': break;
 	case 'o': termInfo.c_cflag |= (PARODD | PARENB); break;
@@ -420,15 +420,15 @@ bool SERIAL_setCommParameters(COMPORT port,
 		return false;
 	}
 	// stopbits
-	switch(stopbits) {
+	switch (stopbits) {
 	case SERIAL_1STOP: break;
-	case SERIAL_2STOP: 
+	case SERIAL_2STOP:
 	case SERIAL_15STOP: termInfo.c_cflag |= CSTOPB; break;
 	default:
 		return false;
 	}
 	// byte length
-	if(length > 8 || length < 5) return false;
+	if (length > 8 || length < 5) return false;
 	switch (length) {
 	case 5: termInfo.c_cflag |= CS5; break;
 	case 6: termInfo.c_cflag |= CS6; break;
@@ -436,41 +436,41 @@ bool SERIAL_setCommParameters(COMPORT port,
 	case 8: termInfo.c_cflag |= CS8; break;
 	}
 	// baudrate
-	int posix_baudrate=0;
-	switch(baudrate) {
-		case 115200: posix_baudrate = B115200; break;
-		case  57600: posix_baudrate = B57600; break;
-		case  38400: posix_baudrate = B38400; break;
-		case  19200: posix_baudrate = B19200; break;
-		case   9600: posix_baudrate = B9600; break;
-		case   4800: posix_baudrate = B4800; break;
-		case   2400: posix_baudrate = B2400; break;
-		case   1200: posix_baudrate = B1200; break;
-		case    600: posix_baudrate = B600; break;
-		case    300: posix_baudrate = B300; break;
-		case    110: posix_baudrate = B110; break;
-		default: return false;
+	int posix_baudrate = 0;
+	switch (baudrate) {
+	case 115200: posix_baudrate = B115200; break;
+	case  57600: posix_baudrate = B57600; break;
+	case  38400: posix_baudrate = B38400; break;
+	case  19200: posix_baudrate = B19200; break;
+	case   9600: posix_baudrate = B9600; break;
+	case   4800: posix_baudrate = B4800; break;
+	case   2400: posix_baudrate = B2400; break;
+	case   1200: posix_baudrate = B1200; break;
+	case    600: posix_baudrate = B600; break;
+	case    300: posix_baudrate = B300; break;
+	case    110: posix_baudrate = B110; break;
+	default: return false;
 	}
-	cfsetospeed (&termInfo, posix_baudrate);
-	cfsetispeed (&termInfo, posix_baudrate);
+	cfsetospeed(&termInfo, posix_baudrate);
+	cfsetispeed(&termInfo, posix_baudrate);
 
 	int retval = tcsetattr(port->porthandle, TCSANOW, &termInfo);
-	if(retval==-1) return false;
+	if (retval == -1) return false;
 	return true;
 }
 
 void SERIAL_setBREAK(COMPORT port, bool value) {
-	ioctl(port->porthandle, value?TIOCSBRK:TIOCCBRK);
+	ioctl(port->porthandle, value ? TIOCSBRK : TIOCCBRK);
 }
 
 void SERIAL_setDTR(COMPORT port, bool value) {
 	long flag = TIOCM_DTR;
-	ioctl(port->porthandle, value?TIOCMBIS:TIOCMBIC, &flag);
+	ioctl(port->porthandle, value ? TIOCMBIS : TIOCMBIC, &flag);
 }
 
 void SERIAL_setRTS(COMPORT port, bool value) {
 	long flag = TIOCM_RTS;
-	ioctl(port->porthandle, value?TIOCMBIS:TIOCMBIC, &flag);
+	ioctl(port->porthandle, value ? TIOCMBIS : TIOCMBIC, &flag);
 }
 #endif
 
@@ -495,8 +495,8 @@ struct _COMPORT {
 bool SERIAL_open(const char* portname, COMPORT* port) {
 	// allocate COMPORT structure
 	COMPORT cp = (_COMPORT*)malloc(sizeof(_COMPORT));
-	if(cp == NULL) return false;
-	cp->porthandle=0;
+	if (cp == NULL) return false;
+	cp->porthandle = 0;
 
 	USHORT errors = 0;
 	ULONG ulAction = 0;
@@ -510,12 +510,12 @@ bool SERIAL_open(const char* portname, COMPORT* port) {
 
 	rc = DosDevIOCtl(cp->porthandle, IOCTL_ASYNC, ASYNC_GETDCBINFO,
 		0, 0, 0, &cp->orig_dcb, ulParmLen, &ulParmLen);
-	if ( rc != NO_ERROR) {
+	if (rc != NO_ERROR) {
 		goto cleanup_error;
 	}
 	// configure the port for polling
 	DCBINFO newdcb;
-	memcpy(&newdcb,&cp->orig_dcb,sizeof(DCBINFO));
+	memcpy(&newdcb, &cp->orig_dcb, sizeof(DCBINFO));
 
 	newdcb.usWriteTimeout = 0;
 	newdcb.usReadTimeout = 0; //65535;
@@ -524,14 +524,14 @@ bool SERIAL_open(const char* portname, COMPORT* port) {
 
 	rc = DosDevIOCtl(cp->porthandle, IOCTL_ASYNC, ASYNC_SETDCBINFO,
 		&newdcb, ulParmLen, &ulParmLen, 0, 0, 0);
-	if ( rc != NO_ERROR) {
+	if (rc != NO_ERROR) {
 		goto cleanup_error;
 	}
 
 	ulParmLen = sizeof(errors);
 	rc = DosDevIOCtl(cp->porthandle, IOCTL_ASYNC, ASYNC_GETCOMMERROR,
 		0, 0, 0, &errors, ulParmLen, &ulParmLen);
-	if ( rc != NO_ERROR) {
+	if (rc != NO_ERROR) {
 		goto cleanup_error;
 	}
 
@@ -553,8 +553,8 @@ void SERIAL_close(COMPORT port) {
 	// restore original DCB, close handle, free the COMPORT struct
 	if (port->porthandle != 0) {
 		DosDevIOCtl(port->porthandle, IOCTL_ASYNC, ASYNC_SETDCBINFO,
-			&port->orig_dcb, ulParmLen, &ulParmLen,	0, 0, 0);
-		DosClose (port->porthandle);
+			&port->orig_dcb, ulParmLen, &ulParmLen, 0, 0, 0);
+		DosClose(port->porthandle);
 	}
 	free(port);
 }
@@ -571,7 +571,7 @@ void SERIAL_setBREAK(COMPORT port, bool value) {
 	ULONG ulParmLen = sizeof(error);
 	DosDevIOCtl(port->porthandle, IOCTL_ASYNC,
 		value ? ASYNC_SETBREAKON : ASYNC_SETBREAKOFF,
-		0,0,0, &error, ulParmLen, &ulParmLen);
+		0, 0, 0, &error, ulParmLen, &ulParmLen);
 }
 
 int SERIAL_getextchar(COMPORT port) {
@@ -588,7 +588,7 @@ int SERIAL_getextchar(COMPORT port) {
 			ULONG ulParmLen = sizeof(errors);
 			DosDevIOCtl(port->porthandle, IOCTL_ASYNC, ASYNC_GETCOMMEVENT,
 				0, 0, 0, &event, ulParmLen, &ulParmLen);
-			if (event & (64 + 128) ) { // Break (Bit 6) or Frame or Parity (Bit 7) error
+			if (event & (64 + 128)) { // Break (Bit 6) or Frame or Parity (Bit 7) error
 				Bit8u errreg = 0;
 				if (event & 64) retval |= SERIAL_BREAK_ERR;
 				if (event & 128) {
@@ -599,7 +599,7 @@ int SERIAL_getextchar(COMPORT port) {
 				}
 			}
 			retval |= (chRead & 0xff);
-			retval |= 0x10000; 
+			retval |= 0x10000;
 		}
 	}
 	return retval;
@@ -617,35 +617,35 @@ int SERIAL_getmodemstatus(COMPORT port) {
 void SERIAL_setDTR(COMPORT port, bool value) {
 	UCHAR masks[2];
 	ULONG ulParmLen = sizeof(masks);
-	if(value) {
-		masks[0]=0x01;
-		masks[1]=0xFF;
+	if (value) {
+		masks[0] = 0x01;
+		masks[1] = 0xFF;
 	} else {
-		masks[0]=0x00;
-		masks[1]=0xFE;
+		masks[0] = 0x00;
+		masks[1] = 0xFE;
 	}
 	DosDevIOCtl(port->porthandle, IOCTL_ASYNC, ASYNC_SETMODEMCTRL,
-		0,0,0, &masks, ulParmLen, &ulParmLen);
+		0, 0, 0, &masks, ulParmLen, &ulParmLen);
 }
 
 void SERIAL_setRTS(COMPORT port, bool value) {
 	UCHAR masks[2];
 	ULONG ulParmLen = sizeof(masks);
-	if(value) {
-		masks[0]=0x02;
-		masks[1]=0xFF;
+	if (value) {
+		masks[0] = 0x02;
+		masks[1] = 0xFF;
 	} else {
-		masks[0]=0x00;
-		masks[1]=0xFD;
+		masks[0] = 0x00;
+		masks[1] = 0xFD;
 	}
 	DosDevIOCtl(port->porthandle, IOCTL_ASYNC, ASYNC_SETMODEMCTRL,
-		0,0,0, &masks, ulParmLen, &ulParmLen);
+		0, 0, 0, &masks, ulParmLen, &ulParmLen);
 }
 
 
 
 bool SERIAL_setCommParameters(COMPORT port,
-			int baudrate, char parity, int stopbits, int length) {
+	int baudrate, char parity, int stopbits, int length) {
 	// baud
 	struct {
 		ULONG baud;
@@ -668,7 +668,7 @@ bool SERIAL_setCommParameters(COMPORT port,
 	} paramline;
 
 	// byte length
-	if(length > 8 || length < 5) {
+	if (length > 8 || length < 5) {
 		// TODO SetLastError(ERROR_INVALID_PARAMETER);
 		return false;
 	}
@@ -686,7 +686,7 @@ bool SERIAL_setCommParameters(COMPORT port,
 		return false;
 	}
 	// stopbits
-	switch(stopbits) {
+	switch (stopbits) {
 	case SERIAL_1STOP: paramline.stop = 0; break;
 	case SERIAL_2STOP: paramline.stop = 2; break;
 	case SERIAL_15STOP: paramline.stop = 1; break;
@@ -698,7 +698,7 @@ bool SERIAL_setCommParameters(COMPORT port,
 	ulParmLen = sizeof(paramline);
 	rc = DosDevIOCtl(port->porthandle, IOCTL_ASYNC, ASYNC_SETLINECTRL,
 		&paramline, ulParmLen, &ulParmLen, 0, 0, 0);
-	if ( rc != NO_ERROR)
+	if (rc != NO_ERROR)
 		return false;
 	return true;
 }

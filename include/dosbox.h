@@ -22,14 +22,14 @@
 
 #include <config.h>
 
-void E_Exit(const char * message,...);
+void E_Exit(const char * message, ...);
 
-void MSG_Add(const char*,const char*); //add messages to the internal languagefile
+void MSG_Add(const char*, const char*); //add messages to the internal languagefile
 const char* MSG_Get(char const *);     //get messages from the internal languagefile
 
 class Section;
 
-typedef Bitu (LoopHandler)(void);
+typedef Bitu(LoopHandler)(void);
 
 void DOSBOX_RunMachine();
 void DOSBOX_SetLoop(LoopHandler * handler);
@@ -55,7 +55,7 @@ enum SVGACards {
 	SVGA_TsengET4K,
 	SVGA_TsengET3K,
 	SVGA_ParadisePVGA1A
-}; 
+};
 
 extern SVGACards svgaCard;
 extern MachineType machine;

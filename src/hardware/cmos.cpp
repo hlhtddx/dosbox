@@ -50,34 +50,34 @@ static struct {
 
 static void cmos_timerevent(Bitu val) {
 	if (cmos.timer.acknowledged) {
-		cmos.timer.acknowledged=false;
+		cmos.timer.acknowledged = false;
 		PIC_ActivateIRQ(8);
 	}
 	if (cmos.timer.enabled) {
-		PIC_AddEvent(cmos_timerevent,cmos.timer.delay);
+		PIC_AddEvent(cmos_timerevent, cmos.timer.delay);
 		cmos.regs[0xc] = 0xC0;//Contraption Zack (music)
 	}
 }
 
 static void cmos_checktimer(void) {
-	PIC_RemoveEvents(cmos_timerevent);	
-	if (cmos.timer.div<=2) cmos.timer.div+=7;
-	cmos.timer.delay=(1000.0f/(32768.0f / (1 << (cmos.timer.div - 1))));
+	PIC_RemoveEvents(cmos_timerevent);
+	if (cmos.timer.div <= 2) cmos.timer.div += 7;
+	cmos.timer.delay = (1000.0f / (32768.0f / (1 << (cmos.timer.div - 1))));
 	if (!cmos.timer.div || !cmos.timer.enabled) return;
-	LOG(LOG_PIT,LOG_NORMAL)("RTC Timer at %.2f hz",1000.0/cmos.timer.delay);
-//	PIC_AddEvent(cmos_timerevent,cmos.timer.delay);
-	/* A rtc is always running */
-	double remd=fmod(PIC_FullIndex(),(double)cmos.timer.delay);
-	PIC_AddEvent(cmos_timerevent,(float)((double)cmos.timer.delay-remd)); //Should be more like a real pc. Check
+	LOG(LOG_PIT, LOG_NORMAL)("RTC Timer at %.2f hz", 1000.0 / cmos.timer.delay);
+	//	PIC_AddEvent(cmos_timerevent,cmos.timer.delay);
+		/* A rtc is always running */
+	double remd = fmod(PIC_FullIndex(), (double)cmos.timer.delay);
+	PIC_AddEvent(cmos_timerevent, (float)((double)cmos.timer.delay - remd)); //Should be more like a real pc. Check
 //	status reg A reading with this (and with other delays actually)
 }
 
-void cmos_selreg(Bitu port,Bitu val,Bitu iolen) {
-	cmos.reg=val & 0x3f;
-	cmos.nmi=(val & 0x80)>0;
+void cmos_selreg(Bitu port, Bitu val, Bitu iolen) {
+	cmos.reg = val & 0x3f;
+	cmos.nmi = (val & 0x80) > 0;
 }
 
-static void cmos_writereg(Bitu port,Bitu val,Bitu iolen) {
+static void cmos_writereg(Bitu port, Bitu val, Bitu iolen) {
 	switch (cmos.reg) {
 	case 0x00:		/* Seconds */
 	case 0x02:		/* Minutes */
@@ -92,40 +92,40 @@ static void cmos_writereg(Bitu port,Bitu val,Bitu iolen) {
 	case 0x01:		/* Seconds Alarm */
 	case 0x03:		/* Minutes Alarm */
 	case 0x05:		/* Hours Alarm */
-		LOG(LOG_BIOS,LOG_NORMAL)("CMOS:Trying to set alarm");
-		cmos.regs[cmos.reg]=val;
+		LOG(LOG_BIOS, LOG_NORMAL)("CMOS:Trying to set alarm");
+		cmos.regs[cmos.reg] = val;
 		break;
 	case 0x0a:		/* Status reg A */
-		cmos.regs[cmos.reg]=val & 0x7f;
-		if ((val & 0x70)!=0x20) LOG(LOG_BIOS,LOG_ERROR)("CMOS Illegal 22 stage divider value");
-		cmos.timer.div=(val & 0xf);
+		cmos.regs[cmos.reg] = val & 0x7f;
+		if ((val & 0x70) != 0x20) LOG(LOG_BIOS, LOG_ERROR)("CMOS Illegal 22 stage divider value");
+		cmos.timer.div = (val & 0xf);
 		cmos_checktimer();
 		break;
 	case 0x0b:		/* Status reg B */
-		cmos.bcd=!(val & 0x4);
-		cmos.regs[cmos.reg]=val & 0x7f;
-		cmos.timer.enabled=(val & 0x40)>0;
-		if (val&0x10) LOG(LOG_BIOS,LOG_ERROR)("CMOS:Updated ended interrupt not supported yet");
+		cmos.bcd = !(val & 0x4);
+		cmos.regs[cmos.reg] = val & 0x7f;
+		cmos.timer.enabled = (val & 0x40) > 0;
+		if (val & 0x10) LOG(LOG_BIOS, LOG_ERROR)("CMOS:Updated ended interrupt not supported yet");
 		cmos_checktimer();
 		break;
 	case 0x0d:/* Status reg D */
-		cmos.regs[cmos.reg]=val & 0x80;	/*Bit 7=1:RTC Pown on*/
+		cmos.regs[cmos.reg] = val & 0x80;	/*Bit 7=1:RTC Pown on*/
 		break;
 	case 0x0f:		/* Shutdown status byte */
-		cmos.regs[cmos.reg]=val & 0x7f;
+		cmos.regs[cmos.reg] = val & 0x7f;
 		break;
 	default:
-		cmos.regs[cmos.reg]=val & 0x7f;
-		LOG(LOG_BIOS,LOG_ERROR)("CMOS:WRite to unhandled register %x",cmos.reg);
+		cmos.regs[cmos.reg] = val & 0x7f;
+		LOG(LOG_BIOS, LOG_ERROR)("CMOS:WRite to unhandled register %x", cmos.reg);
 	}
 }
 
 
 #define MAKE_RETURN(_VAL) (cmos.bcd ? ((((_VAL) / 10) << 4) | ((_VAL) % 10)) : (_VAL));
 
-static Bitu cmos_readreg(Bitu port,Bitu iolen) {
-	if (cmos.reg>0x3f) {
-		LOG(LOG_BIOS,LOG_ERROR)("CMOS:Read from illegal register %x",cmos.reg);
+static Bitu cmos_readreg(Bitu port, Bitu iolen) {
+	if (cmos.reg > 0x3f) {
+		LOG(LOG_BIOS, LOG_ERROR)("CMOS:Read from illegal register %x", cmos.reg);
 		return 0xff;
 	}
 	Bitu drive_a, drive_b;
@@ -133,10 +133,10 @@ static Bitu cmos_readreg(Bitu port,Bitu iolen) {
 	time_t curtime;
 	struct tm *loctime;
 	/* Get the current time. */
-	curtime = time (NULL);
+	curtime = time(NULL);
 
 	/* Convert it to local time representation. */
-	loctime = localtime (&curtime);
+	loctime = localtime(&curtime);
 
 	switch (cmos.reg) {
 	case 0x00:		/* Seconds */
@@ -160,104 +160,104 @@ static Bitu cmos_readreg(Bitu port,Bitu iolen) {
 	case 0x05:		/* Hours Alarm */
 		return cmos.regs[cmos.reg];
 	case 0x0a:		/* Status register A */
-		if (PIC_TickIndex()<0.002) {
-			return (cmos.regs[0x0a]&0x7f) | 0x80;
+		if (PIC_TickIndex() < 0.002) {
+			return (cmos.regs[0x0a] & 0x7f) | 0x80;
 		} else {
-			return (cmos.regs[0x0a]&0x7f);
+			return (cmos.regs[0x0a] & 0x7f);
 		}
 	case 0x0c:		/* Status register C */
-		cmos.timer.acknowledged=true;
+		cmos.timer.acknowledged = true;
 		if (cmos.timer.enabled) {
 			/* In periodic interrupt mode only care for those flags */
-			Bit8u val=cmos.regs[0xc];
-			cmos.regs[0xc]=0;
+			Bit8u val = cmos.regs[0xc];
+			cmos.regs[0xc] = 0;
 			return val;
 		} else {
 			/* Give correct values at certain times */
-			Bit8u val=0;
-			double index=PIC_FullIndex();
-			if (index>=(cmos.last.timer+cmos.timer.delay)) {
-				cmos.last.timer=index;
-				val|=0x40;
-			} 
-			if (index>=(cmos.last.ended+1000)) {
-				cmos.last.ended=index;
-				val|=0x10;
-			} 
+			Bit8u val = 0;
+			double index = PIC_FullIndex();
+			if (index >= (cmos.last.timer + cmos.timer.delay)) {
+				cmos.last.timer = index;
+				val |= 0x40;
+			}
+			if (index >= (cmos.last.ended + 1000)) {
+				cmos.last.ended = index;
+				val |= 0x10;
+			}
 			return val;
 		}
 	case 0x10:		/* Floppy size */
 		drive_a = 0;
 		drive_b = 0;
-		if(imageDiskList[0] != NULL) drive_a = imageDiskList[0]->GetBiosType();
-		if(imageDiskList[1] != NULL) drive_b = imageDiskList[1]->GetBiosType();
+		if (imageDiskList[0] != NULL) drive_a = imageDiskList[0]->GetBiosType();
+		if (imageDiskList[1] != NULL) drive_b = imageDiskList[1]->GetBiosType();
 		return ((drive_a << 4) | (drive_b));
-	/* First harddrive info */
+		/* First harddrive info */
 	case 0x12:
 		hdparm = 0;
-		if(imageDiskList[2] != NULL) hdparm |= 0xf;
-		if(imageDiskList[3] != NULL) hdparm |= 0xf0;
+		if (imageDiskList[2] != NULL) hdparm |= 0xf;
+		if (imageDiskList[3] != NULL) hdparm |= 0xf0;
 		return hdparm;
 	case 0x19:
-		if(imageDiskList[2] != NULL) return 47; /* User defined type */
+		if (imageDiskList[2] != NULL) return 47; /* User defined type */
 		return 0;
 	case 0x1b:
-		if(imageDiskList[2] != NULL) return (imageDiskList[2]->cylinders & 0xff);
+		if (imageDiskList[2] != NULL) return (imageDiskList[2]->cylinders & 0xff);
 		return 0;
 	case 0x1c:
-		if(imageDiskList[2] != NULL) return ((imageDiskList[2]->cylinders & 0xff00)>>8);
+		if (imageDiskList[2] != NULL) return ((imageDiskList[2]->cylinders & 0xff00) >> 8);
 		return 0;
 	case 0x1d:
-		if(imageDiskList[2] != NULL) return (imageDiskList[2]->heads);
+		if (imageDiskList[2] != NULL) return (imageDiskList[2]->heads);
 		return 0;
 	case 0x1e:
-		if(imageDiskList[2] != NULL) return 0xff;
+		if (imageDiskList[2] != NULL) return 0xff;
 		return 0;
 	case 0x1f:
-		if(imageDiskList[2] != NULL) return 0xff;
+		if (imageDiskList[2] != NULL) return 0xff;
 		return 0;
 	case 0x20:
-		if(imageDiskList[2] != NULL) return (0xc0 | (((imageDiskList[2]->heads) > 8) << 3));
+		if (imageDiskList[2] != NULL) return (0xc0 | (((imageDiskList[2]->heads) > 8) << 3));
 		return 0;
 	case 0x21:
-		if(imageDiskList[2] != NULL) return (imageDiskList[2]->cylinders & 0xff);
+		if (imageDiskList[2] != NULL) return (imageDiskList[2]->cylinders & 0xff);
 		return 0;
 	case 0x22:
-		if(imageDiskList[2] != NULL) return ((imageDiskList[2]->cylinders & 0xff00)>>8);
+		if (imageDiskList[2] != NULL) return ((imageDiskList[2]->cylinders & 0xff00) >> 8);
 		return 0;
 	case 0x23:
-		if(imageDiskList[2] != NULL) return (imageDiskList[2]->sectors);
+		if (imageDiskList[2] != NULL) return (imageDiskList[2]->sectors);
 		return 0;
-	/* Second harddrive info */
+		/* Second harddrive info */
 	case 0x1a:
-		if(imageDiskList[3] != NULL) return 47; /* User defined type */
+		if (imageDiskList[3] != NULL) return 47; /* User defined type */
 		return 0;
 	case 0x24:
-		if(imageDiskList[3] != NULL) return (imageDiskList[3]->cylinders & 0xff);
+		if (imageDiskList[3] != NULL) return (imageDiskList[3]->cylinders & 0xff);
 		return 0;
 	case 0x25:
-		if(imageDiskList[3] != NULL) return ((imageDiskList[3]->cylinders & 0xff00)>>8);
+		if (imageDiskList[3] != NULL) return ((imageDiskList[3]->cylinders & 0xff00) >> 8);
 		return 0;
 	case 0x26:
-		if(imageDiskList[3] != NULL) return (imageDiskList[3]->heads);
+		if (imageDiskList[3] != NULL) return (imageDiskList[3]->heads);
 		return 0;
 	case 0x27:
-		if(imageDiskList[3] != NULL) return 0xff;
+		if (imageDiskList[3] != NULL) return 0xff;
 		return 0;
 	case 0x28:
-		if(imageDiskList[3] != NULL) return 0xff;
+		if (imageDiskList[3] != NULL) return 0xff;
 		return 0;
 	case 0x29:
-		if(imageDiskList[3] != NULL) return (0xc0 | (((imageDiskList[3]->heads) > 8) << 3));
+		if (imageDiskList[3] != NULL) return (0xc0 | (((imageDiskList[3]->heads) > 8) << 3));
 		return 0;
 	case 0x2a:
-		if(imageDiskList[3] != NULL) return (imageDiskList[3]->cylinders & 0xff);
+		if (imageDiskList[3] != NULL) return (imageDiskList[3]->cylinders & 0xff);
 		return 0;
 	case 0x2b:
-		if(imageDiskList[3] != NULL) return ((imageDiskList[3]->cylinders & 0xff00)>>8);
+		if (imageDiskList[3] != NULL) return ((imageDiskList[3]->cylinders & 0xff00) >> 8);
 		return 0;
 	case 0x2c:
-		if(imageDiskList[3] != NULL) return (imageDiskList[3]->sectors);
+		if (imageDiskList[3] != NULL) return (imageDiskList[3]->sectors);
 		return 0;
 	case 0x39:
 		return 0;
@@ -278,7 +278,7 @@ static Bitu cmos_readreg(Bitu port,Bitu iolen) {
 //		LOG(LOG_BIOS,LOG_NORMAL)("CMOS:Read from reg %X : %04X",cmos.reg,cmos.regs[cmos.reg]);
 		return cmos.regs[cmos.reg];
 	default:
-		LOG(LOG_BIOS,LOG_NORMAL)("CMOS:Read from reg %X",cmos.reg);
+		LOG(LOG_BIOS, LOG_NORMAL)("CMOS:Read from reg %X", cmos.reg);
 		return cmos.regs[cmos.reg];
 	}
 }
@@ -288,43 +288,43 @@ void CMOS_SetRegister(Bitu regNr, Bit8u val) {
 }
 
 
-class CMOS:public Module_base{
+class CMOS :public Module_base {
 private:
 	IO_ReadHandleObject ReadHandler[2];
-	IO_WriteHandleObject WriteHandler[2];	
+	IO_WriteHandleObject WriteHandler[2];
 public:
-	CMOS(Section* configuration):Module_base(configuration){
-		WriteHandler[0].Install(0x70,cmos_selreg,IO_MB);
-		WriteHandler[1].Install(0x71,cmos_writereg,IO_MB);
-		ReadHandler[0].Install(0x71,cmos_readreg,IO_MB);
-		cmos.timer.enabled=false;
-		cmos.timer.acknowledged=true;
-		cmos.reg=0xa;
-		cmos_writereg(0x71,0x26,1);
-		cmos.reg=0xb;
-		cmos_writereg(0x71,0x2,1);	//Struct tm *loctime is of 24 hour format,
-		cmos.reg=0xd;
-		cmos_writereg(0x71,0x80,1); /* RTC power on */
+	CMOS(Section* configuration) :Module_base(configuration) {
+		WriteHandler[0].Install(0x70, cmos_selreg, IO_MB);
+		WriteHandler[1].Install(0x71, cmos_writereg, IO_MB);
+		ReadHandler[0].Install(0x71, cmos_readreg, IO_MB);
+		cmos.timer.enabled = false;
+		cmos.timer.acknowledged = true;
+		cmos.reg = 0xa;
+		cmos_writereg(0x71, 0x26, 1);
+		cmos.reg = 0xb;
+		cmos_writereg(0x71, 0x2, 1);	//Struct tm *loctime is of 24 hour format,
+		cmos.reg = 0xd;
+		cmos_writereg(0x71, 0x80, 1); /* RTC power on */
 		// Equipment is updated from bios.cpp and bios_disk.cpp
 		/* Fill in base memory size, it is 640K always */
-		cmos.regs[0x15]=(Bit8u)0x80;
-		cmos.regs[0x16]=(Bit8u)0x02;
+		cmos.regs[0x15] = (Bit8u)0x80;
+		cmos.regs[0x16] = (Bit8u)0x02;
 		/* Fill in extended memory size */
-		Bitu exsize=(MEM_TotalPages()*4)-1024;
-		cmos.regs[0x17]=(Bit8u)exsize;
-		cmos.regs[0x18]=(Bit8u)(exsize >> 8);
-		cmos.regs[0x30]=(Bit8u)exsize;
-		cmos.regs[0x31]=(Bit8u)(exsize >> 8);
+		Bitu exsize = (MEM_TotalPages() * 4) - 1024;
+		cmos.regs[0x17] = (Bit8u)exsize;
+		cmos.regs[0x18] = (Bit8u)(exsize >> 8);
+		cmos.regs[0x30] = (Bit8u)exsize;
+		cmos.regs[0x31] = (Bit8u)(exsize >> 8);
 	}
 };
 
 static CMOS* test;
 
-void CMOS_Destroy(Section* sec){
+void CMOS_Destroy(Section* sec) {
 	delete test;
 }
 
 void CMOS_Init(Section* sec) {
 	test = new CMOS(sec);
-	sec->AddDestroyFunction(&CMOS_Destroy,true);
+	sec->AddDestroyFunction(&CMOS_Destroy, true);
 }

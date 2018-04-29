@@ -16,22 +16,22 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-/* Version number of package */
+ /* Version number of package */
 #define VERSION "SVN"
 
 #include <stdint.h>
-  typedef uint8_t   Bit8u;
-  typedef int8_t    Bit8s;
-  typedef uint16_t  Bit16u;
-  typedef int16_t   Bit16s;
-  typedef uint32_t  Bit32u;
-  typedef int32_t   Bit32s;
-  typedef uint64_t  Bit64u;
-  typedef int64_t   Bit64s;
+typedef uint8_t   Bit8u;
+typedef int8_t    Bit8s;
+typedef uint16_t  Bit16u;
+typedef int16_t   Bit16s;
+typedef uint32_t  Bit32u;
+typedef int32_t   Bit32s;
+typedef uint64_t  Bit64u;
+typedef int64_t   Bit64s;
 #if (__WORDSIZE == 64)
-  typedef Bit64u Bitu;
-  typedef Bit64s Bits;
+typedef Bit64u Bitu;
+typedef Bit64s Bits;
 #else
-  typedef Bit32u Bitu;
-  typedef Bit32s Bits;
+typedef Bit32u Bitu;
+typedef Bit32s Bits;
 #endif
