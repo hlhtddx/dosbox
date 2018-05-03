@@ -958,7 +958,8 @@ void VGA_SetupMemory(Section* sec) {
 	// We reserve extra 2K for one scan line
 	vga_allocsize += 2048;
 	vga.mem.linear_orgptr = new Bit8u[vga_allocsize + 16];
-	vga.mem.linear = (Bit8u*)(((Bitu)vga.mem.linear_orgptr + 16 - 1) & ~(16 - 1));
+	Bitu alignment = 16 - 1;
+	vga.mem.linear = (Bit8u*)(((Bitu)vga.mem.linear_orgptr + alignment) & ~alignment );
 	memset(vga.mem.linear, 0, vga_allocsize);
 
 	vga.fastmem_orgptr = new Bit8u[(vga.vmemsize << 1) + 4096 + 16];

@@ -75,6 +75,9 @@
       <UniqueIdentifier>{dfc3a77f-abd4-4fc6-a862-deeaa16b4984}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
+    <Filter Include="Source Files\llvm">
+      <UniqueIdentifier>{28e73a44-fa8a-401c-b652-8a0cf9159f06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\dosbox.cpp">
@@ -434,6 +437,12 @@
     <ClCompile Include="..\src\fpu\fpu.cpp">
       <Filter>Source Files\fpu</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\cpu\core_llvm.cpp">
+      <Filter>Source Files\cpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\llvm\llvm.cpp">
+      <Filter>Source Files\llvm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\winres.rc">
@@ -451,18 +460,6 @@
       <Filter>Source Files\cpu</Filter>
     </ClInclude>
     <ClInclude Include="..\src\cpu\core_normal\helpers.h">
-      <Filter>Source Files\cpu\core_normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\cpu\core_normal\prefix_0f.h">
-      <Filter>Source Files\cpu\core_normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\cpu\core_normal\prefix_66.h">
-      <Filter>Source Files\cpu\core_normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\cpu\core_normal\prefix_66_0f.h">
-      <Filter>Source Files\cpu\core_normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\cpu\core_normal\prefix_none.h">
       <Filter>Source Files\cpu\core_normal</Filter>
     </ClInclude>
     <ClInclude Include="..\src\cpu\core_normal\string.h">
@@ -741,8 +738,16 @@
     <ClInclude Include="..\include\video.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\llvm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\src\dosbox.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\Developer\SDL\SDL-1.2.15-src\SDL-1.2.15\VisualC\SDL\Release\SDL.pdb">
+      <Filter>Source Files\cpu</Filter>
+    </None>
   </ItemGroup>
 </Project>
