@@ -213,7 +213,9 @@ inline void Mouse_AddEvent(Bit8u type) {
 	if (mouse.events < QUEUE_SIZE) {
 		if (mouse.events > 0) {
 			/* Skip duplicate events */
-			if (type == MOUSE_HAS_MOVED) return;
+			if (type == MOUSE_HAS_MOVED) {
+				return;
+			}
 			/* Always put the newest element in the front as that the events are
 			 * handled backwards (prevents doubleclicks while moving)
 			 */
@@ -473,13 +475,25 @@ void Mouse_CursorMoved(float xrel, float yrel, float x, float y, bool emulate) {
 
 	mouse.mickey_x += (dx * mouse.mickeysPerPixel_x);
 	mouse.mickey_y += (dy * mouse.mickeysPerPixel_y);
-	if (mouse.mickey_x >= 32768.0) mouse.mickey_x -= 65536.0;
-	else if (mouse.mickey_x <= -32769.0) mouse.mickey_x += 65536.0;
-	if (mouse.mickey_y >= 32768.0) mouse.mickey_y -= 65536.0;
-	else if (mouse.mickey_y <= -32769.0) mouse.mickey_y += 65536.0;
+
+	if (mouse.mickey_x >= 32768.0) {
+		mouse.mickey_x -= 65536.0;
+	} else if (mouse.mickey_x <= -32769.0) {
+		mouse.mickey_x += 65536.0;
+	}
+
+	if (mouse.mickey_y >= 32768.0) {
+		mouse.mickey_y -= 65536.0;
+	} else if (mouse.mickey_y <= -32769.0) {
+		mouse.mickey_y += 65536.0;
+	}
+
 	if (emulate) {
 		mouse.x += dx;
 		mouse.y += dy;
+		printf("xrel: %f * %f, yrel: %f * %f, delta:(%f,%f) accum(%f,%f)\n",
+			xrel, mouse.pixelPerMickey_x, yrel, mouse.pixelPerMickey_y,
+			dx, dy, mouse.x, mouse.y);
 	} else {
 		if (CurMode->type == M_TEXT) {
 			mouse.x = x * real_readw(BIOSMEM_SEG, BIOSMEM_NB_COLS) * 8;
@@ -1038,6 +1052,7 @@ static Bitu INT74_Handler(void) {
 			reg_dx = POS_Y;
 			reg_si = static_cast<Bit16s>(mouse.mickey_x);
 			reg_di = static_cast<Bit16s>(mouse.mickey_y);
+			printf("type:%d, button:%d, pos_x:%d, pos_y:%d\n", reg_ax, reg_bx, reg_cx, reg_dx);
 			CPU_Push16(RealSeg(CALLBACK_RealPointer(int74_ret_callback)));
 			CPU_Push16(RealOff(CALLBACK_RealPointer(int74_ret_callback)));
 			SegSet16(cs, mouse.sub_seg);
