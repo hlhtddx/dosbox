@@ -2335,6 +2335,8 @@ public:
 			cpudecoder = &CPU_Core_Full_Run;
 		} else if (core == "auto") {
 			cpudecoder = &CPU_Core_Normal_Run;
+		} else if (core == "llvm") {
+			cpudecoder = &CPU_Core_LLVM_Run;
 #if (C_DYNAMIC_X86)
 			CPU_AutoDetermineMode |= CPU_AUTODETERMINE_CORE;
 		} else if (core == "dynamic") {
