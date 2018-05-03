@@ -1,0 +1,1078 @@
+pf,0F,po,so,flds,o,proc,st,m,rl,x,mnemonic,op1,op2,op3,op4,iext,grp1,grp2,grp3,tested_f,modif_f,def_f,undef_f,f_values,description
+,,0,,dw,r,,,,,L,ADD,Eb,Gb,,,,gen,arith,binary,,o..szapc,o..szapc,,,Add
+,,1,,dW,r,,,,,L,ADD,Evqp,Gvqp,,,,gen,arith,binary,,o..szapc,o..szapc,,,Add
+,,2,,Dw,r,,,,,,ADD,Gb,Eb,,,,gen,arith,binary,,o..szapc,o..szapc,,,Add
+,,3,,DW,r,,,,,,ADD,Gvqp,Evqp,,,,gen,arith,binary,,o..szapc,o..szapc,,,Add
+,,4,,w,,,,,,,ADD,AL,Ib,,,,gen,arith,binary,,o..szapc,o..szapc,,,Add
+,,5,,W,,,,,,,ADD,rAX,Ivds,,,,gen,arith,binary,,o..szapc,o..szapc,,,Add
+,,6,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,7,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,8,,dw,r,,,,,L,OR,Eb,Gb,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Inclusive OR
+,,9,,dW,r,,,,,L,OR,Evqp,Gvqp,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Inclusive OR
+,,0A,,Dw,r,,,,,,OR,Gb,Eb,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Inclusive OR
+,,0B,,DW,r,,,,,,OR,Gvqp,Evqp,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Inclusive OR
+,,0C,,w,,,,,,,OR,AL,Ib,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Inclusive OR
+,,0D,,W,,,,,,,OR,rAX,Ivds,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Inclusive OR
+,,0E,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,0F,,,,,,,,,Two-byte Instructions,,,,,,,,,,,,,,
+,,10,,dw,r,,,,,L,ADC,Eb,Gb,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Add with Carry
+,,11,,dW,r,,,,,L,ADC,Evqp,Gvqp,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Add with Carry
+,,12,,Dw,r,,,,,,ADC,Gb,Eb,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Add with Carry
+,,13,,DW,r,,,,,,ADC,Gvqp,Evqp,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Add with Carry
+,,14,,w,,,,,,,ADC,AL,Ib,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Add with Carry
+,,15,,W,,,,,,,ADC,rAX,Ivds,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Add with Carry
+,,16,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,17,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,18,,dw,r,,,,,L,SBB,Eb,Gb,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Integer Subtraction with Borrow
+,,19,,dW,r,,,,,L,SBB,Evqp,Gvqp,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Integer Subtraction with Borrow
+,,1A,,Dw,r,,,,,,SBB,Gb,Eb,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Integer Subtraction with Borrow
+,,1B,,DW,r,,,,,,SBB,Gvqp,Evqp,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Integer Subtraction with Borrow
+,,1C,,w,,,,,,,SBB,AL,Ib,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Integer Subtraction with Borrow
+,,1D,,W,,,,,,,SBB,rAX,Ivds,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Integer Subtraction with Borrow
+,,1E,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,1F,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,20,,dw,r,,,,,L,AND,Eb,Gb,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical AND
+,,21,,dW,r,,,,,L,AND,Evqp,Gvqp,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical AND
+,,22,,Dw,r,,,,,,AND,Gb,Eb,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical AND
+,,23,,DW,r,,,,,,AND,Gvqp,Evqp,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical AND
+,,24,,w,,,,,,,AND,AL,Ib,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical AND
+,,25,,W,,,,,,,AND,rAX,Ivds,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical AND
+26,,,,,,,,E,,,null,,,,,,prefix,segreg,,,,,,,Null Prefix in 64-bit Mode
+,,27,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,28,,dw,r,,,,,L,SUB,Eb,Gb,,,,gen,arith,binary,,o..szapc,o..szapc,,,Subtract
+,,29,,dW,r,,,,,L,SUB,Evqp,Gvqp,,,,gen,arith,binary,,o..szapc,o..szapc,,,Subtract
+,,2A,,Dw,r,,,,,,SUB,Gb,Eb,,,,gen,arith,binary,,o..szapc,o..szapc,,,Subtract
+,,2B,,DW,r,,,,,,SUB,Gvqp,Evqp,,,,gen,arith,binary,,o..szapc,o..szapc,,,Subtract
+,,2C,,w,,,,,,,SUB,AL,Ib,,,,gen,arith,binary,,o..szapc,o..szapc,,,Subtract
+,,2D,,W,,,,,,,SUB,rAX,Ivds,,,,gen,arith,binary,,o..szapc,o..szapc,,,Subtract
+2E,,,,,,,,E,,,null,,,,,,prefix,segreg,,,,,,,Null Prefix in 64-bit Mode
+,,2F,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,30,,dw,r,,,,,L,XOR,Eb,Gb,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Exclusive OR
+,,31,,dW,r,,,,,L,XOR,Evqp,Gvqp,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Exclusive OR
+,,32,,Dw,r,,,,,,XOR,Gb,Eb,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Exclusive OR
+,,33,,DW,r,,,,,,XOR,Gvqp,Evqp,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Exclusive OR
+,,34,,w,,,,,,,XOR,AL,Ib,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Exclusive OR
+,,35,,W,,,,,,,XOR,rAX,Ivds,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Exclusive OR
+36,,,,,,,,E,,,null,,,,,,prefix,segreg,,,,,,,Null Prefix in 64-bit Mode
+,,37,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,38,,dw,r,,,,,,CMP,Eb,Gb,,,,gen,arith,binary,,o..szapc,o..szapc,,,Compare Two Operands
+,,39,,dW,r,,,,,,CMP,Evqp,Gvqp,,,,gen,arith,binary,,o..szapc,o..szapc,,,Compare Two Operands
+,,3A,,Dw,r,,,,,,CMP,Gb,Eb,,,,gen,arith,binary,,o..szapc,o..szapc,,,Compare Two Operands
+,,3B,,DW,r,,,,,,CMP,Gvqp,Evqp,,,,gen,arith,binary,,o..szapc,o..szapc,,,Compare Two Operands
+,,3C,,w,,,,,,,CMP,AL,Ib,,,,gen,arith,binary,,o..szapc,o..szapc,,,Compare Two Operands
+,,3D,,W,,,,,,,CMP,rAX,Ivds,,,,gen,arith,binary,,o..szapc,o..szapc,,,Compare Two Operands
+3E,,,,,,,,E,,,null,,,,,,prefix,segreg,,,,,,,Null Prefix in 64-bit Mode
+,,3F,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+40,,,,,,,,E,,,REX,,,,,,prefix,,,,,,,,Access to new 8-bit registers
+41,,,,,,,,E,,,REX.B,,,,,,prefix,,,,,,,,"Extension of r/m field, base field, or opcode reg field"
+42,,,,,,,,E,,,REX.X,,,,,,prefix,,,,,,,,Extension of SIB index field
+43,,,,,,,,E,,,REX.XB,,,,,,prefix,,,,,,,,REX.X and REX.B combination
+44,,,,,,,,E,,,REX.R,,,,,,prefix,,,,,,,,Extension of ModR/M reg field
+45,,,,,,,,E,,,REX.RB,,,,,,prefix,,,,,,,,REX.R and REX.B combination
+46,,,,,,,,E,,,REX.RX,,,,,,prefix,,,,,,,,REX.R and REX.X combination
+47,,,,,,,,E,,,REX.RXB,,,,,,prefix,,,,,,,,"REX.R, REX.X and REX.B combination"
+48,,,,,,,,E,,,REX.W,,,,,,prefix,,,,,,,,64 Bit Operand Size
+49,,,,,,,,E,,,REX.WB,,,,,,prefix,,,,,,,,REX.W and REX.B combination
+4A,,,,,,,,E,,,REX.WX,,,,,,prefix,,,,,,,,REX.W and REX.X combination
+4B,,,,,,,,E,,,REX.WXB,,,,,,prefix,,,,,,,,"REX.W, REX.X and REX.B combination"
+4C,,,,,,,,E,,,REX.WR,,,,,,prefix,,,,,,,,REX.W and REX.R combination
+4D,,,,,,,,E,,,REX.WRB,,,,,,prefix,,,,,,,,"REX.W, REX.R and REX.B combination"
+4E,,,,,,,,E,,,REX.WRX,,,,,,prefix,,,,,,,,"REX.W, REX.R and REX.X combination"
+4F,,,,,,,,E,,,REX.WRXB,,,,,,prefix,,,,,,,,"REX.W, REX.R, REX.X and REX.B combination"
+,,50,,+r,,,,E,,,PUSH,Zvq,,,,,gen,stack,,,,,,,"Push Word, Doubleword or Quadword Onto the Stack"
+,,58,,+r,,,,E,,,POP,Zvq,,,,,gen,stack,,,,,,,Pop a Value from the Stack
+,,60,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,61,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,62,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,63,,D,r,,,E,,,MOVSXD,Gdqp,Ed,,,,gen,conver,,,,,,,Move with Sign-Extension
+64,,,,,,,,,,,FS,FS,,,,,prefix,segreg,,,,,,,FS segment override prefix
+65,,,,,,,,,,,GS,GS,,,,,prefix,segreg,,,,,,,GS segment override prefix
+66,,,,,,,,,,,no mnemonic,,,,,,prefix,,,,,,,,Operand-size override prefix
+66,,,,,,,M,,,,no mnemonic,,,,,sse2,prefix,,,,,,,,Precision-size override prefix
+67,,,,,,,,,,,no mnemonic,,,,,,prefix,,,,,,,,Address-size override prefix
+,,68,,,,,,,,,PUSH,Ivs,,,,,gen,stack,,,,,,,"Push Word, Doubleword or Quadword Onto the Stack"
+,,69,,,r,,,,,,IMUL,Gvqp,Evqp,Ivds,,,gen,arith,binary,,o..szapc,o......c,...szap.,,Signed Multiply
+,,6A,,S,,,,,,,PUSH,Ibss,,,,,gen,stack,,,,,,,"Push Word, Doubleword or Quadword Onto the Stack"
+,,6B,,S,r,,,,,,IMUL,Gvqp,Evqp,Ibs,,,gen,arith,binary,,o..szapc,o......c,...szap.,,Signed Multiply
+,,6C,,w,,,,,f1,,INS,Yb,DX,,,,gen,inout string,,.d......,,,,,Input from Port to String
+,,,,,,,,,,,INSB,Yb,DX,,,,,,,,,,,,
+,,6D,,W,,,,,f1,,INS,Ywo,DX,,,,gen,inout string,,.d......,,,,,Input from Port to String
+,,,,,,,,,,,INSW,Ywo,DX,,,,,,,,,,,,
+,,6D,,W,,,,,f1,,INS,Yv,DX,,,,gen,inout string,,.d......,,,,,Input from Port to String
+,,,,,,,,,,,INSD,Ydo,DX,,,,,,,,,,,,
+,,6E,,w,,,,,f1,,OUTS,DX,Xb,,,,gen,inout string,,.d......,,,,,Output String to Port
+,,,,,,,,,,,OUTSB,DX,Xb,,,,,,,,,,,,
+,,6F,,W,,,,,f1,,OUTS,DX,Xwo,,,,gen,inout string,,.d......,,,,,Output String to Port
+,,,,,,,,,,,OUTSW,DX,Xwo,,,,,,,,,,,,
+,,6F,,W,,,,,f1,,OUTS,DX,Xv,,,,gen,inout string,,.d......,,,,,Output String to Port
+,,,,,,,,,,,OUTSD,DX,Xdo,,,,,,,,,,,,
+,,70,,tttn,,,,,,,JO,Jbs,,,,,gen,branch,cond,o.......,,,,,Jump short if overflow (OF=1)
+,,71,,tttN,,,,,,,JNO,Jbs,,,,,gen,branch,cond,o.......,,,,,Jump short if not overflow (OF=0)
+,,72,,ttTn,,,,,,,JB,Jbs,,,,,gen,branch,cond,.......c,,,,,Jump short if below/not above or equal/carry (CF=1)
+,,,,,,,,,,,JNAE,Jbs,,,,,,,,,,,,,
+,,,,,,,,,,,JC,Jbs,,,,,,,,,,,,,
+,,73,,ttTN,,,,,,,JNB,Jbs,,,,,gen,branch,cond,.......c,,,,,Jump short if not below/above or equal/not carry (CF=0)
+,,,,,,,,,,,JAE,Jbs,,,,,,,,,,,,,
+,,,,,,,,,,,JNC,Jbs,,,,,,,,,,,,,
+,,74,,tTtn,,,,,,,JZ,Jbs,,,,,gen,branch,cond,....z...,,,,,Jump short if zero/equal (ZF=1)
+,,,,,,,,,,,JE,Jbs,,,,,,,,,,,,,
+,,75,,tTtN,,,,,,,JNZ,Jbs,,,,,gen,branch,cond,....z...,,,,,Jump short if not zero/not equal (ZF=0)
+,,,,,,,,,,,JNE,Jbs,,,,,,,,,,,,,
+,,76,,tTTn,,,,,,,JBE,Jbs,,,,,gen,branch,cond,....z..c,,,,,Jump short if below or equal/not above (CF=1 OR ZF=1)
+,,,,,,,,,,,JNA,Jbs,,,,,,,,,,,,,
+,,77,,tTTN,,,,,,,JNBE,Jbs,,,,,gen,branch,cond,....z..c,,,,,Jump short if not below or equal/above (CF=0 AND ZF=0)
+,,,,,,,,,,,JA,Jbs,,,,,,,,,,,,,
+,,78,,Tttn,,,,,,,JS,Jbs,,,,,gen,branch,cond,...s....,,,,,Jump short if sign (SF=1)
+,,79,,TttN,,,,,,,JNS,Jbs,,,,,gen,branch,cond,...s....,,,,,Jump short if not sign (SF=0)
+,,7A,,TtTn,,,,,,,JP,Jbs,,,,,gen,branch,cond,......p.,,,,,Jump short if parity/parity even (PF=1)
+,,,,,,,,,,,JPE,Jbs,,,,,,,,,,,,,
+,,7B,,TtTN,,,,,,,JNP,Jbs,,,,,gen,branch,cond,......p.,,,,,Jump short if not parity/parity odd (PF=0)
+,,,,,,,,,,,JPO,Jbs,,,,,,,,,,,,,
+,,7C,,TTtn,,,,,,,JL,Jbs,,,,,gen,branch,cond,o..s....,,,,,Jump short if less/not greater (SF!=OF)
+,,,,,,,,,,,JNGE,Jbs,,,,,,,,,,,,,
+,,7D,,TTtN,,,,,,,JNL,Jbs,,,,,gen,branch,cond,o..s....,,,,,Jump short if not less/greater or equal (SF=OF)
+,,,,,,,,,,,JGE,Jbs,,,,,,,,,,,,,
+,,7E,,TTTn,,,,,,,JLE,Jbs,,,,,gen,branch,cond,o..sz...,,,,,Jump short if less or equal/not greater ((ZF=1) OR (SF!=OF))
+,,,,,,,,,,,JNG,Jbs,,,,,,,,,,,,,
+,,7F,,TTTN,,,,,,,JNLE,Jbs,,,,,gen,branch,cond,o..sz...,,,,,Jump short if not less nor equal/greater ((ZF=0) AND (SF=OF))
+,,,,,,,,,,,JG,Jbs,,,,,,,,,,,,,
+,,80,,w,0,,,,,L,ADD,Eb,Ib,,,,gen,arith,binary,,o..szapc,o..szapc,,,Add
+,,80,,w,1,,,,,L,OR,Eb,Ib,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Inclusive OR
+,,80,,w,2,,,,,L,ADC,Eb,Ib,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Add with Carry
+,,80,,w,3,,,,,L,SBB,Eb,Ib,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Integer Subtraction with Borrow
+,,80,,w,4,,,,,L,AND,Eb,Ib,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical AND
+,,80,,w,5,,,,,L,SUB,Eb,Ib,,,,gen,arith,binary,,o..szapc,o..szapc,,,Subtract
+,,80,,w,6,,,,,L,XOR,Eb,Ib,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Exclusive OR
+,,80,,w,7,,,,,,CMP,Eb,Ib,,,,gen,arith,binary,,o..szapc,o..szapc,,,Compare Two Operands
+,,81,,W,0,,,,,L,ADD,Evqp,Ivds,,,,gen,arith,binary,,o..szapc,o..szapc,,,Add
+,,81,,W,1,,,,,L,OR,Evqp,Ivds,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Inclusive OR
+,,81,,W,2,,,,,L,ADC,Evqp,Ivds,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Add with Carry
+,,81,,W,3,,,,,L,SBB,Evqp,Ivds,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Integer Subtraction with Borrow
+,,81,,W,4,,,,,L,AND,Evqp,Ivds,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical AND
+,,81,,W,5,,,,,L,SUB,Evqp,Ivds,,,,gen,arith,binary,,o..szapc,o..szapc,,,Subtract
+,,81,,W,6,,,,,L,XOR,Evqp,Ivds,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Exclusive OR
+,,81,,W,7,,,,,,CMP,Evqp,Ivds,,,,gen,arith,binary,,o..szapc,o..szapc,,,Compare Two Operands
+,,82,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,83,,SW,0,,,,,L,ADD,Evqp,Ibs,,,,gen,arith,binary,,o..szapc,o..szapc,,,Add
+,,83,,SW,1,,,,,L,OR,Evqp,Ibs,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Inclusive OR
+,,83,,SW,2,,,,,L,ADC,Evqp,Ibs,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Add with Carry
+,,83,,SW,3,,,,,L,SBB,Evqp,Ibs,,,,gen,arith,binary,.......c,o..szapc,o..szapc,,,Integer Subtraction with Borrow
+,,83,,SW,4,,,,,L,AND,Evqp,Ibs,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical AND
+,,83,,SW,5,,,,,L,SUB,Evqp,Ibs,,,,gen,arith,binary,,o..szapc,o..szapc,,,Subtract
+,,83,,SW,6,,,,,L,XOR,Evqp,Ibs,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Exclusive OR
+,,83,,SW,7,,,,,,CMP,Evqp,Ibs,,,,gen,arith,binary,,o..szapc,o..szapc,,,Compare Two Operands
+,,84,,dw,r,,,,,,TEST,Eb,Gb,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Compare
+,,85,,dW,r,,,,,,TEST,Evqp,Gvqp,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Compare
+,,86,,Dw,r,,,,,L,XCHG,Gb,Eb,,,,gen,datamov,,,,,,,Exchange Register/Memory with Register
+,,87,,DW,r,,,,,L,XCHG,Gvqp,Evqp,,,,gen,datamov,,,,,,,Exchange Register/Memory with Register
+,,88,,dw,r,,,,,,MOV,Eb,Gb,,,,gen,datamov,,,,,,,Move
+,,89,,dW,r,,,,,,MOV,Evqp,Gvqp,,,,gen,datamov,,,,,,,Move
+,,8A,,Dw,r,,,,,,MOV,Gb,Eb,,,,gen,datamov,,,,,,,Move
+,,8B,,DW,r,,,,,,MOV,Gvqp,Evqp,,,,gen,datamov,,,,,,,Move
+,,8C,,d,r,,,,,,MOV,Mw,Sw,,,,gen,datamov,,,,,,,Move
+,,,,,,,,,,,MOV,Rvqp,Sw,,,,,,,,,,,,
+,,8D,,,r,,,,,,LEA,Gvqp,M,,,,gen,datamov,,,,,,,Load Effective Address
+,,8E,,D,r,,,,,,MOV,Sw,Ew,,,,gen,datamov,,,,,,,Move
+,,8F,,W,0,,,,,,POP,Ev,,,,,gen,stack,,,,,,,Pop a Value from the Stack
+,,8F,,W,0,,,E,,,POP,Evq,,,,,gen,stack,,,,,,,Pop a Value from the Stack
+,,90,,+r,,,,,,,XCHG,Zvqp,rAX,,,,gen,datamov,,,,,,,Exchange Register/Memory with Register
+,,90,,,,,D1,,,,NOP,,,,,,gen,control,,,,,,,No Operation
+F3,,90,,,,,,,,,PAUSE,,,,,sse2,cachect,,,,,,,,Spin Loop Hint
+,,98,,,,,,E,,,CBW,AX,AL,,,,gen,conver,,,,,,,Convert
+,,,,,,,,,,,CWDE,EAX,AX,,,,,,,,,,,,
+,,,,,,,,,,,CDQE,RAX,EAX,,,,,,,,,,,,
+,,99,,,,,,E,,,CWD,DX,AX,,,,gen,conver,,,,,,,Convert
+,,,,,,,,,,,CDQ,EDX,EAX,,,,,,,,,,,,
+,,,,,,,,,,,CQO,RDX,RAX,,,,,,,,,,,,
+,,9A,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,9B,,,,,,,,,FWAIT,,,,,,x87fpu,control,,,123,,123,,Check pending unmasked floating-point exceptions
+,,,,,,,,,,,WAIT,,,,,,,,,,,,,,
+9B,,,,,,,,,,,no mnemonic,,,,,,prefix,x87fpu,control,,123,,123,,Wait Prefix
+,,9C,,,,,,E,,,PUSHF,Fws,,,,,gen,stack flgctrl,,,,,,,Push rFLAGS Register onto the Stack
+,,,,,,,,,,,PUSHFQ,Fqs,,,,,,,,,,,,,
+,,9D,,,,,,E,,,POPF,Fws,,,,,gen,stack flgctrl,,,,,,,Pop Stack into rFLAGS Register
+,,,,,,,,,,,POPFQ,Fqs,,,,,,,,,,,,,
+,,9E,,,,,D2,,,,SAHF,AH,,,,,gen,datamov flgctrl,,,...szapc,...szapc,,,Store AH into Flags
+,,9F,,,,,D2,,,,LAHF,AH,,,,,gen,datamov flgctrl,,...szapc,,,,,Load Status Flags into AH Register
+,,A0,,w,,,,,,,MOV,AL,Ob,,,,gen,datamov,,,,,,,Move
+,,A1,,W,,,,,,,MOV,rAX,Ovqp,,,,gen,datamov,,,,,,,Move
+,,A2,,w,,,,,,,MOV,Ob,AL,,,,gen,datamov,,,,,,,Move
+,,A3,,W,,,,,,,MOV,Ovqp,rAX,,,,gen,datamov,,,,,,,Move
+,,A4,,w,,,,,,,MOVS,Yb,Xb,,,,gen,datamov string,,.d......,,,,,Move Data from String to String
+,,,,,,,,,,,MOVSB,Yb,Xb,,,,,,,,,,,,
+,,A5,,W,,,,E,,,MOVS,Yvqp,Xvqp,,,,gen,datamov string,,.d......,,,,,Move Data from String to String
+,,,,,,,,,,,MOVSW,Ywo,Xwo,,,,,,,,,,,,
+,,,,,,,,,,,MOVSD,Ydo,Xdo,,,,,,,,,,,,
+,,,,,,,,,,,MOVSQ,Yqp,Xqp,,,,,,,,,,,,
+,,A6,,w,,,,,,,CMPS,Yb,Xb,,,,gen,arith string,binary,.d......,o..szapc,o..szapc,,,Compare String Operands
+,,,,,,,,,,,CMPSB,Yb,Xb,,,,,,,,,,,,
+,,A7,,W,,,,E,,,CMPS,Yvqp,Xvqp,,,,gen,arith string,binary,.d......,o..szapc,o..szapc,,,Compare String Operands
+,,,,,,,,,,,CMPSW,Ywo,Xwo,,,,,,,,,,,,
+,,,,,,,,,,,CMPSD,Ydo,Xdo,,,,,,,,,,,,
+,,,,,,,,,,,CMPSQ,Yqp,Xqp,,,,,,,,,,,,
+,,A8,,w,,,,,,,TEST,AL,Ib,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Compare
+,,A9,,W,,,,,,,TEST,rAX,Ivds,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Compare
+,,AA,,w,,,,,,,STOS,Yb,AL,,,,gen,datamov string,,.d......,,,,,Store String
+,,,,,,,,,,,STOSB,Yb,AL,,,,,,,,,,,,
+,,AB,,W,,,,E,,,STOS,Yvqp,rAX,,,,gen,datamov string,,.d......,,,,,Store String
+,,,,,,,,,,,STOSW,Ywo,AX,,,,,,,,,,,,
+,,,,,,,,,,,STOSD,Ydo,EAX,,,,,,,,,,,,
+,,,,,,,,,,,STOSQ,Yqp,RAX,,,,,,,,,,,,
+,,AC,,w,,,,,,,LODS,AL,Xb,,,,gen,datamov string,,.d......,,,,,Load String
+,,,,,,,,,,,LODSB,AL,Xb,,,,,,,,,,,,
+,,AD,,W,,,,E,,,LODS,rAX,Xvqp,,,,gen,datamov string,,.d......,,,,,Load String
+,,,,,,,,,,,LODSW,AX,Xwo,,,,,,,,,,,,
+,,,,,,,,,,,LODSD,EAX,Xdo,,,,,,,,,,,,
+,,,,,,,,,,,LODSQ,RAX,Xqp,,,,,,,,,,,,
+,,AE,,w,,,,,,,SCAS,Yb,AL,,,,gen,arith string,binary,.d......,o..szapc,o..szapc,,,Scan String
+,,,,,,,,,,,SCASB,Yb,AL,,,,,,,,,,,,
+,,AF,,W,,,,E,,,SCAS,Yvqp,rAX,,,,gen,arith string,binary,.d......,o..szapc,o..szapc,,,Scan String
+,,,,,,,,,,,SCASW,Ywo,AX,,,,,,,,,,,,
+,,,,,,,,,,,SCASD,Ydo,EAX,,,,,,,,,,,,
+,,,,,,,,,,,SCASQ,Yqp,RAX,,,,,,,,,,,,
+,,B0,,+r,,,,,,,MOV,Zb,Ib,,,,gen,datamov,,,,,,,Move
+,,B8,,+r,,,,,,,MOV,Zvqp,Ivqp,,,,gen,datamov,,,,,,,Move
+,,C0,,w,0,,,,,,ROL,Eb,Ib,,,,gen,shftrot,,,o..szapc,o..szapc,o.......,,Rotate
+,,C0,,w,1,,,,,,ROR,Eb,Ib,,,,gen,shftrot,,,o..szapc,o..szapc,o.......,,Rotate
+,,C0,,w,2,,,,,,RCL,Eb,Ib,,,,gen,shftrot,,.......c,o..szapc,o..szapc,o.......,,Rotate
+,,C0,,w,3,,,,,,RCR,Eb,Ib,,,,gen,shftrot,,.......c,o..szapc,o..szapc,o.......,,Rotate
+,,C0,,w,4,,,,,,SHL,Eb,Ib,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,,,,,,,,,,SAL,Eb,Ib,,,,,,,,,,,,
+,,C0,,w,5,,,,,,SHR,Eb,Ib,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,C0,,w,6,,U3,,,,SAL?alias,Eb,Ib,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,,,,,,,,,,SHL?alias,Eb,Ib,,,,,,,,,,,,
+,,C0,,w,7,,,,,,SAR,Eb,Ib,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a..,,Shift
+,,C1,,W,0,,,,,,ROL,Evqp,Ib,,,,gen,shftrot,,,o..szapc,o..szapc,o.......,,Rotate
+,,C1,,W,1,,,,,,ROR,Evqp,Ib,,,,gen,shftrot,,,o..szapc,o..szapc,o.......,,Rotate
+,,C1,,W,2,,,,,,RCL,Evqp,Ib,,,,gen,shftrot,,.......c,o..szapc,o..szapc,o.......,,Rotate
+,,C1,,W,3,,,,,,RCR,Evqp,Ib,,,,gen,shftrot,,.......c,o..szapc,o..szapc,o.......,,Rotate
+,,C1,,W,4,,,,,,SHL,Evqp,Ib,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,,,,,,,,,,SAL,Evqp,Ib,,,,,,,,,,,,
+,,C1,,W,5,,,,,,SHR,Evqp,Ib,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,C1,,W,6,,U3,,,,SAL?alias,Evqp,Ib,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,,,,,,,,,,SHL?alias,Evqp,Ib,,,,,,,,,,,,
+,,C1,,W,7,,,,,,SAR,Evqp,Ib,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a..,,Shift
+,,C2,,,,,,,,,RETN,Iw,,,,,gen,branch stack,,,,,,,Return from procedure
+,,C3,,,,,,,,,RETN,,,,,,gen,branch stack,,,,,,,Return from procedure
+,,C4,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,C5,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,C6,,w,0,,,,,,MOV,Eb,Ib,,,,gen,datamov,,,,,,,Move
+,,C7,,W,0,,,,,,MOV,Evqp,Ivds,,,,gen,datamov,,,,,,,Move
+,,C8,,,,,,E,,,ENTER,rBP,Iw,Ib,,,gen,stack,,,,,,,Make Stack Frame for Procedure Parameters
+,,C9,,,,,,E,,,LEAVE,rBP,,,,,gen,stack,,,,,,,High Level Procedure Exit
+,,CA,,,,,,,f,,RETF,Iw,,,,,gen,branch stack,,,,,,,Return from procedure
+,,CB,,,,,,,f,,RETF,,,,,,gen,branch stack,,,,,,,Return from procedure
+,,CC,,,,,,,f,,INT?alias,3,Fv,,,,gen,break stack,,,..i.....,..i.....,,..i.....,Call to Interrupt Procedure
+,,CD,,,,,,,f,,INT,Ib,Fv,,,,gen,break stack,,,..i.....,..i.....,,..i.....,Call to Interrupt Procedure
+,,CE,,,,,,,f,,INTO,Fv,,,,,gen,break stack,,o.......,..i.....,..i.....,,..i.....,Call to Interrupt Procedure
+,,CF,,,,,,E,f,,IRET,Fwo,,,,,gen,break stack,,,,,,,Interrupt Return
+,,,,,,,,,,,IRETD,Fdo,,,,,,,,,,,,,
+,,,,,,,,,,,IRETQ,Fqp,,,,,,,,,,,,,
+,,D0,,w,0,,,,,,ROL,Eb,1,,,,gen,shftrot,,,o..szapc,o..szapc,,,Rotate
+,,D0,,w,1,,,,,,ROR,Eb,1,,,,gen,shftrot,,,o..szapc,o..szapc,,,Rotate
+,,D0,,w,2,,,,,,RCL,Eb,1,,,,gen,shftrot,,.......c,o..szapc,o..szapc,,,Rotate
+,,D0,,w,3,,,,,,RCR,Eb,1,,,,gen,shftrot,,.......c,o..szapc,o..szapc,,,Rotate
+,,D0,,w,4,,,,,,SHL,Eb,1,,,,gen,shftrot,,,o..szapc,o..sz.pc,.....a..,,Shift
+,,,,,,,,,,,SAL,Eb,1,,,,,,,,,,,,
+,,D0,,w,5,,,,,,SHR,Eb,1,,,,gen,shftrot,,,o..szapc,o..sz.pc,.....a..,,Shift
+,,D0,,w,6,,U3,,,,SAL?alias,Eb,1,,,,gen,shftrot,,,o..szapc,o..sz.pc,.....a..,,Shift
+,,,,,,,,,,,SHL?alias,Eb,1,,,,,,,,,,,,
+,,D0,,w,7,,,,,,SAR,Eb,1,,,,gen,shftrot,,,o..szapc,o..sz.pc,.....a..,,Shift
+,,D1,,W,0,,,,,,ROL,Evqp,1,,,,gen,shftrot,,,o..szapc,o..szapc,,,Rotate
+,,D1,,W,1,,,,,,ROR,Evqp,1,,,,gen,shftrot,,,o..szapc,o..szapc,,,Rotate
+,,D1,,W,2,,,,,,RCL,Evqp,1,,,,gen,shftrot,,.......c,o..szapc,o..szapc,,,Rotate
+,,D1,,W,3,,,,,,RCR,Evqp,1,,,,gen,shftrot,,.......c,o..szapc,o..szapc,,,Rotate
+,,D1,,W,4,,,,,,SHL,Evqp,1,,,,gen,shftrot,,,o..szapc,o..sz.pc,.....a..,,Shift
+,,,,,,,,,,,SAL,Evqp,1,,,,,,,,,,,,
+,,D1,,W,5,,,,,,SHR,Evqp,1,,,,gen,shftrot,,,o..szapc,o..sz.pc,.....a..,,Shift
+,,D1,,W,6,,U3,,,,SAL?alias,Evqp,1,,,,gen,shftrot,,,o..szapc,o..sz.pc,.....a..,,Shift
+,,,,,,,,,,,SHL?alias,Evqp,1,,,,,,,,,,,,
+,,D1,,W,7,,,,,,SAR,Evqp,1,,,,gen,shftrot,,,o..szapc,o..sz.pc,.....a..,,Shift
+,,D2,,w,0,,,,,,ROL,Eb,CL,,,,gen,shftrot,,,o..szapc,o..szapc,o.......,,Rotate
+,,D2,,w,1,,,,,,ROR,Eb,CL,,,,gen,shftrot,,,o..szapc,o..szapc,o.......,,Rotate
+,,D2,,w,2,,,,,,RCL,Eb,CL,,,,gen,shftrot,,.......c,o..szapc,o..szapc,o.......,,Rotate
+,,D2,,w,3,,,,,,RCR,Eb,CL,,,,gen,shftrot,,.......c,o..szapc,o..szapc,o.......,,Rotate
+,,D2,,w,4,,,,,,SHL,Eb,CL,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,,,,,,,,,,SAL,Eb,CL,,,,,,,,,,,,
+,,D2,,w,5,,,,,,SHR,Eb,CL,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,D2,,w,6,,U3,,,,SAL?alias,Eb,CL,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,,,,,,,,,,SHL?alias,Eb,CL,,,,,,,,,,,,
+,,D2,,w,7,,,,,,SAR,Eb,CL,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a..,,Shift
+,,D3,,W,0,,,,,,ROL,Evqp,CL,,,,gen,shftrot,,,o..szapc,o..szapc,o.......,,Rotate
+,,D3,,W,1,,,,,,ROR,Evqp,CL,,,,gen,shftrot,,,o..szapc,o..szapc,o.......,,Rotate
+,,D3,,W,2,,,,,,RCL,Evqp,CL,,,,gen,shftrot,,.......c,o..szapc,o..szapc,o.......,,Rotate
+,,D3,,W,3,,,,,,RCR,Evqp,CL,,,,gen,shftrot,,.......c,o..szapc,o..szapc,o.......,,Rotate
+,,D3,,W,4,,,,,,SHL,Evqp,CL,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,,,,,,,,,,SAL,Evqp,CL,,,,,,,,,,,,
+,,D3,,W,5,,,,,,SHR,Evqp,CL,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,D3,,W,6,,U3,,,,SAL?alias,Evqp,CL,,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Shift
+,,,,,,,,,,,SHL?alias,Evqp,CL,,,,,,,,,,,,
+,,D3,,W,7,,,,,,SAR,Evqp,CL,,,,gen,shftrot,,,o..szapc,o..sz.pc,.....a..,,Shift
+,,D4,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,D5,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,D6,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,D7,,,,,,,,,XLAT,AL,BBb,,,,gen,datamov,,,,,,,Table Look-up Translation
+,,,,,,,,,,,XLATB,AL,BBb,,,,,,,,,,,,
+,,D8,,mf,0,,,,,,FADD,ST,Msr,,,,x87fpu,arith,,,123,.1..,0.23,,Add
+,,,,,,,,,,,FADD,ST,EST,,,,,,,,,,,,
+,,D8,,mf,1,,,,,,FMUL,ST,Msr,,,,x87fpu,arith,,,123,.1..,0.23,,Multiply
+,,,,,,,,,,,FMUL,ST,EST,,,,,,,,,,,,
+,,D8,,mf,2,,,,,,FCOM,ST,ESsr,,,,x87fpu,compar,,,123,123,,,Compare Real
+,,D8,D1,,2,,,,,,FCOM,ST,ST1,,,,x87fpu,compar,,,123,123,,,Compare Real
+,,D8,,mf,3,,,,,p,FCOMP,ST,ESsr,,,,x87fpu,compar,,,123,123,,,Compare Real and Pop
+,,D8,D9,,3,,,,,p,FCOMP,ST,ST1,,,,x87fpu,compar,,,123,123,,,Compare Real and Pop
+,,D8,,mf,4,,,,,,FSUB,ST,Msr,,,,x87fpu,arith,,,123,.1..,0.23,,Subtract
+,,,,,,,,,,,FSUB,ST,EST,,,,,,,,,,,,
+,,D8,,mf,5,,,,,,FSUBR,ST,Msr,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Subtract
+,,,,,,,,,,,FSUBR,ST,EST,,,,,,,,,,,,
+,,D8,,mf,6,,,,,,FDIV,ST,Msr,,,,x87fpu,arith,,,123,.1..,0.23,,Divide
+,,,,,,,,,,,FDIV,ST,EST,,,,,,,,,,,,
+,,D8,,mf,7,,,,,,FDIVR,ST,Msr,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Divide
+,,,,,,,,,,,FDIVR,ST,EST,,,,,,,,,,,,
+,,D9,,mf,0,,,,,s,FLD,ST,ESsr,,,,x87fpu,datamov,,,123,.1..,0.23,,Load Floating Point Value
+,,D9,,mf,1,,,,,,FXCH,ST,EST,,,,x87fpu,datamov,,,123,.1..,0.23,,Exchange Register Contents
+,,D9,C9,,1,,,,,,FXCH,ST,ST1,,,,x87fpu,datamov,,,123,.1..,0.23,,Exchange Register Contents
+,,D9,,mf,2,,,,,,FST,Msr,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Floating Point Value
+,,D9,D0,,2,,,,,,FNOP,,,,,,x87fpu,control,,,123,,123,,No Operation
+,,D9,,mf,3,,,,,p,FSTP,Msr,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Floating Point Value and Pop
+,,D9,,,3,,U9,,,p,FSTP1?part alias5,EST,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Floating Point Value and Pop
+,,D9,,,4,,,,,,FLDENV,Me,,,,,x87fpu,control,,,123,123,,,Load x87 FPU Environment
+,,D9,E0,,4,,,,,,FCHS,ST,,,,,x87fpu,arith,,,123,.1..,0.23,,Change Sign
+,,D9,E1,,4,,,,,,FABS,ST,,,,,x87fpu,arith,,,123,.1..,0.23,,Absolute Value
+,,D9,E4,,4,,,,,,FTST,ST,,,,,x87fpu,compar,,,123,123,,,Test
+,,D9,E5,,4,,,,,,FXAM,ST,,,,,x87fpu,,,,123,123,,,Examine
+,,D9,,,5,,,,,,FLDCW,Mw,,,,,x87fpu,control,,,123,,123,,Load x87 FPU Control Word
+,,D9,E8,,5,,,,,s,FLD1,ST,,,,,x87fpu,ldconst,,,123,.1..,0.23,,Load Constant +1.0
+,,D9,E9,,5,,,,,s,FLDL2T,ST,,,,,x87fpu,ldconst,,,123,.1..,0.23,,Load Constant log210
+,,D9,EA,,5,,,,,s,FLDL2E,ST,,,,,x87fpu,ldconst,,,123,.1..,0.23,,Load Constant log2e
+,,D9,EB,,5,,,,,s,FLDPI,ST,,,,,x87fpu,ldconst,,,123,.1..,0.23,,Load Constant ¦Ð
+,,D9,EC,,5,,,,,s,FLDLG2,ST,,,,,x87fpu,ldconst,,,123,.1..,0.23,,Load Constant log102
+,,D9,ED,,5,,,,,s,FLDLN2,ST,,,,,x87fpu,ldconst,,,123,.1..,0.23,,Load Constant loge2
+,,D9,EE,,5,,,,,s,FLDZ,ST,,,,,x87fpu,ldconst,,,123,.1..,0.23,,Load Constant +0.0
+,,D9,,,6,,,,,,FNSTENV,Me,,,,,x87fpu,control,,,123,,123,,Store x87 FPU Environment
+9B,,D9,,,6,,,,,,FSTENV,Me,,,,,x87fpu,control,,,123,,123,,Store x87 FPU Environment
+,,D9,F0,,6,,,,,,F2XM1,ST,,,,,x87fpu,trans,,,123,.1..,0.23,,Compute 2x-1
+,,D9,F1,,6,,,,,p,FYL2X,ST1,ST,,,,x87fpu,trans,,,123,.1..,0.23,,Compute y ¡Á log2x and Pop
+,,D9,F2,,6,,,,,s,FPTAN,ST,,,,,x87fpu,trans,,,123,.12.,0..3,,Partial Tangent
+,,D9,F3,,6,,,,,p,FPATAN,ST1,ST,,,,x87fpu,trans,,,123,.1..,0.23,,Partial Arctangent and Pop
+,,D9,F4,,6,,,,,s,FXTRACT,ST,,,,,x87fpu,arith,,,123,.1..,0.23,,Extract Exponent and Significand
+,,D9,F5,,6,,,,,,FPREM1,ST,ST1,,,,x87fpu,arith,,,123,123,,,IEEE Partial Remainder
+,,D9,F6,,6,,,,,,FDECSTP,,,,,,x87fpu,control,,,123,.1..,0.23,.0..,Decrement Stack-Top Pointer
+,,D9,F7,,6,,,,,,FINCSTP,,,,,,x87fpu,control,,,123,.1..,0.23,.0..,Increment Stack-Top Pointer
+,,D9,,,7,,,,,,FNSTCW,Mw,,,,,x87fpu,control,,,123,,123,,Store x87 FPU Control Word
+9B,,D9,,,7,,,,,,FSTCW,Mw,,,,,x87fpu,control,,,123,,123,,Store x87 FPU Control Word
+,,D9,F8,,7,,,,,,FPREM,ST,ST1,,,,x87fpu,arith,,,123,123,,,Partial Remainder (for compatibility with i8087 and i287)
+,,D9,F9,,7,,,,,p,FYL2XP1,ST1,ST,,,,x87fpu,trans,,,123,.1..,0.23,,Compute y ¡Á log2(x+1) and Pop
+,,D9,FA,,7,,,,,,FSQRT,ST,,,,,x87fpu,arith,,,123,.1..,0.23,,Square Root
+,,D9,FB,,7,,,,,s,FSINCOS,ST,,,,,x87fpu,trans,,,123,.12.,0..3,,Sine and Cosine
+,,D9,FC,,7,,,,,,FRNDINT,ST,,,,,x87fpu,arith,,,123,.1..,0.23,,Round to Integer
+,,D9,FD,,7,,,,,,FSCALE,ST,ST1,,,,x87fpu,arith,,,123,.1..,0.23,,Scale
+,,D9,FE,,7,,,,,,FSIN,ST,,,,,x87fpu,trans,,,123,.12.,0..3,,Sine
+,,D9,FF,,7,,,,,,FCOS,ST,,,,,x87fpu,trans,,,123,.12.,0..3,,Cosine
+,,DA,,mF,0,,,,,,FIADD,ST,Mdi,,,,x87fpu,arith,,,123,.1..,0.23,,Add
+,,DA,,,0,,,,,,FCMOVB,ST,EST,,,,x87fpu,datamov,,.......c,123,.1..,0.23,,FP Conditional Move - below (CF=1)
+,,DA,,mF,1,,,,,,FIMUL,ST,Mdi,,,,x87fpu,arith,,,123,.1..,0.23,,Multiply
+,,DA,,,1,,,,,,FCMOVE,ST,EST,,,,x87fpu,datamov,,....z...,123,.1..,0.23,,FP Conditional Move - equal (ZF=1)
+,,DA,,mF,2,,,,,,FICOM,ST,Mdi,,,,x87fpu,compar,,,123,123,,,Compare Integer
+,,DA,,,2,,,,,,FCMOVBE,ST,EST,,,,x87fpu,datamov,,....z...,123,.1..,0.23,,FP Conditional Move - below or equal (CF=1 or ZF=1)
+,,DA,,mF,3,,,,,p,FICOMP,ST,Mdi,,,,x87fpu,compar,,,123,123,,,Compare Integer and Pop
+,,DA,,,3,,,,,,FCMOVU,ST,EST,,,,x87fpu,datamov,,......p.,123,.1..,0.23,,FP Conditional Move - unordered (PF=1)
+,,DA,,mF,4,,,,,,FISUB,ST,Mdi,,,,x87fpu,arith,,,123,.1..,0.23,,Subtract
+,,DA,,mF,5,,,,,,FISUBR,ST,Mdi,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Subtract
+,,DA,E9,,5,,,,,P,FUCOMPP,ST,ST1,,,,x87fpu,compar,,,123,123,,,Unordered Compare Floating Point Values and Pop Twice
+,,DA,,mF,6,,,,,,FIDIV,ST,Mdi,,,,x87fpu,arith,,,123,.1..,0.23,,Divide
+,,DA,,mF,7,,,,,,FIDIVR,ST,Mdi,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Divide
+,,DB,,mF,0,,,,,s,FILD,ST,Mdi,,,,x87fpu,datamov,,,123,.1..,0.23,,Load Integer
+,,DB,,,0,,,,,,FCMOVNB,ST,EST,,,,x87fpu,datamov,,.......c,123,.1..,0.23,,FP Conditional Move - not below (CF=0)
+,,DB,,mF,1,,,,,p,FISTTP,Mdi,ST,,,sse3,x87fpu,conver,,,123,.1..,0.23,.0..,Store Integer with Truncation and Pop
+,,DB,,,1,,,,,,FCMOVNE,ST,EST,,,,x87fpu,datamov,,....z...,123,.1..,0.23,,FP Conditional Move - not equal (ZF=0)
+,,DB,,mF,2,,,,,,FIST,Mdi,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Integer
+,,DB,,,2,,,,,,FCMOVNBE,ST,EST,,,,x87fpu,datamov,,....z...,123,.1..,0.23,,FP Conditional Move - below or equal (CF=0 and ZF=0)
+,,DB,,mF,3,,,,,p,FISTP,Mdi,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Integer and Pop
+,,DB,,,3,,,,,,FCMOVNU,ST,EST,,,,x87fpu,datamov,,......p.,123,.1..,0.23,,FP Conditional Move - not unordered (PF=0)
+,,DB,E0,,4,,D6,,,,FNENI?nop,,,,,,obsol,control,,,,,,,Treated as Integer NOP
+,,DB,E1,,4,,D6,,,,FNDISI?nop,,,,,,obsol,control,,,,,,,Treated as Integer NOP
+,,DB,E2,,4,,,,,,FNCLEX,,,,,,x87fpu,control,,,123,,123,,Clear Exceptions
+9B,,DB,E2,,4,,,,,,FCLEX,,,,,,x87fpu,control,,,123,,123,,Clear Exceptions
+,,DB,E3,,4,,,,,,FNINIT,,,,,,x87fpu,control,,,123,,,0,Initialize Floating-Point Unit
+9B,,DB,E3,,4,,,,,,FINIT,,,,,,x87fpu,control,,,123,,,0,Initialize Floating-Point Unit
+,,DB,E4,,4,,D7,,,,FNSETPM?nop,,,,,,obsol,control,,,,,,,Treated as Integer NOP
+,,DB,,,5,,,,,s,FLD,ST,Mer,,,,x87fpu,datamov,,,123,.1..,0.23,,Load Floating Point Value
+,,DB,,,5,,,,,,FUCOMI,ST,EST,,,,x87fpu,compar,,,o...z.pc .1..,o...z.pc .1..,,o.......,Unordered Compare Floating Point Values and Set EFLAGS
+,,DB,,,6,,,,,,FCOMI,ST,EST,,,,x87fpu,compar,,,o...z.pc .1..,o...z.pc .1..,,o.......,Compare Floating Point Values and Set EFLAGS
+,,DB,,,7,,,,,p,FSTP,Mer,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Floating Point Value and Pop
+,,DC,,Mf,0,,,,,,FADD,ST,Mdr,,,,x87fpu,arith,,,123,.1..,0.23,,Add
+,,DC,,,0,,,,,,FADD,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Add
+,,DC,,Mf,1,,,,,,FMUL,ST,Mdr,,,,x87fpu,arith,,,123,.1..,0.23,,Multiply
+,,DC,,,1,,,,,,FMUL,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Multiply
+,,DC,,Mf,2,,,,,,FCOM,ST,Mdr,,,,x87fpu,compar,,,123,123,,,Compare Real
+,,DC,,,2,,U9,,,,FCOM2?alias,ST,EST,,,,x87fpu,compar,,,123,123,,,Compare Real
+,,DC,,Mf,3,,,,,p,FCOMP,ST,Mdr,,,,x87fpu,compar,,,123,123,,,Compare Real and Pop
+,,DC,,,3,,U9,,,p,FCOMP3?alias,ST,EST,,,,x87fpu,compar,,,123,123,,,Compare Real and Pop
+,,DC,,Mf,4,,,,,,FSUB,ST,Mdr,,,,x87fpu,arith,,,123,.1..,0.23,,Subtract
+,,DC,,,4,,,,,,FSUBR,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Subtract
+,,DC,,Mf,5,,,,,,FSUBR,ST,Mdr,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Subtract
+,,DC,,,5,,,,,,FSUB,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Subtract
+,,DC,,Mf,6,,,,,,FDIV,ST,Mdr,,,,x87fpu,arith,,,123,.1..,0.23,,Divide
+,,DC,,,6,,,,,,FDIVR,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Divide
+,,DC,,Mf,7,,,,,,FDIVR,ST,Mdr,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Divide
+,,DC,,,7,,,,,,FDIV,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Divide and Pop
+,,DD,,Mf,0,,,,,s,FLD,ST,Mdr,,,,x87fpu,datamov,,,123,.1..,0.23,,Load Floating Point Value
+,,DD,,,0,,,,,,FFREE,EST,,,,,x87fpu,control,,,123,,123,,Free Floating-Point Register
+,,DD,,,1,,,,,p,FISTTP,Mqi,ST,,,sse3,x87fpu,conver,,,123,.1..,0.23,.0..,Store Integer with Truncation and Pop
+,,DD,,,1,,U9,,,,FXCH4?alias,ST,EST,,,,x87fpu,datamov,,,123,.1..,0.23,,Exchange Register Contents
+,,DD,,Mf,2,,,,,,FST,Mdr,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Floating Point Value
+,,DD,,,2,,,,,,FST,ST,EST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Floating Point Value
+,,DD,,Mf,3,,,,,p,FSTP,Mdr,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Floating Point Value and Pop
+,,DD,,,3,,,,,p,FSTP,ST,EST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Floating Point Value and Pop
+,,DD,,,4,,,,,,FRSTOR,ST,ST1,ST2,...,,x87fpu,control,,,123,123,,,Restore x87 FPU State
+,,DD,,,4,,,,,,FUCOM,ST,EST,,,,x87fpu,compar,,,123,123,,,Unordered Compare Floating Point Values
+,,DD,E1,,4,,,,,,FUCOM,ST,ST1,,,,x87fpu,compar,,,123,123,,,Unordered Compare Floating Point Values
+,,DD,,,5,,,,,p,FUCOMP,ST,EST,,,,x87fpu,compar,,,123,123,,,Unordered Compare Floating Point Values and Pop
+,,DD,E9,,5,,,,,p,FUCOMP,ST,ST1,,,,x87fpu,compar,,,123,123,,,Unordered Compare Floating Point Values and Pop
+,,DD,,,6,,,,,,FNSAVE,Mst,ST,ST1,...,,x87fpu,control,,,123,123,,0,Store x87 FPU State
+9B,,DD,,,6,,,,,,FSAVE,Mst,ST,ST1,...,,x87fpu,control,,,123,123,,0,Store x87 FPU State
+,,DD,,,7,,,,,,FNSTSW,Mw,,,,,x87fpu,control,,,123,,123,,Store x87 FPU Status Word
+9B,,DD,,,7,,,,,,FSTSW,Mw,,,,,x87fpu,control,,,123,,123,,Store x87 FPU Status Word
+,,DE,,MF,0,,,,,,FIADD,ST,Mwi,,,,x87fpu,arith,,,123,.1..,0.23,,Add
+,,DE,,,0,,,,,p,FADDP,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Add and Pop
+,,DE,C1,,0,,,,,p,FADDP,ST1,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Add and Pop
+,,DE,,MF,1,,,,,,FIMUL,ST,Mwi,,,,x87fpu,arith,,,123,.1..,0.23,,Multiply
+,,DE,,,1,,,,,p,FMULP,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Multiply and Pop
+,,DE,C9,,1,,,,,p,FMULP,ST1,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Multiply and Pop
+,,DE,,MF,2,,,,,,FICOM,ST,Mwi,,,,x87fpu,compar,,,123,123,,,Compare Integer
+,,DE,,,2,,U9,,,p,FCOMP5?alias,ST,EST,,,,x87fpu,compar,,,123,123,,,Compare Real and Pop
+,,DE,,MF,3,,,,,p,FICOMP,ST,Mwi,,,,x87fpu,compar,,,123,123,,,Compare Integer and Pop
+,,DE,D9,,3,,,,,P,FCOMPP,ST,ST1,,,,x87fpu,compar,,,123,123,,,Compare Real and Pop Twice
+,,DE,,MF,4,,,,,,FISUB,ST,Mwi,,,,x87fpu,arith,,,123,.1..,0.23,,Subtract
+,,DE,,,4,,,,,p,FSUBRP,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Subtract and Pop
+,,DE,E1,,4,,,,,p,FSUBRP,ST1,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Subtract and Pop
+,,DE,,MF,5,,,,,,FISUBR,ST,Mwi,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Subtract
+,,DE,,,5,,,,,p,FSUBP,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Subtract and Pop
+,,DE,E9,,5,,,,,p,FSUBP,ST1,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Subtract and Pop
+,,DE,,MF,6,,,,,,FIDIV,ST,Mwi,,,,x87fpu,arith,,,123,.1..,0.23,,Divide
+,,DE,,,6,,,,,p,FDIVRP,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Divide and Pop
+,,DE,F1,,6,,,,,p,FDIVRP,ST1,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Divide and Pop
+,,DE,,MF,7,,,,,,FIDIVR,ST,Mwi,,,,x87fpu,arith,,,123,.1..,0.23,,Reverse Divide
+,,DE,,,7,,,,,p,FDIVP,EST,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Divide and Pop
+,,DE,F9,,7,,,,,p,FDIVP,ST1,ST,,,,x87fpu,arith,,,123,.1..,0.23,,Divide and Pop
+,,DF,,MF,0,,,,,s,FILD,ST,Mwi,,,,x87fpu,datamov,,,123,.1..,0.23,,Load Integer
+,,DF,,,0,,D8,,,p,FFREEP,EST,,,,,x87fpu,control,,,123,,123,,Free Floating-Point Register and Pop
+,,DF,,MF,1,,,,,p,FISTTP,Mwi,ST,,,sse3,x87fpu,conver,,,123,.1..,0.23,.0..,Store Integer with Truncation and Pop
+,,DF,,,1,,U9,,,,FXCH7?alias,ST,EST,,,,x87fpu,datamov,,,123,.1..,0.23,,Exchange Register Contents
+,,DF,,MF,2,,,,,,FIST,Mwi,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Integer
+,,DF,,,2,,U9,,,p,FSTP8?alias,EST,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Floating Point Value and Pop
+,,DF,,MF,3,,,,,p,FISTP,Mwi,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Integer and Pop
+,,DF,,,3,,U9,,,p,FSTP9?alias,EST,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Floating Point Value and Pop
+,,DF,,,4,,,,,s,FBLD,ST,Mbcd,,,,x87fpu,datamov,,,123,.1..,0.23,,Load Binary Coded Decimal
+,,DF,E0,,4,,,,,,FNSTSW,AX,,,,,x87fpu,control,,,123,,123,,Store x87 FPU Status Word
+9B,,DF,E0,,4,,,,,,FSTSW,AX,,,,,x87fpu,control,,,123,,123,,Store x87 FPU Status Word
+,,DF,,,5,,,,,s,FILD,ST,Mqi,,,,x87fpu,datamov,,,123,.1..,0.23,,Load Integer
+,,DF,,,5,,,,,p,FUCOMIP,ST,EST,,,,x87fpu,compar,,,o...z.pc .1..,o...z.pc .1..,,o.......,Unordered Compare Floating Point Values and Set EFLAGS and Pop
+,,DF,,,6,,,,,p,FBSTP,Mbcd,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store BCD Integer and Pop
+,,DF,,,6,,,,,p,FCOMIP,ST,EST,,,,x87fpu,compar,,,o...z.pc .1..,o...z.pc .1..,,o.......,Compare Floating Point Values and Set EFLAGS and Pop
+,,DF,,,7,,,,,p,FISTP,Mqi,ST,,,,x87fpu,datamov,,,123,.1..,0.23,,Store Integer and Pop
+,,E0,,,,,D32,E,,,LOOPNZ,rCX,Jbs,,,,gen,branch,cond,....z...,,,,,Decrement count; Jump short if count!=0 and ZF=0
+,,,,,,,,,,,LOOPNE,rCX,Jbs,,,,,,,,,,,,
+,,E1,,,,,D32,E,,,LOOPZ,rCX,Jbs,,,,gen,branch,cond,....z...,,,,,Decrement count; Jump short if count!=0 and ZF=1
+,,,,,,,,,,,LOOPE,rCX,Jbs,,,,,,,,,,,,
+,,E2,,,,,D32,E,,,LOOP,rCX,Jbs,,,,gen,branch,cond,,,,,,Decrement count; Jump short if count!=0
+,,E3,,,,,D32,E,,,JECXZ,Jbs,ECX,,,,gen,branch,cond,,,,,,Jump short if rCX register is 0
+,,,,,,,,,,,JRCXZ,Jbs,RCX,,,,,,,,,,,,
+,,E4,,w,,,,,f1,,IN,AL,Ib,,,,gen,inout,,,,,,,Input from Port
+,,E5,,W,,,,,f1,,IN,eAX,Ib,,,,gen,inout,,,,,,,Input from Port
+,,E6,,w,,,,,f1,,OUT,Ib,AL,,,,gen,inout,,,,,,,Output to Port
+,,E7,,W,,,,,f1,,OUT,Ib,eAX,,,,gen,inout,,,,,,,Output to Port
+,,E8,,,,,D32,,,,CALL,Jvds,,,,,gen,branch stack,,,,,,,Call Procedure
+,,E9,,,,,D32,,,,JMP,Jvds,,,,,gen,branch,,,,,,,Jump
+,,EA,,,,,,E,,,invalid,,,,,,,,,,,,,,Invalid Instruction in 64-Bit Mode
+,,EB,,,,,,,,,JMP,Jbs,,,,,gen,branch,,,,,,,Jump
+,,EC,,w,,,,,f1,,IN,AL,DX,,,,gen,inout,,,,,,,Input from Port
+,,ED,,W,,,,,f1,,IN,eAX,DX,,,,gen,inout,,,,,,,Input from Port
+,,EE,,w,,,,,f1,,OUT,DX,AL,,,,gen,inout,,,,,,,Output to Port
+,,EF,,W,,,,,f1,,OUT,DX,eAX,,,,gen,inout,,,,,,,Output to Port
+F0,,,,,,,,,,,LOCK,,,,,,prefix,,,,,,,,Assert LOCK# Signal Prefix
+,,F1,,,,,D4,,,,undefined,,,,,,,,,,,,,,Undefined and Reserved; Does not Generate #UD
+,,F1,,,,,U10,,,,INT1?part alias10,Fv,,,,,gen,break stack,,,..i.....,..i.....,,..i.....,Call to Interrupt Procedure
+,,,,,,,,,,,ICEBP?part alias10,Fv,,,,,,,,,,,,,
+F2,,,,,,,D11,E,,,REPNZ,rCX,,,,,prefix,string,,....z...,,,,,Repeat String Operation Prefix
+,,,,,,,,,,,REPNE,rCX,,,,,,,,,,,,,
+F2,,,,,,,U11,E,,,REP,rCX,,,,,prefix,string,,,,,,,Repeat String Operation Prefix
+F2,,,,,,,M,,,,no mnemonic,,,,,sse2,prefix,,,,,,,,Scalar Double-precision Prefix
+F3,,,,,,,D11,E,,,REPZ,rCX,,,,,prefix,string,,....z...,,,,,Repeat String Operation Prefix
+,,,,,,,,,,,REPE,rCX,,,,,,,,,,,,,
+F3,,,,,,,D11,E,,,REP,rCX,,,,,prefix,string,,,,,,,Repeat String Operation Prefix
+F3,,,,,,,M,,,,no mnemonic,,,,,sse1,prefix,,,,,,,,Scalar Single-precision Prefix
+,,F4,,,,,,,0,,HLT,,,,,,system,,,,,,,,Halt
+,,F5,,,,,,,,,CMC,,,,,,gen,flgctrl,,.......c,.......c,.......c,,,Complement Carry Flag
+,,F6,,w,0,,,,,,TEST,Eb,Ib,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Compare
+,,F6,,w,1,,U12,,,,TEST?alias,Eb,Ib,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Compare
+,,F6,,w,2,,,,,L,NOT,Eb,,,,,gen,logical,,,,,,,One's Complement Negation
+,,F6,,w,3,,,,,L,NEG,Eb,,,,,gen,arith,binary,,o..szapc,o..szapc,,,Two's Complement Negation
+,,F6,,w,4,,,,,,MUL,AX,AL,Eb,,,gen,arith,binary,,o..szapc,o......c,...szap.,,Unsigned Multiply
+,,F6,,w,5,,,,,,IMUL,AX,AL,Eb,,,gen,arith,binary,,o..szapc,o......c,...szap.,,Signed Multiply
+,,F6,,w,6,,,,,,DIV,AL,AH,AX,Eb,,gen,arith,binary,,o..szapc,,o..szapc,,Unsigned Divide
+,,F6,,w,7,,,,,,IDIV,AL,AH,AX,Eb,,gen,arith,binary,,o..szapc,,o..szapc,,Signed Divide
+,,F7,,W,0,,,,,,TEST,Evqp,Ivds,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Compare
+,,F7,,W,1,,U12,,,,TEST?alias,Evqp,Ivds,,,,gen,logical,,,o..szapc,o..sz.pc,.....a..,o......c,Logical Compare
+,,F7,,W,2,,,,,L,NOT,Evqp,,,,,gen,logical,,,,,,,One's Complement Negation
+,,F7,,W,3,,,,,L,NEG,Evqp,,,,,gen,arith,binary,,o..szapc,o..szapc,,,Two's Complement Negation
+,,F7,,W,4,,,,,,MUL,rDX,rAX,Evqp,,,gen,arith,binary,,o..szapc,o......c,...szap.,,Unsigned Multiply
+,,F7,,W,5,,,,,,IMUL,rDX,rAX,Evqp,,,gen,arith,binary,,o..szapc,o......c,...szap.,,Signed Multiply
+,,F7,,W,6,,,,,,DIV,rDX,rAX,Evqp,,,gen,arith,binary,,o..szapc,,o..szapc,,Unsigned Divide
+,,F7,,W,7,,,,,,IDIV,rDX,rAX,Evqp,,,gen,arith,binary,,o..szapc,,o..szapc,,Signed Divide
+,,F8,,,,,,,,,CLC,,,,,,gen,flgctrl,,,.......c,.......c,,.......c,Clear Carry Flag
+,,F9,,,,,,,,,STC,,,,,,gen,flgctrl,,,.......c,.......c,,.......C,Set Carry Flag
+,,FA,,,,,,,f1,,CLI,,,,,,gen,flgctrl,,,..i.....,..i.....,,..i.....,Clear Interrupt Flag
+,,FB,,,,,,,f1,,STI,,,,,,gen,flgctrl,,,..i.....,..i.....,,..I.....,Set Interrupt Flag
+,,FC,,,,,,,,,CLD,,,,,,gen,flgctrl,,,.d......,.d......,,.d......,Clear Direction Flag
+,,FD,,,,,,,,,STD,,,,,,gen,flgctrl,,,.d......,.d......,,.D......,Set Direction Flag
+,,FE,,w,0,,,,,L,INC,Eb,,,,,gen,arith,binary,,o..szap.,o..szap.,,,Increment by 1
+,,FE,,w,1,,,,,L,DEC,Eb,,,,,gen,arith,binary,,o..szap.,o..szap.,,,Decrement by 1
+,,FF,,W,0,,,,,L,INC,Evqp,,,,,gen,arith,binary,,o..szap.,o..szap.,,,Increment by 1
+,,FF,,W,1,,,,,L,DEC,Evqp,,,,,gen,arith,binary,,o..szap.,o..szap.,,,Decrement by 1
+,,FF,,,2,,,,,,CALL,Ev,,,,,gen,branch stack,,,,,,,Call Procedure
+,,FF,,,2,,D32,E,,,CALL,Eq,,,,,gen,branch stack,,,,,,,Call Procedure
+,,FF,,,3,,D13,,,,CALLF,Mptp,,,,,gen,branch stack,,,,,,,Call Procedure
+,,FF,,,4,,,,,,JMP,Ev,,,,,gen,branch,,,,,,,Jump
+,,FF,,,4,,D32,E,,,JMP,Eq,,,,,gen,branch,,,,,,,Jump
+,,FF,,,5,,D13,,,,JMPF,Mptp,,,,,gen,branch,,,,,,,Jump
+,,FF,,,6,,,,,,PUSH,Ev,,,,,gen,stack,,,,,,,"Push Word, Doubleword or Quadword Onto the Stack"
+,,FF,,,6,,,E,,,PUSH,Evq,,,,,gen,stack,,,,,,,"Push Word, Doubleword or Quadword Onto the Stack"
+pf,0F,po,so,flds,o,proc,st,m,rl,x,mnemonic,op1,op2,op3,op4,iext,grp1,grp2,grp3,tested?f,modif?f,def?f,undef?f,f?values,"description,?notes????????????????????????????????????????"
+,0F,0,,,0,,,P,,,SLDT,Mw,LDTR,,,,system,,,,,,,,Store Local Descriptor Table Register
+,,,,,,,,,,,SLDT,Rvqp,LDTR,,,,,,,,,,,,
+,0F,0,,,1,,,P,,,STR,Mw,TR,,,,system,,,,,,,,Store Task Register
+,,,,,,,,,,,STR,Rvqp,TR,,,,,,,,,,,,
+,0F,0,,,2,,,P,0,,LLDT,LDTR,Ew,,,,system,,,,,,,,Load Local Descriptor Table Register
+,0F,0,,,3,,,P,0,,LTR,TR,Ew,,,,system,,,,,,,,Load Task Register
+,0F,0,,,4,,,P,,,VERR,Ew,,,,,system,,,,....z...,....z...,,,Verify a Segment for Reading
+,0F,0,,,5,,,P,,,VERW,Ew,,,,,system,,,,....z...,....z...,,,Verify a Segment for Writing
+,0F,0,,,6,IT+,,,,,JMPE,,,,,,system,branch,,,,,,,Jump to IA-64 Instruction Set
+,0F,1,,,0,,,,,,SGDT,Ms,GDTR,,,,system,,,,,,,,Store Global Descriptor Table Register
+,0F,1,C1,,0,,D33,P,0,,VMCALL,,,,,vmx,,,,,o..szapc,o..szapc,,,Call to VM Monitor
+,0F,1,C2,,0,,D33,P,0,,VMLAUNCH,,,,,vmx,,,,,o..szapc,o..szapc,,,Launch Virtual Machine
+,0F,1,C3,,0,,D33,P,0,,VMRESUME,,,,,vmx,,,,,o..szapc,o..szapc,,,Resume Virtual Machine
+,0F,1,C4,,0,,D33,P,0,,VMXOFF,,,,,vmx,,,,,o..szapc,o..szapc,,,Leave VMX Operation
+,0F,1,,,1,,,,,,SIDT,Ms,IDTR,,,,system,,,,,,,,Store Interrupt Descriptor Table Register
+,0F,1,C8,,1,,,,0,,MONITOR,BAb,ECX,EDX,,sse3,sync,,,,,,,,Set Up Monitor Address
+,0F,1,C9,,1,,,,0,,MWAIT,EAX,ECX,,,sse3,sync,,,,,,,,Monitor Wait
+,0F,1,,,2,,,,0,,LGDT,GDTR,Ms,,,,system,,,,,,,,Load Global Descriptor Table Register
+,0F,1,D0,,2,C2++,,,,,XGETBV,EDX,EAX,ECX,XCR,,system,,,,,,,,Get Value of Extended Control Register
+,0F,1,D1,,2,C2++,,,0,,XSETBV,XCR,ECX,EDX,EAX,,system,,,,,,,,Set Extended Control Register
+,0F,1,,,3,,,,0,,LIDT,IDTR,Ms,,,,system,,,,,,,,Load Interrupt Descriptor Table Register
+,0F,1,,,4,,D14,,,,SMSW,Mw,MSW,,,,system,,,,,,,,Store Machine Status Word
+,,,,,,,,,,,SMSW,Rvqp,MSW,,,,,,,,,,,,
+,0F,1,,,6,,,,0,,LMSW,MSW,Ew,,,,system,,,,,,,,Load Machine Status Word
+,0F,1,,,7,,,,0,,INVLPG,M,,,,,system,,,,,,,,Invalidate TLB Entry
+,0F,1,F8,,7,,,E,0,,SWAPGS,GS,I...,,,,system,,,,,,,,Swap GS Base Register
+,0F,1,F9,,7,C7+,,,f2,,RDTSCP,EAX,EDX,ECX,...,,system,,,,,,,,Read Time-Stamp Counter and Processor ID
+,0F,2,,,r,,,P,,,LAR,Gvqp,Mw,,,,system,,,,....z...,....z...,,,Load Access Rights Byte
+,,,,,,,,,,,LAR,Gvqp,Rv,,,,,,,,,,,,
+,0F,3,,,r,,,P,,,LSL,Gvqp,Mw,,,,system,,,,....z...,....z...,,,Load Segment Limit
+,,,,,,,,,,,LSL,Gvqp,Rv,,,,,,,,,,,,
+,0F,5,,,,,D15,E,,,SYSCALL,RCX,R11,SS,...,,system,branch,,,,,,,Fast System Call
+,0F,6,,,,,,,0,,CLTS,CR0,,,,,system,,,,,,,,Clear Task-Switched Flag in CR0
+,0F,7,,,,,,E,0,,SYSRET,SS,Fd,R11,...,,system,branch,trans,,,,,,Return From Fast System Call
+,0F,8,,,,,,,0,,INVD,,,,,,system,,,,,,,,Invalidate Internal Caches
+,0F,9,,,,,,,0,,WBINVD,,,,,,system,,,,,,,,Write Back and Invalidate Cache
+,0F,0B,,,,,,,,,UD2,,,,,,gen,control,,,,,,,Undefined Instruction
+,0F,0D,,,,,M16,,,,NOP,Ev,,,,,gen,control,,,,,,,No Operation
+,0F,10,,,r,,,,,,MOVUPS,Vps,Wps,,,sse1,simdfp,datamov,,,,,,,Move Unaligned Packed Single-FP Values
+F3,0F,10,,,r,,,,,,MOVSS,Vss,Wss,,,sse1,simdfp,datamov,,,,,,,Move Scalar Single-FP Values
+66,0F,10,,,r,,,,,,MOVUPD,Vpd,Wpd,,,sse2,pcksclr,datamov,,,,,,,Move Unaligned Packed Double-FP Value
+F2,0F,10,,,r,,,,,,MOVSD,Vsd,Wsd,,,sse2,pcksclr,datamov,,,,,,,Move Scalar Double-FP Value
+,0F,11,,,r,,,,,,MOVUPS,Wps,Vps,,,sse1,simdfp,datamov,,,,,,,Move Unaligned Packed Single-FP Values
+F3,0F,11,,,r,,,,,,MOVSS,Wss,Vss,,,sse1,simdfp,datamov,,,,,,,Move Scalar Single-FP Values
+66,0F,11,,,r,,,,,,MOVUPD,Wpd,Vpd,,,sse2,pcksclr,datamov,,,,,,,Move Unaligned Packed Double-FP Values
+F2,0F,11,,,r,,,,,,MOVSD,Wsd,Vsd,,,sse2,pcksclr,datamov,,,,,,,Move Scalar Double-FP Value
+,0F,12,,,r,,,,,,MOVHLPS,Vq,Uq,,,sse1,simdfp,datamov,,,,,,,Move Packed Single-FP Values High to Low
+,0F,12,,,r,,,,,,MOVLPS,Vq,Mq,,,sse1,simdfp,datamov,,,,,,,Move Low Packed Single-FP Values
+66,0F,12,,,r,,,,,,MOVLPD,Vq,Mq,,,sse2,pcksclr,datamov,,,,,,,Move Low Packed Double-FP Value
+F2,0F,12,,,r,,,,,,MOVDDUP,Vq,Wq,,,sse3,simdfp,datamov,,,,,,,Move One Double-FP and Duplicate
+F3,0F,12,,,r,,,,,,MOVSLDUP,Vq,Wq,,,sse3,simdfp,datamov,,,,,,,Move Packed Single-FP Low and Duplicate
+,0F,13,,,r,,,,,,MOVLPS,Mq,Vq,,,sse1,simdfp,datamov,,,,,,,Move Low Packed Single-FP Values
+66,0F,13,,,r,,,,,,MOVLPD,Mq,Vq,,,sse2,pcksclr,datamov,,,,,,,Move Low Packed Double-FP Value
+,0F,14,,,r,,,,,,UNPCKLPS,Vps,Wq,,,sse1,simdfp,shunpck,,,,,,,Unpack and Interleave Low Packed Single-FP Values
+66,0F,14,,,r,,,,,,UNPCKLPD,Vpd,Wpd,,,sse2,pcksclr,shunpck,,,,,,,Unpack and Interleave Low Packed Double-FP Values
+,0F,15,,,r,,,,,,UNPCKHPS,Vps,Wq,,,sse1,simdfp,shunpck,,,,,,,Unpack and Interleave High Packed Single-FP Values
+66,0F,15,,,r,,,,,,UNPCKHPD,Vpd,Wpd,,,sse2,pcksclr,shunpck,,,,,,,Unpack and Interleave High Packed Double-FP Values
+,0F,16,,,r,,,,,,MOVLHPS,Vq,Uq,,,sse1,simdfp,datamov,,,,,,,Move Packed Single-FP Values Low to High
+,0F,16,,,r,,,,,,MOVHPS,Vq,Mq,,,sse1,simdfp,datamov,,,,,,,Move High Packed Single-FP Values
+66,0F,16,,,r,,,,,,MOVHPD,Vq,Mq,,,sse2,pcksclr,datamov,,,,,,,Move High Packed Double-FP Value
+F3,0F,16,,,r,,,,,,MOVSHDUP,Vq,Wq,,,sse3,simdfp,datamov,,,,,,,Move Packed Single-FP High and Duplicate
+,0F,17,,,r,,,,,,MOVHPS,Mq,Vq,,,sse1,simdfp,datamov,,,,,,,Move High Packed Single-FP Values
+66,0F,17,,,r,,,,,,MOVHPD,Mq,Vq,,,sse2,pcksclr,datamov,,,,,,,Move High Packed Double-FP Value
+,0F,18,,,0,,,,,,PREFETCHNTA,Mb,,,,sse1,fetch,,,,,,,,Prefetch Data Into Caches
+,0F,18,,,1,,,,,,PREFETCHT0,Mb,,,,sse1,fetch,,,,,,,,Prefetch Data Into Caches
+,0F,18,,,2,,,,,,PREFETCHT1,Mb,,,,sse1,fetch,,,,,,,,Prefetch Data Into Caches
+,0F,18,,,3,,,,,,PREFETCHT2,Mb,,,,sse1,fetch,,,,,,,,Prefetch Data Into Caches
+,0F,18,,,4,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,18,,,5,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,18,,,6,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,18,,,7,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,19,,,,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1A,,,,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1B,,,,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1C,,,,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1D,,,,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1E,,,,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1F,,,0,,,,,,NOP,Ev,,,,,gen,control,,,,,,,No Operation
+,0F,1F,,,1,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1F,,,2,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1F,,,3,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1F,,,4,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1F,,,5,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1F,,,6,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,1F,,,7,,M17,,,,HINT_NOP,Ev,,,,,gen,control,,,,,,,Hintable NOP
+,0F,20,,,r,,,E,0,,MOV,Rq,Cq,,,,system,,,,o..szapc,,o..szapc,,Move to/from Control Registers
+,0F,20,,,r,,U18,E,0,,MOV,Hq,Cq,,,,system,,,,o..szapc,,o..szapc,,Move to/from Control Registers
+,0F,21,,,r,,,E,0,,MOV,Rq,Dq,,,,system,,,,o..szapc,,o..szapc,,Move to/from Debug Registers
+,0F,21,,,r,,U18,E,0,,MOV,Hq,Dq,,,,system,,,,o..szapc,,o..szapc,,Move to/from Debug Registers
+,0F,22,,,r,,,E,0,,MOV,Cq,Rq,,,,system,,,,o..szapc,,o..szapc,,Move to/from Control Registers
+,0F,22,,,r,,U18,E,0,,MOV,Cq,Hq,,,,system,,,,o..szapc,,o..szapc,,Move to/from Control Registers
+,0F,23,,,r,,,E,0,,MOV,Dq,Rq,,,,system,,,,o..szapc,,o..szapc,,Move to/from Debug Registers
+,0F,23,,,r,,U18,E,0,,MOV,Dq,Hq,,,,system,,,,o..szapc,,o..szapc,,Move to/from Debug Registers
+,0F,28,,,r,,,,,,MOVAPS,Vps,Wps,,,sse1,simdfp,datamov,,,,,,,Move Aligned Packed Single-FP Values
+66,0F,28,,,r,,,,,,MOVAPD,Vpd,Wpd,,,sse2,pcksclr,datamov,,,,,,,Move Aligned Packed Double-FP Values
+,0F,29,,,r,,,,,,MOVAPS,Wps,Vps,,,sse1,simdfp,datamov,,,,,,,Move Aligned Packed Single-FP Values
+66,0F,29,,,r,,,,,,MOVAPD,Wpd,Vpd,,,sse2,pcksclr,datamov,,,,,,,Move Aligned Packed Double-FP Values
+,0F,2A,,,r,,,,,,CVTPI2PS,Vps,Qpi,,,sse1,conver,,,,,,,,Convert Packed DW Integers to Single-FP Values
+F3,0F,2A,,,r,,,,,,CVTSI2SS,Vss,Edqp,,,sse1,conver,,,,,,,,Convert DW Integer to Scalar Single-FP Value
+66,0F,2A,,,r,,,,,,CVTPI2PD,Vpd,Qpi,,,sse2,pcksclr,conver,,,,,,,Convert Packed DW Integers to Double-FP Values
+F2,0F,2A,,,r,,,,,,CVTSI2SD,Vsd,Edqp,,,sse2,pcksclr,conver,,,,,,,Convert DW Integer to Scalar Double-FP Value
+,0F,2B,,,r,,,,,,MOVNTPS,Mps,Vps,,,sse1,cachect,,,,,,,,Store Packed Single-FP Values Using Non-Temporal Hint
+66,0F,2B,,,r,,,,,,MOVNTPD,Mpd,Vpd,,,sse2,cachect,,,,,,,,Store Packed Double-FP Values Using Non-Temporal Hint
+,0F,2C,,,r,,,,,,CVTTPS2PI,Ppi,Wpsq,,,sse1,conver,,,,,,,,Convert with Trunc. Packed Single-FP Values to DW Integers
+F3,0F,2C,,,r,,,,,,CVTTSS2SI,Gdqp,Wss,,,sse1,conver,,,,,,,,Convert with Trunc. Scalar Single-FP Value to DW Integer
+66,0F,2C,,,r,,,,,,CVTTPD2PI,Ppi,Wpd,,,sse2,pcksclr,conver,,,,,,,Convert with Trunc. Packed Double-FP Values to DW Integers
+F2,0F,2C,,,r,,,,,,CVTTSD2SI,Gdqp,Wsd,,,sse2,pcksclr,conver,,,,,,,Conv. with Trunc. Scalar Double-FP Value to Signed DW Int
+,0F,2D,,,r,,,,,,CVTPS2PI,Ppi,Wpsq,,,sse1,conver,,,,,,,,Convert Packed Single-FP Values to DW Integers
+F3,0F,2D,,,r,,,,,,CVTSS2SI,Gdqp,Wss,,,sse1,conver,,,,,,,,Convert Scalar Single-FP Value to DW Integer
+66,0F,2D,,,r,,,,,,CVTPD2PI,Ppi,Wpd,,,sse2,pcksclr,conver,,,,,,,Convert Packed Double-FP Values to DW Integers
+F2,0F,2D,,,r,,,,,,CVTSD2SI,Gdqp,Wsd,,,sse2,pcksclr,conver,,,,,,,Convert Scalar Double-FP Value to DW Integer
+,0F,2E,,,r,,,,,,UCOMISS,Vss,Wss,,,sse1,simdfp,compar,,,....z.pc,....z.pc,,,Unordered Compare Scalar Single-FP Values and Set EFLAGS
+66,0F,2E,,,r,,,,,,UCOMISD,Vsd,Wsd,,,sse2,pcksclr,compar,,,....z.pc,....z.pc,,,Unordered Compare Scalar Double-FP Values and Set EFLAGS
+,0F,2F,,,r,,,,,,COMISS,Vss,Wss,,,sse1,simdfp,compar,,,....z.pc,....z.pc,,,Compare Scalar Ordered Single-FP Values and Set EFLAGS
+66,0F,2F,,,r,,,,,,COMISD,Vsd,Wsd,,,sse2,pcksclr,compar,,,....z.pc,....z.pc,,,Compare Scalar Ordered Double-FP Values and Set EFLAGS
+,0F,30,,,,,,,0,,WRMSR,MSR,rCX,rAX,rDX,,system,,,,,,,,Write to Model Specific Register
+,0F,31,,,,,,,f2,,RDTSC,EAX,EDX,I...,,,system,,,,,,,,Read Time-Stamp Counter
+,0F,32,,,,,,,0,,RDMSR,rAX,rDX,rCX,MSR,,system,,,,,,,,Read from Model Specific Register
+,0F,33,,,,,,,f3,,RDPMC,EAX,EDX,PMC,,,system,,,,,,,,Read Performance-Monitoring Counters
+,0F,34,,Sr,,,D19,E,,,SYSENTER,SS,RSP,I...,...,,system,branch,,,..i.....,..i.....,,..i.....,Fast System Call
+,0F,35,,Sr,,,D20,P,0,,SYSEXIT,SS,eSP,I...,...,,system,branch,trans,,,,,,Fast Return from Fast System Call
+,0F,37,,,,C2++,D21,,,,GETSEC,EAX,,,,smx,,,,,,,,,GETSEC Leaf Functions
+66,0F,38,80,,r,C2++,D33,E,0,,INVEPT,Gq,Mdq,,,vmx,,,,,o..szapc,o..szapc,,,Invalidate Translations Derived from EPT
+66,0F,38,81,,r,C2++,D33,E,0,,INVVPID,Gq,Mdq,,,vmx,,,,,o..szapc,o..szapc,,,Invalidate Translations Based on VPID
+,0F,38,F0,,r,C2++,,,,,MOVBE,Gvqp,Mvqp,,,,gen,datamov,,,,,,,Move Data After Swapping Bytes
+F2,0F,38,F0,,r,C2++,D34,,,,CRC32,Gdqp,Eb,,,sse42,,,,,,,,,Accumulate CRC32 Value
+,0F,38,F1,,r,C2++,,,,,MOVBE,Mvqp,Gvqp,,,,gen,datamov,,,,,,,Move Data After Swapping Bytes
+F2,0F,38,F1,,r,C2++,D34,,,,CRC32,Gdqp,Evqp,,,sse42,,,,,,,,,Accumulate CRC32 Value
+66,0F,3A,8,,r,C2++,D34,,,,ROUNDPS,Vps,Wps,Ib,,sse41,simdfp,conver,,,,,,,Round Packed Single-FP Values
+66,0F,3A,9,,r,C2++,D34,,,,ROUNDPD,Vps,Wpd,Ib,,sse41,simdfp,conver,,,,,,,Round Packed Double-FP Values
+66,0F,3A,0A,,r,C2++,D34,,,,ROUNDSS,Vss,Wss,Ib,,sse41,simdfp,conver,,,,,,,Round Scalar Single-FP Values
+66,0F,3A,0B,,r,C2++,D34,,,,ROUNDSD,Vsd,Wsd,Ib,,sse41,simdfp,conver,,,,,,,Round Scalar Double-FP Values
+66,0F,3A,0C,,r,C2++,D34,,,,BLENDPS,Vps,Wps,Ib,,sse41,simdfp,datamov,,,,,,,Blend Packed Single-FP Values
+66,0F,3A,0D,,r,C2++,D34,,,,BLENDPD,Vpd,Wpd,Ib,,sse41,simdfp,datamov,,,,,,,Blend Packed Double-FP Values
+66,0F,3A,0E,,r,C2++,D34,,,,PBLENDW,Vdq,Wdq,Ib,,sse41,simdint,datamov,,,,,,,Blend Packed Words
+,0F,3A,0F,,r,C2+,,,,,PALIGNR,Pq,Qq,,,ssse3,simdint,,,,,,,,Packed Align Right
+66,0F,3A,0F,,r,C2+,,,,,PALIGNR,Vdq,Wdq,,,ssse3,simdint,,,,,,,,Packed Align Right
+66,0F,3A,14,,r,C2++,D34,,,,PEXTRB,Mb,Vdq,Ib,,sse41,simdint,datamov,,,,,,,Extract Byte
+,,,,,,,,,,,PEXTRB,Rdqp,Vdq,Ib,,,,,,,,,,,
+66,0F,3A,15,,r,C2++,D34,,,,PEXTRW,Mw,Vdq,Ib,,sse41,simdint,datamov,,,,,,,Extract Word
+,,,,,,,,,,,PEXTRW,Rdqp,Vdq,Ib,,,,,,,,,,,
+66,0F,3A,16,,r,C2++,D34,,,,PEXTRD,Ed,Vdq,Ib,,sse41,simdint,datamov,,,,,,,Extract Dword/Qword
+,,,,,,,,,,,PEXTRQ,Eqp,Vdq,Ib,,,,,,,,,,,
+66,0F,3A,17,,r,C2++,D34,,,,EXTRACTPS,Ed,Vdq,Ib,,sse41,simdfp,datamov,,,,,,,Extract Packed Single-FP Value
+66,0F,3A,20,,r,C2++,D34,,,,PINSRB,Vdq,Mb,Ib,,sse41,simdint,datamov,,,,,,,Insert Byte
+,,,,,,,,,,,PINSRB,Vdq,Rdqp,Ib,,,,,,,,,,,
+66,0F,3A,21,,r,C2++,D34,,,,INSERTPS,Vps,Md,Ib,,sse41,simdfp,datamov,,,,,,,Insert Packed Single-FP Value
+,,,,,,,,,,,INSERTPS,Vps,Ups,Ib,,,,,,,,,,,
+66,0F,3A,22,,r,C2++,D34,,,,PINSRD,Vdq,Ed,Ib,,sse41,simdint,datamov,,,,,,,Insert Dword/Qword
+,,,,,,,,,,,PINSRQ,Vdq,Eqp,Ib,,,,,,,,,,,
+66,0F,3A,40,,r,C2++,D34,,,,DPPS,Vps,Wps,,,sse41,simdfp,arith,,,,,,,Dot Product of Packed Single-FP Values
+66,0F,3A,41,,r,C2++,D34,,,,DPPD,Vpd,Wpd,,,sse41,simdfp,arith,,,,,,,Dot Product of Packed Double-FP Values
+66,0F,3A,42,,r,C2++,D34,,,,MPSADBW,Vdq,Wdq,Ib,,sse41,simdint,arith,,,,,,,Compute Multiple Packed Sums of Absolute Difference
+66,0F,3A,60,,r,C2++,D34,,,,PCMPESTRM,XMM0,Vdq,Wdq,...,sse42,strtxt,,,,o..szapc,o..szapc,,.....ap.,"Packed Compare Explicit Length Strings, Return Mask"
+66,0F,3A,61,,r,C2++,D34,,,,PCMPESTRI,rCX,Vdq,Wdq,...,sse42,strtxt,,,,o..szapc,o..szapc,,.....ap.,"Packed Compare Explicit Length Strings, Return Index"
+66,0F,3A,62,,r,C2++,D34,,,,PCMPISTRM,XMM0,Vdq,Wdq,Ib,sse42,strtxt,,,,o..szapc,o..szapc,,.....ap.,"Packed Compare Implicit Length Strings, Return Mask"
+66,0F,3A,63,,r,C2++,D34,,,,PCMPISTRI,rCX,Vdq,Wdq,Ib,sse42,strtxt,,,,o..szapc,o..szapc,,.....ap.,"Packed Compare Implicit Length Strings, Return Index"
+,0F,40,,tttn,r,,D23,,,,CMOVO,Gvqp,Evqp,,,,gen,datamov,,o.......,,,,,Conditional Move - overflow (OF=1)
+,0F,41,,tttN,r,,D23,,,,CMOVNO,Gvqp,Evqp,,,,gen,datamov,,o.......,,,,,Conditional Move - not overflow (OF=0)
+,0F,42,,ttTn,r,,D23,,,,CMOVB,Gvqp,Evqp,,,,gen,datamov,,.......c,,,,,Conditional Move - below/not above or equal/carry (CF=1)
+,,,,,,,,,,,CMOVNAE,Gvqp,Evqp,,,,,,,,,,,,
+,,,,,,,,,,,CMOVC,Gvqp,Evqp,,,,,,,,,,,,
+,0F,43,,ttTN,r,,D23,,,,CMOVNB,Gvqp,Evqp,,,,gen,datamov,,.......c,,,,,Conditional Move - not below/above or equal/not carry (CF=0)
+,,,,,,,,,,,CMOVAE,Gvqp,Evqp,,,,,,,,,,,,
+,,,,,,,,,,,CMOVNC,Gvqp,Evqp,,,,,,,,,,,,
+,0F,44,,tTtn,r,,D23,,,,CMOVZ,Gvqp,Evqp,,,,gen,datamov,,....z...,,,,,Conditional Move - zero/equal (ZF=1)
+,,,,,,,,,,,CMOVE,Gvqp,Evqp,,,,,,,,,,,,
+,0F,45,,tTtN,r,,D23,,,,CMOVNZ,Gvqp,Evqp,,,,gen,datamov,,....z...,,,,,Conditional Move - not zero/not equal (ZF=0)
+,,,,,,,,,,,CMOVNE,Gvqp,Evqp,,,,,,,,,,,,
+,0F,46,,tTTn,r,,D23,,,,CMOVBE,Gvqp,Evqp,,,,gen,datamov,,....z..c,,,,,Conditional Move - below or equal/not above (CF=1 OR ZF=1)
+,,,,,,,,,,,CMOVNA,Gvqp,Evqp,,,,,,,,,,,,
+,0F,47,,tTTN,r,,D23,,,,CMOVNBE,Gvqp,Evqp,,,,gen,datamov,,....z..c,,,,,Conditional Move - not below or equal/above (CF=0 AND ZF=0)
+,,,,,,,,,,,CMOVA,Gvqp,Evqp,,,,,,,,,,,,
+,0F,48,,Tttn,r,,D23,,,,CMOVS,Gvqp,Evqp,,,,gen,datamov,,...s....,,,,,Conditional Move - sign (SF=1)
+,0F,49,,TttN,r,,D23,,,,CMOVNS,Gvqp,Evqp,,,,gen,datamov,,...s....,,,,,Conditional Move - not sign (SF=0)
+,0F,4A,,TtTn,r,,D23,,,,CMOVP,Gvqp,Evqp,,,,gen,datamov,,......p.,,,,,Conditional Move - parity/parity even (PF=1)
+,,,,,,,,,,,CMOVPE,Gvqp,Evqp,,,,,,,,,,,,
+,0F,4B,,TtTN,r,,D23,,,,CMOVNP,Gvqp,Evqp,,,,gen,datamov,,......p.,,,,,Conditional Move - not parity/parity odd (PF=0)
+,,,,,,,,,,,CMOVPO,Gvqp,Evqp,,,,,,,,,,,,
+,0F,4C,,TTtn,r,,D23,,,,CMOVL,Gvqp,Evqp,,,,gen,datamov,,o..s....,,,,,Conditional Move - less/not greater (SF!=OF)
+,,,,,,,,,,,CMOVNGE,Gvqp,Evqp,,,,,,,,,,,,
+,0F,4D,,TTtN,r,,D23,,,,CMOVNL,Gvqp,Evqp,,,,gen,datamov,,o..s....,,,,,Conditional Move - not less/greater or equal (SF=OF)
+,,,,,,,,,,,CMOVGE,Gvqp,Evqp,,,,,,,,,,,,
+,0F,4E,,TTTn,r,,D23,,,,CMOVLE,Gvqp,Evqp,,,,gen,datamov,,o..sz...,,,,,Conditional Move - less or equal/not greater ((ZF=1) OR (SF!=OF))
+,,,,,,,,,,,CMOVNG,Gvqp,Evqp,,,,,,,,,,,,
+,0F,4F,,TTTN,r,,D23,,,,CMOVNLE,Gvqp,Evqp,,,,gen,datamov,,o..sz...,,,,,Conditional Move - not less nor equal/greater ((ZF=0) AND (SF=OF))
+,,,,,,,,,,,CMOVG,Gvqp,Evqp,,,,,,,,,,,,
+,0F,50,,,r,,,,,,MOVMSKPS,Gdqp,Ups,,,sse1,simdfp,datamov,,,,,,,Extract Packed Single-FP Sign Mask
+66,0F,50,,,r,,,,,,MOVMSKPD,Gdqp,Upd,,,sse2,pcksclr,datamov,,,,,,,Extract Packed Double-FP Sign Mask
+,0F,51,,,r,,,,,,SQRTPS,Vps,Wps,,,sse1,simdfp,arith,,,,,,,Compute Square Roots of Packed Single-FP Values
+F3,0F,51,,,r,,,,,,SQRTSS,Vss,Wss,,,sse1,simdfp,arith,,,,,,,Compute Square Root of Scalar Single-FP Value
+66,0F,51,,,r,,,,,,SQRTPD,Vpd,Wpd,,,sse2,pcksclr,arith,,,,,,,Compute Square Roots of Packed Double-FP Values
+F2,0F,51,,,r,,,,,,SQRTSD,Vsd,Wsd,,,sse2,pcksclr,arith,,,,,,,Compute Square Root of Scalar Double-FP Value
+,0F,52,,,r,,,,,,RSQRTPS,Vps,Wps,,,sse1,simdfp,arith,,,,,,,Compute Recipr. of Square Roots of Packed Single-FP Values
+F3,0F,52,,,r,,,,,,RSQRTSS,Vss,Wss,,,sse1,simdfp,arith,,,,,,,Compute Recipr. of Square Root of Scalar Single-FP Value
+,0F,53,,,r,,,,,,RCPPS,Vps,Wps,,,sse1,simdfp,arith,,,,,,,Compute Reciprocals of Packed Single-FP Values
+F3,0F,53,,,r,,,,,,RCPSS,Vss,Wss,,,sse1,simdfp,arith,,,,,,,Compute Reciprocal of Scalar Single-FP Values
+,0F,54,,,r,,,,,,ANDPS,Vps,Wps,,,sse1,simdfp,logical,,,,,,,Bitwise Logical AND of Packed Single-FP Values
+66,0F,54,,,r,,,,,,ANDPD,Vpd,Wpd,,,sse2,pcksclr,logical,,,,,,,Bitwise Logical AND of Packed Double-FP Values
+,0F,55,,,r,,,,,,ANDNPS,Vps,Wps,,,sse1,simdfp,logical,,,,,,,Bitwise Logical AND NOT of Packed Single-FP Values
+66,0F,55,,,r,,,,,,ANDNPD,Vpd,Wpd,,,sse2,pcksclr,logical,,,,,,,Bitwise Logical AND NOT of Packed Double-FP Values
+,0F,56,,,r,,,,,,ORPS,Vps,Wps,,,sse1,simdfp,logical,,,,,,,Bitwise Logical OR of Single-FP Values
+66,0F,56,,,r,,,,,,ORPD,Vpd,Wpd,,,sse2,pcksclr,logical,,,,,,,Bitwise Logical OR of Double-FP Values
+,0F,57,,,r,,,,,,XORPS,Vps,Wps,,,sse1,simdfp,logical,,,,,,,Bitwise Logical XOR for Single-FP Values
+66,0F,57,,,r,,,,,,XORPD,Vpd,Wpd,,,sse2,pcksclr,logical,,,,,,,Bitwise Logical XOR for Double-FP Values
+,0F,58,,,r,,,,,,ADDPS,Vps,Wps,,,sse1,simdfp,arith,,,,,,,Add Packed Single-FP Values
+F3,0F,58,,,r,,,,,,ADDSS,Vss,Wss,,,sse1,simdfp,arith,,,,,,,Add Scalar Single-FP Values
+66,0F,58,,,r,,,,,,ADDPD,Vpd,Wpd,,,sse2,pcksclr,arith,,,,,,,Add Packed Double-FP Values
+F2,0F,58,,,r,,,,,,ADDSD,Vsd,Wsd,,,sse2,pcksclr,arith,,,,,,,Add Scalar Double-FP Values
+,0F,59,,,r,,,,,,MULPS,Vps,Wps,,,sse1,simdfp,arith,,,,,,,Multiply Packed Single-FP Values
+F3,0F,59,,,r,,,,,,MULSS,Vss,Wss,,,sse1,simdfp,arith,,,,,,,Multiply Scalar Single-FP Value
+66,0F,59,,,r,,,,,,MULPD,Vpd,Wpd,,,sse2,pcksclr,arith,,,,,,,Multiply Packed Double-FP Values
+F2,0F,59,,,r,,,,,,MULSD,Vsd,Wsd,,,sse2,pcksclr,arith,,,,,,,Multiply Scalar Double-FP Values
+,0F,5A,,,r,,,,,,CVTPS2PD,Vpd,Wps,,,sse2,pcksclr,conver,,,,,,,Convert Packed Single-FP Values to Double-FP Values
+66,0F,5A,,,r,,,,,,CVTPD2PS,Vps,Wpd,,,sse2,pcksclr,conver,,,,,,,Convert Packed Double-FP Values to Single-FP Values
+F3,0F,5A,,,r,,,,,,CVTSS2SD,Vsd,Wss,,,sse2,pcksclr,conver,,,,,,,Convert Scalar Single-FP Value to Scalar Double-FP Value
+F2,0F,5A,,,r,,,,,,CVTSD2SS,Vss,Wsd,,,sse2,pcksclr,conver,,,,,,,Convert Scalar Double-FP Value to Scalar Single-FP Value
+,0F,5B,,,r,,,,,,CVTDQ2PS,Vps,Wdq,,,sse2,pcksp,,,,,,,,Convert Packed DW Integers to Single-FP Values
+66,0F,5B,,,r,,,,,,CVTPS2DQ,Vdq,Wps,,,sse2,pcksp,,,,,,,,Convert Packed Single-FP Values to DW Integers
+F3,0F,5B,,,r,,,,,,CVTTPS2DQ,Vdq,Wps,,,sse2,pcksp,,,,,,,,Convert with Trunc. Packed Single-FP Values to DW Integers
+,0F,5C,,,r,,,,,,SUBPS,Vps,Wps,,,sse1,simdfp,arith,,,,,,,Subtract Packed Single-FP Values
+F3,0F,5C,,,r,,,,,,SUBSS,Vss,Wss,,,sse1,simdfp,arith,,,,,,,Subtract Scalar Single-FP Values
+66,0F,5C,,,r,,,,,,SUBPD,Vpd,Wpd,,,sse2,pcksclr,arith,,,,,,,Subtract Packed Double-FP Values
+F2,0F,5C,,,r,,,,,,SUBSD,Vsd,Wsd,,,sse2,pcksclr,arith,,,,,,,Subtract Scalar Double-FP Values
+,0F,5D,,,r,,,,,,MINPS,Vps,Wps,,,sse1,simdfp,arith,,,,,,,Return Minimum Packed Single-FP Values
+F3,0F,5D,,,r,,,,,,MINSS,Vss,Wss,,,sse1,simdfp,arith,,,,,,,Return Minimum Scalar Single-FP Value
+66,0F,5D,,,r,,,,,,MINPD,Vpd,Wpd,,,sse2,pcksclr,arith,,,,,,,Return Minimum Packed Double-FP Values
+F2,0F,5D,,,r,,,,,,MINSD,Vsd,Wsd,,,sse2,pcksclr,arith,,,,,,,Return Minimum Scalar Double-FP Value
+,0F,5E,,,r,,,,,,DIVPS,Vps,Wps,,,sse1,simdfp,arith,,,,,,,Divide Packed Single-FP Values
+F3,0F,5E,,,r,,,,,,DIVSS,Vss,Wss,,,sse1,simdfp,arith,,,,,,,Divide Scalar Single-FP Values
+66,0F,5E,,,r,,,,,,DIVPD,Vpd,Wpd,,,sse2,pcksclr,arith,,,,,,,Divide Packed Double-FP Values
+F2,0F,5E,,,r,,,,,,DIVSD,Vsd,Wsd,,,sse2,pcksclr,arith,,,,,,,Divide Scalar Double-FP Values
+,0F,5F,,,r,,,,,,MAXPS,Vps,Wps,,,sse1,simdfp,arith,,,,,,,Return Maximum Packed Single-FP Values
+F3,0F,5F,,,r,,,,,,MAXSS,Vss,Wss,,,sse1,simdfp,arith,,,,,,,Return Maximum Scalar Single-FP Value
+66,0F,5F,,,r,,,,,,MAXPD,Vpd,Wpd,,,sse2,pcksclr,arith,,,,,,,Return Maximum Packed Double-FP Values
+F2,0F,5F,,,r,,,,,,MAXSD,Vsd,Wsd,,,sse2,pcksclr,arith,,,,,,,Return Maximum Scalar Double-FP Value
+,0F,60,,,r,,,,,,PUNPCKLBW,Pq,Qd,,,mmx,unpack,,,,,,,,Unpack Low Data
+66,0F,60,,,r,,,,,,PUNPCKLBW,Vdq,Wdq,,,sse2,simdint,shunpck,,,,,,,Unpack Low Data
+,0F,61,,,r,,,,,,PUNPCKLWD,Pq,Qd,,,mmx,unpack,,,,,,,,Unpack Low Data
+66,0F,61,,,r,,,,,,PUNPCKLWD,Vdq,Wdq,,,sse2,simdint,shunpck,,,,,,,Unpack Low Data
+,0F,62,,,r,,,,,,PUNPCKLDQ,Pq,Qd,,,mmx,unpack,,,,,,,,Unpack Low Data
+66,0F,62,,,r,,,,,,PUNPCKLDQ,Vdq,Wdq,,,sse2,simdint,shunpck,,,,,,,Unpack Low Data
+,0F,63,,,r,,,,,,PACKSSWB,Pq,Qd,,,mmx,conver,,,,,,,,Pack with Signed Saturation
+66,0F,63,,,r,,,,,,PACKSSWB,Vdq,Wdq,,,sse2,simdint,conver,,,,,,,Pack with Signed Saturation
+,0F,64,,,r,,,,,,PCMPGTB,Pq,Qd,,,mmx,compar,,,,,,,,Compare Packed Signed Integers for Greater Than
+66,0F,64,,,r,,,,,,PCMPGTB,Vdq,Wdq,,,sse2,simdint,compar,,,,,,,Compare Packed Signed Integers for Greater Than
+,0F,65,,,r,,,,,,PCMPGTW,Pq,Qd,,,mmx,compar,,,,,,,,Compare Packed Signed Integers for Greater Than
+66,0F,65,,,r,,,,,,PCMPGTW,Vdq,Wdq,,,sse2,simdint,compar,,,,,,,Compare Packed Signed Integers for Greater Than
+,0F,66,,,r,,,,,,PCMPGTD,Pq,Qd,,,mmx,compar,,,,,,,,Compare Packed Signed Integers for Greater Than
+66,0F,66,,,r,,,,,,PCMPGTD,Vdq,Wdq,,,sse2,simdint,compar,,,,,,,Compare Packed Signed Integers for Greater Than
+,0F,67,,,r,,,,,,PACKUSWB,Pq,Qq,,,mmx,conver,,,,,,,,Pack with Unsigned Saturation
+66,0F,67,,,r,,,,,,PACKUSWB,Vdq,Wdq,,,sse2,simdint,conver,,,,,,,Pack with Unsigned Saturation
+,0F,68,,,r,,,,,,PUNPCKHBW,Pq,Qq,,,mmx,unpack,,,,,,,,Unpack High Data
+66,0F,68,,,r,,,,,,PUNPCKHBW,Vdq,Wdq,,,sse2,simdint,shunpck,,,,,,,Unpack High Data
+,0F,69,,,r,,,,,,PUNPCKHWD,Pq,Qq,,,mmx,unpack,,,,,,,,Unpack High Data
+66,0F,69,,,r,,,,,,PUNPCKHWD,Vdq,Wdq,,,sse2,simdint,shunpck,,,,,,,Unpack High Data
+,0F,6A,,,r,,,,,,PUNPCKHDQ,Pq,Qq,,,mmx,unpack,,,,,,,,Unpack High Data
+66,0F,6A,,,r,,,,,,PUNPCKHDQ,Vdq,Wdq,,,sse2,simdint,shunpck,,,,,,,Unpack High Data
+,0F,6B,,,r,,,,,,PACKSSDW,Pq,Qq,,,mmx,conver,,,,,,,,Pack with Signed Saturation
+66,0F,6B,,,r,,,,,,PACKSSDW,Vdq,Wdq,,,sse2,simdint,conver,,,,,,,Pack with Signed Saturation
+66,0F,6C,,,r,,,,,,PUNPCKLQDQ,Vdq,Wdq,,,sse2,simdint,shunpck,,,,,,,Unpack Low Data
+66,0F,6D,,,r,,,,,,PUNPCKHQDQ,Vdq,Wdq,,,sse2,simdint,shunpck,,,,,,,Unpack High Data
+,0F,6E,,,r,,D22,E,,,MOVD,Pq,Ed,,,mmx,datamov,,,,,,,,Move Doubleword/Quadword
+,,,,,,,,,,,MOVQ,Pq,Eqp,,,,,,,,,,,,
+66,0F,6E,,,r,,D22,E,,,MOVD,Vdq,Ed,,,sse2,simdint,datamov,,,,,,,Move Doubleword/Quadword
+,,,,,,,,,,,MOVQ,Vdq,Eqp,,,,,,,,,,,,
+,0F,6F,,,r,,,,,,MOVQ,Pq,Qq,,,mmx,datamov,,,,,,,,Move Quadword
+66,0F,6F,,,r,,,,,,MOVDQA,Vdq,Wdq,,,sse2,simdint,datamov,,,,,,,Move Aligned Double Quadword
+F3,0F,6F,,,r,,,,,,MOVDQU,Vdq,Wdq,,,sse2,simdint,datamov,,,,,,,Move Unaligned Double Quadword
+,0F,70,,,r,,,,,,PSHUFW,Pq,Qq,Ib,,sse1,simdint,,,,,,,,Shuffle Packed Words
+F2,0F,70,,,r,,,,,,PSHUFLW,Vdq,Wdq,Ib,,sse2,simdint,shunpck,,,,,,,Shuffle Packed Low Words
+F3,0F,70,,,r,,,,,,PSHUFHW,Vdq,Wdq,Ib,,sse2,simdint,shunpck,,,,,,,Shuffle Packed High Words
+66,0F,70,,,r,,,,,,PSHUFD,Vdq,Wdq,Ib,,sse2,simdint,shunpck,,,,,,,Shuffle Packed Doublewords
+,0F,71,,,2,,,,,,PSRLW,Nq,Ib,,,mmx,shift,,,,,,,,Shift Packed Data Right Logical
+66,0F,71,,,2,,,,,,PSRLW,Udq,Ib,,,sse2,shift,,,,,,,,Shift Packed Data Right Logical
+,0F,71,,,4,,,,,,PSRAW,Nq,Ib,,,mmx,shift,,,,,,,,Shift Packed Data Right Arithmetic
+66,0F,71,,,4,,,,,,PSRAW,Udq,Ib,,,sse2,shift,,,,,,,,Shift Packed Data Right Arithmetic
+,0F,71,,,6,,,,,,PSLLW,Nq,Ib,,,mmx,shift,,,,,,,,Shift Packed Data Left Logical
+66,0F,71,,,6,,,,,,PSLLW,Udq,Ib,,,sse2,shift,,,,,,,,Shift Packed Data Left Logical
+,0F,72,,,2,,,,,,PSRLD,Nq,Ib,,,mmx,shift,,,,,,,,Shift Double Quadword Right Logical
+66,0F,72,,,2,,,,,,PSRLD,Udq,Ib,,,sse2,shift,,,,,,,,Shift Double Quadword Right Logical
+,0F,72,,,4,,,,,,PSRAD,Nq,Ib,,,mmx,shift,,,,,,,,Shift Packed Data Right Arithmetic
+66,0F,72,,,4,,,,,,PSRAD,Udq,Ib,,,sse2,shift,,,,,,,,Shift Packed Data Right Arithmetic
+,0F,72,,,6,,,,,,PSLLD,Nq,Ib,,,mmx,shift,,,,,,,,Shift Packed Data Left Logical
+66,0F,72,,,6,,,,,,PSLLD,Udq,Ib,,,sse2,shift,,,,,,,,Shift Packed Data Left Logical
+,0F,73,,,2,,,,,,PSRLQ,Nq,Ib,,,mmx,shift,,,,,,,,Shift Packed Data Right Logical
+66,0F,73,,,2,,,,,,PSRLQ,Udq,Ib,,,sse2,shift,,,,,,,,Shift Packed Data Right Logical
+66,0F,73,,,3,,,,,,PSRLDQ,Udq,Ib,,,sse2,simdint,shift,,,,,,,Shift Double Quadword Right Logical
+,0F,73,,,6,,,,,,PSLLQ,Nq,Ib,,,mmx,shift,,,,,,,,Shift Packed Data Left Logical
+66,0F,73,,,6,,,,,,PSLLQ,Udq,Ib,,,sse2,shift,,,,,,,,Shift Packed Data Left Logical
+66,0F,73,,,7,,,,,,PSLLDQ,Udq,Ib,,,sse2,simdint,shift,,,,,,,Shift Double Quadword Left Logical
+,0F,74,,,r,,,,,,PCMPEQB,Pq,Qq,,,mmx,compar,,,,,,,,Compare Packed Data for Equal
+66,0F,74,,,r,,,,,,PCMPEQB,Vdq,Wdq,,,sse2,simdint,compar,,,,,,,Compare Packed Data for Equal
+,0F,75,,,r,,,,,,PCMPEQW,Pq,Qq,,,mmx,compar,,,,,,,,Compare Packed Data for Equal
+66,0F,75,,,r,,,,,,PCMPEQW,Vdq,Wdq,,,sse2,simdint,compar,,,,,,,Compare Packed Data for Equal
+,0F,76,,,r,,,,,,PCMPEQD,Pq,Qq,,,mmx,compar,,,,,,,,Compare Packed Data for Equal
+66,0F,76,,,r,,,,,,PCMPEQD,Vdq,Wdq,,,sse2,simdint,compar,,,,,,,Compare Packed Data for Equal
+,0F,77,,,,,,,,,EMMS,,,,,mmx,x87fpu,control,,,,,,,Empty MMX Technology State
+,0F,78,,,r,,D33,E,0,,VMREAD,Eq,Gq,,,vmx,,,,,o..szapc,o..szapc,,,Read Field from Virtual-Machine Control Structure
+,0F,79,,,r,,D33,E,0,,VMWRITE,Gq,Eq,,,vmx,,,,,o..szapc,o..szapc,,,Write Field to Virtual-Machine Control Structure
+66,0F,7C,,,r,,,,,,HADDPD,Vpd,Wpd,,,sse3,simdfp,arith,,,,,,,Packed Double-FP Horizontal Add
+F2,0F,7C,,,r,,,,,,HADDPS,Vps,Wps,,,sse3,simdfp,arith,,,,,,,Packed Single-FP Horizontal Add
+66,0F,7D,,,r,,,,,,HSUBPD,Vpd,Wpd,,,sse3,simdfp,arith,,,,,,,Packed Double-FP Horizontal Subtract
+F2,0F,7D,,,r,,,,,,HSUBPS,Vps,Wps,,,sse3,simdfp,arith,,,,,,,Packed Single-FP Horizontal Subtract
+,0F,7E,,,r,,D22,E,,,MOVD,Ed,Pq,,,mmx,datamov,,,,,,,,Move Doubleword/Quadword
+,,,,,,,,,,,MOVQ,Eqp,Pq,,,,,,,,,,,,
+66,0F,7E,,,r,,D22,E,,,MOVD,Ed,Vdq,,,sse2,simdint,datamov,,,,,,,Move Doubleword/Quadword
+,,,,,,,,,,,MOVQ,Eqp,Vdq,,,,,,,,,,,,
+F3,0F,7E,,,r,,,,,,MOVQ,Vq,Wq,,,sse2,simdint,datamov,,,,,,,Move Quadword
+,0F,7F,,,r,,,,,,MOVQ,Qq,Pq,,,mmx,datamov,,,,,,,,Move Quadword
+66,0F,7F,,,r,,,,,,MOVDQA,Wdq,Vdq,,,sse2,simdint,datamov,,,,,,,Move Aligned Double Quadword
+F3,0F,7F,,,r,,,,,,MOVDQU,Wdq,Vdq,,,sse2,simdint,datamov,,,,,,,Move Unaligned Double Quadword
+,0F,80,,tttn,,,D32,,,,JO,Jvds,,,,,gen,branch,cond,o.......,,,,,Jump near if overflow (OF=1)
+,0F,81,,tttN,,,D32,,,,JNO,Jvds,,,,,gen,branch,cond,o.......,,,,,Jump near if not overflow (OF=0)
+,0F,82,,ttTn,,,D32,,,,JB,Jvds,,,,,gen,branch,cond,.......c,,,,,Jump near if below/not above or equal/carry (CF=1)
+,,,,,,,,,,,JNAE,Jvds,,,,,,,,,,,,,
+,,,,,,,,,,,JC,Jvds,,,,,,,,,,,,,
+,0F,83,,ttTN,,,D32,,,,JNB,Jvds,,,,,gen,branch,cond,.......c,,,,,Jump near if not below/above or equal/not carry (CF=0)
+,,,,,,,,,,,JAE,Jvds,,,,,,,,,,,,,
+,,,,,,,,,,,JNC,Jvds,,,,,,,,,,,,,
+,0F,84,,tTtn,,,D32,,,,JZ,Jvds,,,,,gen,branch,cond,....z...,,,,,Jump near if zero/equal (ZF=1)
+,,,,,,,,,,,JE,Jvds,,,,,,,,,,,,,
+,0F,85,,tTtN,,,D32,,,,JNZ,Jvds,,,,,gen,branch,cond,....z...,,,,,Jump near if not zero/not equal (ZF=0)
+,,,,,,,,,,,JNE,Jvds,,,,,,,,,,,,,
+,0F,86,,tTTn,,,D32,,,,JBE,Jvds,,,,,gen,branch,cond,....z..c,,,,,Jump near if below or equal/not above (CF=1 OR ZF=1)
+,,,,,,,,,,,JNA,Jvds,,,,,,,,,,,,,
+,0F,87,,tTTN,,,D32,,,,JNBE,Jvds,,,,,gen,branch,cond,....z..c,,,,,Jump near if not below or equal/above (CF=0 AND ZF=0)
+,,,,,,,,,,,JA,Jvds,,,,,,,,,,,,,
+,0F,88,,Tttn,,,D32,,,,JS,Jvds,,,,,gen,branch,cond,...s....,,,,,Jump near if sign (SF=1)
+,0F,89,,TttN,,,D32,,,,JNS,Jvds,,,,,gen,branch,cond,...s....,,,,,Jump near if not sign (SF=0)
+,0F,8A,,TtTn,,,D32,,,,JP,Jvds,,,,,gen,branch,cond,......p.,,,,,Jump near if parity/parity even (PF=1)
+,,,,,,,,,,,JPE,Jvds,,,,,,,,,,,,,
+,0F,8B,,TtTN,,,D32,,,,JNP,Jvds,,,,,gen,branch,cond,......p.,,,,,Jump near if not parity/parity odd (PF=0)
+,,,,,,,,,,,JPO,Jvds,,,,,,,,,,,,,
+,0F,8C,,TTtn,,,D32,,,,JL,Jvds,,,,,gen,branch,cond,o..s....,,,,,Jump near if less/not greater (SF!=OF)
+,,,,,,,,,,,JNGE,Jvds,,,,,,,,,,,,,
+,0F,8D,,TTtN,,,D32,,,,JNL,Jvds,,,,,gen,branch,cond,o..s....,,,,,Jump near if not less/greater or equal (SF=OF)
+,,,,,,,,,,,JGE,Jvds,,,,,,,,,,,,,
+,0F,8E,,TTTn,,,D32,,,,JLE,Jvds,,,,,gen,branch,cond,o..sz...,,,,,Jump near if less or equal/not greater ((ZF=1) OR (SF!=OF))
+,,,,,,,,,,,JNG,Jvds,,,,,,,,,,,,,
+,0F,8F,,TTTN,,,D32,,,,JNLE,Jvds,,,,,gen,branch,cond,o..sz...,,,,,Jump near if not less nor equal/greater ((ZF=0) AND (SF=OF))
+,,,,,,,,,,,JG,Jvds,,,,,,,,,,,,,
+,0F,90,,tttn,0,,D24,,,,SETO,Eb,,,,,gen,datamov,,o.......,,,,,Set Byte on Condition - overflow (OF=1)
+,0F,91,,tttN,0,,D24,,,,SETNO,Eb,,,,,gen,datamov,,o.......,,,,,Set Byte on Condition - not overflow (OF=0)
+,0F,92,,ttTn,0,,D24,,,,SETB,Eb,,,,,gen,datamov,,.......c,,,,,Set Byte on Condition - below/not above or equal/carry (CF=1)
+,,,,,,,,,,,SETNAE,Eb,,,,,,,,,,,,,
+,,,,,,,,,,,SETC,Eb,,,,,,,,,,,,,
+,0F,93,,ttTN,0,,D24,,,,SETNB,Eb,,,,,gen,datamov,,.......c,,,,,Set Byte on Condition - not below/above or equal/not carry (CF=0)
+,,,,,,,,,,,SETAE,Eb,,,,,,,,,,,,,
+,,,,,,,,,,,SETNC,Eb,,,,,,,,,,,,,
+,0F,94,,tTtn,0,,D24,,,,SETZ,Eb,,,,,gen,datamov,,....z...,,,,,Set Byte on Condition - zero/equal (ZF=1)
+,,,,,,,,,,,SETE,Eb,,,,,,,,,,,,,
+,0F,95,,tTtN,0,,D24,,,,SETNZ,Eb,,,,,gen,datamov,,....z...,,,,,Set Byte on Condition - not zero/not equal (ZF=0)
+,,,,,,,,,,,SETNE,Eb,,,,,,,,,,,,,
+,0F,96,,tTTn,0,,D24,,,,SETBE,Eb,,,,,gen,datamov,,....z..c,,,,,Set Byte on Condition - below or equal/not above (CF=1 OR ZF=1)
+,,,,,,,,,,,SETNA,Eb,,,,,,,,,,,,,
+,0F,97,,tTTN,0,,D24,,,,SETNBE,Eb,,,,,gen,datamov,,....z..c,,,,,Set Byte on Condition - not below or equal/above (CF=0 AND ZF=0)
+,,,,,,,,,,,SETA,Eb,,,,,,,,,,,,,
+,0F,98,,Tttn,0,,D24,,,,SETS,Eb,,,,,gen,datamov,,...s....,,,,,Set Byte on Condition - sign (SF=1)
+,0F,99,,TttN,0,,D24,,,,SETNS,Eb,,,,,gen,datamov,,...s....,,,,,Set Byte on Condition - not sign (SF=0)
+,0F,9A,,TtTn,0,,D24,,,,SETP,Eb,,,,,gen,datamov,,......p.,,,,,Set Byte on Condition - parity/parity even (PF=1)
+,,,,,,,,,,,SETPE,Eb,,,,,,,,,,,,,
+,0F,9B,,TtTN,0,,D24,,,,SETNP,Eb,,,,,gen,datamov,,......p.,,,,,Set Byte on Condition - not parity/parity odd (PF=0)
+,,,,,,,,,,,SETPO,Eb,,,,,,,,,,,,,
+,0F,9C,,TTtn,0,,D24,,,,SETL,Eb,,,,,gen,datamov,,o..s....,,,,,Set Byte on Condition - less/not greater (SF!=OF)
+,,,,,,,,,,,SETNGE,Eb,,,,,,,,,,,,,
+,0F,9D,,TTtN,0,,D24,,,,SETNL,Eb,,,,,gen,datamov,,o..s....,,,,,Set Byte on Condition - not less/greater or equal (SF=OF)
+,,,,,,,,,,,SETGE,Eb,,,,,,,,,,,,,
+,0F,9E,,TTTn,0,,D24,,,,SETLE,Eb,,,,,gen,datamov,,o..sz...,,,,,Set Byte on Condition - less or equal/not greater ((ZF=1) OR (SF!=OF))
+,,,,,,,,,,,SETNG,Eb,,,,,,,,,,,,,
+,0F,9F,,TTTN,0,,D24,,,,SETNLE,Eb,,,,,gen,datamov,,o..sz...,,,,,Set Byte on Condition - not less nor equal/greater ((ZF=0) AND (SF=OF))
+,,,,,,,,,,,SETG,Eb,,,,,,,,,,,,,
+,0F,A0,,Sre,,,,,,,PUSH,FS,,,,,gen,stack segreg,,,,,,,"Push Word, Doubleword or Quadword Onto the Stack"
+,0F,A1,,Sre,,,,,,,POP,FS,,,,,gen,stack segreg,,,,,,,Pop a Value from the Stack
+,0F,A2,,,,,,,,,CPUID,I...,EAX,ECX,...,,gen,control,,,,,,,CPU Identification
+,0F,A3,,,r,,,,,,BT,Evqp,Gvqp,,,,gen,bit,,,o..szapc,.......c,o..szap.,,Bit Test
+,0F,A4,,d,r,,,,,,SHLD,Evqp,Gvqp,Ib,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Double Precision Shift Left
+,0F,A5,,d,r,,,,,,SHLD,Evqp,Gvqp,CL,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Double Precision Shift Left
+,0F,A8,,SrE,,,,,,,PUSH,GS,,,,,gen,stack segreg,,,,,,,"Push Word, Doubleword or Quadword Onto the Stack"
+,0F,A9,,SrE,,,,,,,POP,GS,,,,,gen,stack segreg,,,,,,,Pop a Value from the Stack
+,0F,AA,,,,,,S,,,RSM,Fw,,,,,system,branch,,,,,,,Resume from System Management Mode
+,0F,AB,,,r,,,,,L,BTS,Evqp,Gvqp,,,,gen,bit,,,o..szapc,.......c,o..szap.,,Bit Test and Set
+,0F,AC,,d,r,,,,,,SHRD,Evqp,Gvqp,Ib,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Double Precision Shift Right
+,0F,AD,,d,r,,,,,,SHRD,Evqp,Gvqp,CL,,,gen,shftrot,,,o..szapc,o..sz.pc,o....a.c,,Double Precision Shift Right
+,0F,AE,,,0,,,,,,FXSAVE,Mstx,ST,ST1,...,,sm,,,,,,,,"Save x87 FPU, MMX, XMM, and MXCSR State"
+,0F,AE,,,0,,,E,,,FXSAVE,Mstx,ST,ST1,...,,sm,,,,,,,,"Save x87 FPU, MMX, XMM, and MXCSR State"
+,0F,AE,,,1,,,,,,FXRSTOR,ST,ST1,ST2,...,,sm,,,,,,,,"Restore x87 FPU, MMX, XMM, and MXCSR State"
+,0F,AE,,,1,,,E,,,FXRSTOR,ST,ST1,ST2,...,,sm,,,,,,,,"Restore x87 FPU, MMX, XMM, and MXCSR State"
+,0F,AE,,,2,,,,,,LDMXCSR,Md,,,,sse1,mxcsrsm,,,,,,,,Load MXCSR Register
+,0F,AE,,,3,,,,,,STMXCSR,Md,,,,sse1,mxcsrsm,,,,,,,,Store MXCSR Register State
+,0F,AE,,,4,C2++,,,,,XSAVE,M,EDX,EAX,...,,system,,,,,,,,Save Processor Extended States
+,0F,AE,,,4,C2++,,E,,,XSAVE,M,EDX,EAX,...,,system,,,,,,,,Save Processor Extended States
+,0F,AE,,,5,,,,,,LFENCE,,,,,sse2,order,,,,,,,,Load Fence
+,0F,AE,,,5,C2++,,E,,,XRSTOR,ST,ST1,ST2,...,,system,,,,,,,,Restore Processor Extended States
+,0F,AE,,,6,,,,,,MFENCE,,,,,sse2,order,,,,,,,,Memory Fence
+,0F,AE,,,7,,,,,,SFENCE,,,,,sse1,order,,,,,,,,Store Fence
+,0F,AE,,,7,,,,,,CLFLUSH,Mb,,,,sse2,cachect,,,,,,,,Flush Cache Line
+,0F,AF,,DW,r,,,,,,IMUL,Gvqp,Evqp,,,,gen,arith,binary,,o..szapc,o......c,...szap.,,Signed Multiply
+,0F,B0,,dw,r,,D25,,,L,CMPXCHG,Eb,AL,Gb,,,gen,datamov arith,binary,,o..szapc,o..szapc,,,Compare and Exchange
+,0F,B1,,dW,r,,D25,,,L,CMPXCHG,Evqp,rAX,Gvqp,,,gen,datamov arith,binary,,o..szapc,o..szapc,,,Compare and Exchange
+,0F,B2,,sRe,r,,D26,,,,LSS,SS,Gvqp,Mptp,,,gen,datamov segreg,,,,,,,Load Far Pointer
+,0F,B3,,,r,,,,,L,BTR,Evqp,Gvqp,,,,gen,bit,,,o..szapc,.......c,o..szap.,,Bit Test and Reset
+,0F,B4,,Sre,r,,D26,,,,LFS,FS,Gvqp,Mptp,,,gen,datamov segreg,,,,,,,Load Far Pointer
+,0F,B5,,SrE,r,,D26,,,,LGS,GS,Gvqp,Mptp,,,gen,datamov segreg,,,,,,,Load Far Pointer
+,0F,B6,,Dw,r,,,,,,MOVZX,Gvqp,Eb,,,,gen,conver,,,,,,,Move with Zero-Extend
+,0F,B7,,DW,r,,,,,,MOVZX,Gvqp,Ew,,,,gen,conver,,,,,,,Move with Zero-Extend
+,0F,B8,,,,IT+,,,,,JMPE,,,,,,system,branch,,,,,,,Jump to IA-64 Instruction Set
+F3,0F,B8,,,r,C2++,,,,,POPCNT,Gvqp,Evqp,,,,gen,bit,,,o..szapc,,,o..s.apc,Bit Population Count
+,0F,B9,,,r,,M27,,,,UD,G,E,,,,gen,control,,,,,,,Undefined Instruction
+,0F,BA,,,4,,,,,,BT,Evqp,Ib,,,,gen,bit,,,o..szapc,.......c,o..szap.,,Bit Test
+,0F,BA,,,5,,,,,L,BTS,Evqp,Ib,,,,gen,bit,,,o..szapc,.......c,o..szap.,,Bit Test and Set
+,0F,BA,,,6,,,,,L,BTR,Evqp,Ib,,,,gen,bit,,,o..szapc,.......c,o..szap.,,Bit Test and Reset
+,0F,BA,,,7,,,,,L,BTC,Evqp,Ib,,,,gen,bit,,,o..szapc,.......c,o..szap.,,Bit Test and Complement
+,0F,BB,,,r,,,,,L,BTC,Evqp,Gvqp,,,,gen,bit,,,o..szapc,.......c,o..szap.,,Bit Test and Complement
+,0F,BC,,,r,,D28,,,,BSF,Gvqp,Evqp,,,,gen,bit,,,o..szapc,....z...,o..s.apc,,Bit Scan Forward
+,0F,BD,,,r,,D28,,,,BSR,Gvqp,Evqp,,,,gen,bit,,,o..szapc,....z...,o..s.apc,,Bit Scan Reverse
+,0F,BE,,Dw,r,,,,,,MOVSX,Gvqp,Eb,,,,gen,conver,,,,,,,Move with Sign-Extension
+,0F,BF,,DW,r,,,,,,MOVSX,Gvqp,Ew,,,,gen,conver,,,,,,,Move with Sign-Extension
+,0F,C0,,dw,r,,,,,L,XADD,Eb,Gb,,,,gen,datamov arith,binary,,o..szapc,o..szapc,,,Exchange and Add
+,0F,C1,,dW,r,,,,,L,XADD,Evqp,Gvqp,,,,gen,datamov arith,binary,,o..szapc,o..szapc,,,Exchange and Add
+,0F,C2,,,r,,,,,,CMPPS,Vps,Wps,Ib,,sse1,simdfp,compar,,,,,,,Compare Packed Single-FP Values
+F3,0F,C2,,,r,,,,,,CMPSS,Vss,Wss,Ib,,sse1,simdfp,compar,,,,,,,Compare Scalar Single-FP Values
+66,0F,C2,,,r,,,,,,CMPPD,Vpd,Wpd,Ib,,sse2,pcksclr,compar,,,,,,,Compare Packed Double-FP Values
+F2,0F,C2,,,r,,,,,,CMPSD,Vsd,Wsd,Ib,,sse2,pcksclr,compar,,,,,,,Compare Scalar Double-FP Values
+,0F,C3,,,r,,,,,,MOVNTI,Mdqp,Gdqp,,,sse2,cachect,,,,,,,,Store Doubleword Using Non-Temporal Hint
+,0F,C4,,,r,,,,,,PINSRW,Pq,Rdqp,Ib,,sse1,simdint,,,,,,,,Insert Word
+,,,,,,,,,,,PINSRW,Pq,Mw,Ib,,,,,,,,,,,
+66,0F,C4,,,r,,,,,,PINSRW,Vdq,Rdqp,Ib,,sse1,simdint,,,,,,,,Insert Word
+,,,,,,,,,,,PINSRW,Vdq,Mw,Ib,,,,,,,,,,,
+,0F,C5,,,r,,,,,,PEXTRW,Gdqp,Nq,Ib,,sse1,simdint,,,,,,,,Extract Word
+66,0F,C5,,,r,,,,,,PEXTRW,Gdqp,Udq,Ib,,sse1,simdint,,,,,,,,Extract Word
+,0F,C6,,,r,,,,,,SHUFPS,Vps,Wps,Ib,,sse1,simdfp,shunpck,,,,,,,Shuffle Packed Single-FP Values
+66,0F,C6,,,r,,,,,,SHUFPD,Vpd,Wpd,Ib,,sse2,pcksclr,shunpck,,,,,,,Shuffle Packed Double-FP Values
+,0F,C7,,,1,,D29,,,L,CMPXCHG8B,Mq,EAX,EDX,...,,gen,datamov arith,binary,,....z...,....z...,,,Compare and Exchange Bytes
+,0F,C7,,,1,,D29,E,,L,CMPXCHG8B,Mq,EAX,EDX,...,,gen,datamov arith,binary,,....z...,....z...,,,Compare and Exchange Bytes
+,,,,,,,,,,,CMPXCHG16B,Mdq,RAX,RDX,...,,,,,,,,,,
+,0F,C7,,,6,,D33,P,0,,VMPTRLD,Mq,,,,vmx,,,,,o..szapc,o..szapc,,,Load Pointer to Virtual-Machine Control Structure
+66,0F,C7,,,6,,D33,P,0,,VMCLEAR,Mq,,,,vmx,,,,,o..szapc,o..szapc,,,Clear Virtual-Machine Control Structure
+F3,0F,C7,,,6,,D33,P,0,,VMXON,Mq,,,,vmx,,,,,o..szapc,o..szapc,,,Enter VMX Operation
+,0F,C7,,,7,,D33,P,0,,VMPTRST,Mq,,,,vmx,,,,,o..szapc,o..szapc,,,Store Pointer to Virtual-Machine Control Structure
+,0F,C8,,+r,,,D30,,,,BSWAP,Zvqp,,,,,gen,datamov,,,,,,,Byte Swap
+66,0F,D0,,,r,,,,,,ADDSUBPD,Vpd,Wpd,,,sse3,simdfp,arith,,,,,,,Packed Double-FP Add/Subtract
+F2,0F,D0,,,r,,,,,,ADDSUBPS,Vps,Wps,,,sse3,simdfp,arith,,,,,,,Packed Single-FP Add/Subtract
+,0F,D1,,,r,,,,,,PSRLW,Pq,Qq,,,mmx,shift,,,,,,,,Shift Packed Data Right Logical
+66,0F,D1,,,r,,,,,,PSRLW,Vdq,Wdq,,,sse2,simdint,shift,,,,,,,Shift Packed Data Right Logical
+,0F,D2,,,r,,,,,,PSRLD,Pq,Qq,,,mmx,shift,,,,,,,,Shift Packed Data Right Logical
+66,0F,D2,,,r,,,,,,PSRLD,Vdq,Wdq,,,sse2,simdint,shift,,,,,,,Shift Packed Data Right Logical
+,0F,D3,,,r,,,,,,PSRLQ,Pq,Qq,,,mmx,shift,,,,,,,,Shift Packed Data Right Logical
+66,0F,D3,,,r,,,,,,PSRLQ,Vdq,Wdq,,,sse2,simdint,shift,,,,,,,Shift Packed Data Right Logical
+,0F,D4,,,r,,,,,,PADDQ,Pq,Qq,,,sse2,simdint,arith,,,,,,,Add Packed Quadword Integers
+66,0F,D4,,,r,,,,,,PADDQ,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Add Packed Quadword Integers
+,0F,D5,,,r,,,,,,PMULLW,Pq,Qq,,,mmx,arith,,,,,,,,Multiply Packed Signed Integers and Store Low Result
+66,0F,D5,,,r,,,,,,PMULLW,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Multiply Packed Signed Integers and Store Low Result
+66,0F,D6,,,r,,,,,,MOVQ,Wq,Vq,,,sse2,simdint,datamov,,,,,,,Move Quadword
+F3,0F,D6,,,r,,,,,,MOVQ2DQ,Vdq,Nq,,,sse2,simdint,datamov,,,,,,,Move Quadword from MMX Technology to XMM Register
+F2,0F,D6,,,r,,,,,,MOVDQ2Q,Pq,Uq,,,sse2,simdint,datamov,,,,,,,Move Quadword from XMM to MMX Technology Register
+,0F,D7,,,r,,,,,,PMOVMSKB,Gdqp,Nq,,,sse1,simdint,,,,,,,,Move Byte Mask
+66,0F,D7,,,r,,,,,,PMOVMSKB,Gdqp,Udq,,,sse1,simdint,,,,,,,,Move Byte Mask
+,0F,D8,,,r,,,,,,PSUBUSB,Pq,Qq,,,mmx,arith,,,,,,,,Subtract Packed Unsigned Integers with Unsigned Saturation
+66,0F,D8,,,r,,,,,,PSUBUSB,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Subtract Packed Unsigned Integers with Unsigned Saturation
+,0F,D9,,,r,,,,,,PSUBUSW,Pq,Qq,,,mmx,arith,,,,,,,,Subtract Packed Unsigned Integers with Unsigned Saturation
+66,0F,D9,,,r,,,,,,PSUBUSW,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Subtract Packed Unsigned Integers with Unsigned Saturation
+,0F,DA,,,r,,,,,,PMINUB,Pq,Qq,,,sse1,simdint,,,,,,,,Minimum of Packed Unsigned Byte Integers
+66,0F,DA,,,r,,,,,,PMINUB,Vdq,Wdq,,,sse1,simdint,,,,,,,,Minimum of Packed Unsigned Byte Integers
+,0F,DB,,,r,,,,,,PAND,Pq,Qd,,,mmx,logical,,,,,,,,Logical AND
+66,0F,DB,,,r,,,,,,PAND,Vdq,Wdq,,,sse2,simdint,logical,,,,,,,Logical AND
+,0F,DC,,,r,,,,,,PADDUSB,Pq,Qq,,,mmx,arith,,,,,,,,Add Packed Unsigned Integers with Unsigned Saturation
+66,0F,DC,,,r,,,,,,PADDUSB,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Add Packed Unsigned Integers with Unsigned Saturation
+,0F,DD,,,r,,,,,,PADDUSW,Pq,Qq,,,mmx,arith,,,,,,,,Add Packed Unsigned Integers with Unsigned Saturation
+66,0F,DD,,,r,,,,,,PADDUSW,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Add Packed Unsigned Integers with Unsigned Saturation
+,0F,DE,,,r,,,,,,PMAXUB,Pq,Qq,,,sse1,simdint,,,,,,,,Maximum of Packed Unsigned Byte Integers
+66,0F,DE,,,r,,,,,,PMAXUB,Vdq,Wdq,,,sse1,simdint,,,,,,,,Maximum of Packed Unsigned Byte Integers
+,0F,DF,,,r,,,,,,PANDN,Pq,Qq,,,mmx,logical,,,,,,,,Logical AND NOT
+66,0F,DF,,,r,,,,,,PANDN,Vdq,Wdq,,,sse2,simdint,logical,,,,,,,Logical AND NOT
+,0F,E0,,,r,,,,,,PAVGB,Pq,Qq,,,sse1,simdint,,,,,,,,Average Packed Integers
+66,0F,E0,,,r,,,,,,PAVGB,Vdq,Wdq,,,sse1,simdint,,,,,,,,Average Packed Integers
+,0F,E1,,,r,,,,,,PSRAW,Pq,Qq,,,mmx,shift,,,,,,,,Shift Packed Data Right Arithmetic
+66,0F,E1,,,r,,,,,,PSRAW,Vdq,Wdq,,,sse2,simdint,shift,,,,,,,Shift Packed Data Right Arithmetic
+,0F,E2,,,r,,,,,,PSRAD,Pq,Qq,,,mmx,shift,,,,,,,,Shift Packed Data Right Arithmetic
+66,0F,E2,,,r,,,,,,PSRAD,Vdq,Wdq,,,sse2,simdint,shift,,,,,,,Shift Packed Data Right Arithmetic
+,0F,E3,,,r,,,,,,PAVGW,Pq,Qq,,,sse1,simdint,,,,,,,,Average Packed Integers
+66,0F,E3,,,r,,,,,,PAVGW,Vdq,Wdq,,,sse1,simdint,,,,,,,,Average Packed Integers
+,0F,E4,,,r,,,,,,PMULHUW,Pq,Qq,,,sse1,simdint,,,,,,,,Multiply Packed Unsigned Integers and Store High Result
+66,0F,E4,,,r,,,,,,PMULHUW,Vdq,Wdq,,,sse1,simdint,,,,,,,,Multiply Packed Unsigned Integers and Store High Result
+,0F,E5,,,r,,,,,,PMULHW,Pq,Qq,,,mmx,arith,,,,,,,,Multiply Packed Signed Integers and Store High Result
+66,0F,E5,,,r,,,,,,PMULHW,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Multiply Packed Signed Integers and Store High Result
+F2,0F,E6,,,r,,,,,,CVTPD2DQ,Vdq,Wpd,,,sse2,pcksclr,conver,,,,,,,Convert Packed Double-FP Values to DW Integers
+66,0F,E6,,,r,,,,,,CVTTPD2DQ,Vdq,Wpd,,,sse2,pcksclr,conver,,,,,,,Convert with Trunc. Packed Double-FP Values to DW Integers
+F3,0F,E6,,,r,,,,,,CVTDQ2PD,Vpd,Wdq,,,sse2,pcksclr,conver,,,,,,,Convert Packed DW Integers to Double-FP Values
+,0F,E7,,,r,,,,,,MOVNTQ,Mq,Pq,,,sse1,cachect,,,,,,,,Store of Quadword Using Non-Temporal Hint
+66,0F,E7,,,r,,,,,,MOVNTDQ,Mdq,Vdq,,,sse2,cachect,,,,,,,,Store Double Quadword Using Non-Temporal Hint
+,0F,E8,,,r,,,,,,PSUBSB,Pq,Qq,,,mmx,arith,,,,,,,,Subtract Packed Signed Integers with Signed Saturation
+66,0F,E8,,,r,,,,,,PSUBSB,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Subtract Packed Signed Integers with Signed Saturation
+,0F,E9,,,r,,,,,,PSUBSW,Pq,Qq,,,mmx,arith,,,,,,,,Subtract Packed Signed Integers with Signed Saturation
+66,0F,E9,,,r,,,,,,PSUBSW,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Subtract Packed Signed Integers with Signed Saturation
+,0F,EA,,,r,,,,,,PMINSW,Pq,Qq,,,sse1,simdint,,,,,,,,Minimum of Packed Signed Word Integers
+66,0F,EA,,,r,,,,,,PMINSW,Vdq,Wdq,,,sse1,simdint,,,,,,,,Minimum of Packed Signed Word Integers
+,0F,EB,,,r,,,,,,POR,Pq,Qq,,,mmx,logical,,,,,,,,Bitwise Logical OR
+66,0F,EB,,,r,,,,,,POR,Vdq,Wdq,,,sse2,simdint,logical,,,,,,,Bitwise Logical OR
+,0F,EC,,,r,,,,,,PADDSB,Pq,Qq,,,mmx,arith,,,,,,,,Add Packed Signed Integers with Signed Saturation
+66,0F,EC,,,r,,,,,,PADDSB,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Add Packed Signed Integers with Signed Saturation
+,0F,ED,,,r,,,,,,PADDSW,Pq,Qq,,,mmx,arith,,,,,,,,Add Packed Signed Integers with Signed Saturation
+66,0F,ED,,,r,,,,,,PADDSW,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Add Packed Signed Integers with Signed Saturation
+,0F,EE,,,r,,,,,,PMAXSW,Pq,Qq,,,sse1,simdint,,,,,,,,Maximum of Packed Signed Word Integers
+66,0F,EE,,,r,,,,,,PMAXSW,Vdq,Wdq,,,sse1,simdint,,,,,,,,Maximum of Packed Signed Word Integers
+,0F,EF,,,r,,,,,,PXOR,Pq,Qq,,,mmx,logical,,,,,,,,Logical Exclusive OR
+66,0F,EF,,,r,,,,,,PXOR,Vdq,Wdq,,,sse2,simdint,logical,,,,,,,Logical Exclusive OR
+F2,0F,F0,,,r,,,,,,LDDQU,Vdq,Mdq,,,sse3,cachect,,,,,,,,Load Unaligned Integer 128 Bits
+,0F,F1,,,r,,,,,,PSLLW,Pq,Qq,,,mmx,shift,,,,,,,,Shift Packed Data Left Logical
+66,0F,F1,,,r,,,,,,PSLLW,Vdq,Wdq,,,sse2,simdint,shift,,,,,,,Shift Packed Data Left Logical
+,0F,F2,,,r,,,,,,PSLLD,Pq,Qq,,,mmx,shift,,,,,,,,Shift Packed Data Left Logical
+66,0F,F2,,,r,,,,,,PSLLD,Vdq,Wdq,,,sse2,simdint,shift,,,,,,,Shift Packed Data Left Logical
+,0F,F3,,,r,,,,,,PSLLQ,Pq,Qq,,,mmx,shift,,,,,,,,Shift Packed Data Left Logical
+66,0F,F3,,,r,,,,,,PSLLQ,Vdq,Wdq,,,sse2,simdint,shift,,,,,,,Shift Packed Data Left Logical
+,0F,F4,,,r,,,,,,PMULUDQ,Pq,Qq,,,sse2,simdint,arith,,,,,,,Multiply Packed Unsigned DW Integers
+66,0F,F4,,,r,,,,,,PMULUDQ,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Multiply Packed Unsigned DW Integers
+,0F,F5,,,r,,,,,,PMADDWD,Pq,Qd,,,mmx,arith,,,,,,,,Multiply and Add Packed Integers
+66,0F,F5,,,r,,,,,,PMADDWD,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Multiply and Add Packed Integers
+,0F,F6,,,r,,,,,,PSADBW,Pq,Qq,,,sse1,simdint,,,,,,,,Compute Sum of Absolute Differences
+66,0F,F6,,,r,,,,,,PSADBW,Vdq,Wdq,,,sse1,simdint,,,,,,,,Compute Sum of Absolute Differences
+,0F,F7,,,r,,D31,,,,MASKMOVQ,BDq,Pq,Nq,,sse1,cachect,,,,,,,,Store Selected Bytes of Quadword
+66,0F,F7,,,r,,,,,,MASKMOVDQU,BDdq,Vdq,Udq,,sse2,cachect,,,,,,,,Store Selected Bytes of Double Quadword
+,0F,F8,,,r,,,,,,PSUBB,Pq,Qq,,,mmx,arith,,,,,,,,Subtract Packed Integers
+66,0F,F8,,,r,,,,,,PSUBB,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Subtract Packed Integers
+,0F,F9,,,r,,,,,,PSUBW,Pq,Qq,,,mmx,arith,,,,,,,,Subtract Packed Integers
+66,0F,F9,,,r,,,,,,PSUBW,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Subtract Packed Integers
+,0F,FA,,,r,,,,,,PSUBD,Pq,Qq,,,mmx,arith,,,,,,,,Subtract Packed Integers
+66,0F,FA,,,r,,,,,,PSUBD,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Subtract Packed Integers
+,0F,FB,,,r,,,,,,PSUBQ,Pq,Qq,,,sse2,simdint,arith,,,,,,,Subtract Packed Quadword Integers
+66,0F,FB,,,r,,,,,,PSUBQ,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Subtract Packed Quadword Integers
+,0F,FC,,,r,,,,,,PADDB,Pq,Qq,,,mmx,arith,,,,,,,,Add Packed Integers
+66,0F,FC,,,r,,,,,,PADDB,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Add Packed Integers
+,0F,FD,,,r,,,,,,PADDW,Pq,Qq,,,mmx,arith,,,,,,,,Add Packed Integers
+66,0F,FD,,,r,,,,,,PADDW,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Add Packed Integers
+,0F,FE,,,r,,,,,,PADDD,Pq,Qq,,,mmx,arith,,,,,,,,Add Packed Integers
+66,0F,FE,,,r,,,,,,PADDD,Vdq,Wdq,,,sse2,simdint,arith,,,,,,,Add Packed Integers
