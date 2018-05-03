@@ -47,6 +47,11 @@
 #define CPU_ARCHTYPE_486NEWSLOW		0x45
 #define CPU_ARCHTYPE_PENTIUMSLOW	0x50
 
+#define CHECK_ALL_INSTRUCTIONS 0
+#if CHECK_ALL_INSTRUCTIONS
+void DumpUsedInstruction();
+#endif
+
  /* CPU Cycle Timing */
 extern Bit32s CPU_Cycles;
 extern Bit32s CPU_CycleLeft;
@@ -78,6 +83,8 @@ Bits CPU_Core_Dynrec_Run(void);
 Bits CPU_Core_Dynrec_Trap_Run(void);
 Bits CPU_Core_Prefetch_Run(void);
 Bits CPU_Core_Prefetch_Trap_Run(void);
+Bits CPU_Core_LLVM_Run(void);
+Bits CPU_Core_LLVM_Trap_Run(void);
 
 void CPU_Enable_SkipAutoAdjust(void);
 void CPU_Disable_SkipAutoAdjust(void);

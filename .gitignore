@@ -6,3 +6,6 @@ build/*
 /visualc_net/.vs
 /visualc_net/Debug
 /visualc_net/Release
+/.vs
+/src/libs/zmbv/.vs
+/visualc_net/x64
