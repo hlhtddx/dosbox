@@ -92,7 +92,7 @@ typedef struct {
 
 
 //get pi from a real library
-#define PI		3.14159265358979323846
+static const double PI = 3.14159265358979323846;
 #define L2E		1.4426950408889634
 #define L2T		3.3219280948873623
 #define LN2		0.69314718055994531
