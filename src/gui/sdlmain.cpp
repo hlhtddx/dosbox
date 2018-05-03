@@ -1419,20 +1419,24 @@ static void GUI_StartUp(Section * sec) {
 
 void Mouse_AutoLock(bool enable) {
 	sdl.mouse.autolock = enable;
-	if (sdl.mouse.autoenable) sdl.mouse.requestlock = enable;
-	else {
+	if (sdl.mouse.autoenable) {
+		sdl.mouse.requestlock = enable;
+	} else {
 		SDL_ShowCursor(enable ? SDL_DISABLE : SDL_ENABLE);
 		sdl.mouse.requestlock = false;
 	}
 }
 
 static void HandleMouseMotion(SDL_MouseMotionEvent * motion) {
-	if (sdl.mouse.locked || !sdl.mouse.autoenable)
+	if (sdl.mouse.locked || !sdl.mouse.autoenable) {
+		//printf("xrel: %d, yrel: %d, sdl.mouse.sensitivity: %p\n", motion->xrel, motion->yrel, sdl.mouse.sensitivity);
+
 		Mouse_CursorMoved((float)motion->xrel*sdl.mouse.sensitivity / 100.0f,
-		(float)motion->yrel*sdl.mouse.sensitivity / 100.0f,
+			(float)motion->yrel*sdl.mouse.sensitivity / 100.0f,
 			(float)(motion->x - sdl.clip.x) / (sdl.clip.w - 1)*sdl.mouse.sensitivity / 100.0f,
 			(float)(motion->y - sdl.clip.y) / (sdl.clip.h - 1)*sdl.mouse.sensitivity / 100.0f,
 			sdl.mouse.locked);
+	}
 }
 
 static void HandleMouseButton(SDL_MouseButtonEvent * button) {
