@@ -466,6 +466,7 @@ void DOSBOX_Init(void) {
 #if (C_DYNAMIC_X86) || (C_DYNREC)
 		"dynamic",
 #endif
+		"llvm", //for llvm decode
 		"normal", "simple",0 };
 	Pstring = secprop->Add_string("core", Property::Changeable::WhenIdle, "auto");
 	Pstring->Set_values(cores);
