@@ -9,6 +9,7 @@ list(APPEND ${project}_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/core_normal.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core_prefetch.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core_simple.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/core_llvm.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/cpu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/flags.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/instructions.h

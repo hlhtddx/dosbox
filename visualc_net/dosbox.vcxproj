@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
+    <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
+    <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -17,13 +17,13 @@
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
@@ -32,30 +32,26 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>15.0.27428.2015</_ProjectFileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>.\Debug\</OutDir>
-    <IntDir>.\Debug\</IntDir>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>.\Release\</OutDir>
-    <IntDir>.\Release\</IntDir>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../src/platform/visualc;../include;D:\Developer\local-package\includes;D:\Developer\local-package\includes\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/platform/visualc;../include;D:\Developer\local-package\includes;D:\Developer\local-package\includes\SDL;D:\Developer\LLVM\Debug\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -67,36 +63,35 @@
       <BrowseInformation>true</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;winmm.lib;sdlmain.lib;sdl.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\Debug/dosbox.exe</OutputFile>
+      <AdditionalDependencies>opengl32.lib;winmm.lib;sdlmain_x64-debug.lib;sdl_x64-debug.lib;LLVMCore.lib;LLVMExecutionEngine.lib;LLVMObject.lib;LLVMSupport.lib;LLVMX86CodeGen.lib;LLVMX86AsmParser.lib;LLVMX86AsmPrinter.lib;LLVMX86Desc.lib;LLVMX86Disassembler.lib;LLVMX86Info.lib;LLVMX86Utils.lib;LLVMRuntimeDyld.lib;LLVMAsmPrinter.lib;LLVMDebugInfoCodeView.lib;LLVMDebugInfoMSF.lib;LLVMGlobalISel.lib;LLVMSelectionDAG.lib;LLVMCodeGen.lib;LLVMTarget.lib;LLVMBitWriter.lib;LLVMScalarOpts.lib;LLVMInstCombine.lib;LLVMTransformUtils.lib;LLVMAnalysis.lib;LLVMProfileData.lib;LLVMBitReader.lib;LLVMBinaryFormat.lib;LLVMMCParser.lib;LLVMMCDisassembler.lib;LLVMMC.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Debug/dosbox.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
-      <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>D:\Developer\local-package\libs\x86\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Developer\local-package\libs;D:\Developer\LLVM\Debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <TypeLibraryName>.\Debug/dosbox.tlb</TypeLibraryName>
-      <HeaderFileName />
+      <HeaderFileName>
+      </HeaderFileName>
     </Midl>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
     </ResourceCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>../src/platform/visualc;../include;D:\Developer\local-package\includes;D:\Developer\local-package\includes\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/platform/visualc;../include;D:\Developer\local-package\includes;D:\Developer\local-package\includes\SDL;D:\Developer\LLVM\Release\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -115,20 +110,20 @@
       <CompileAs>Default</CompileAs>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;winmm.lib;zlib.lib;libpng.lib;sdl_net.lib;sdlmain.lib;sdl.lib;curses.lib;odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\Release/dosbox.exe</OutputFile>
+      <AdditionalDependencies>opengl32.lib;winmm.lib;sdlmain_x64.lib;sdl_x64.lib;LLVMCore.lib;LLVMExecutionEngine.lib;LLVMObject.lib;LLVMSupport.lib;LLVMX86CodeGen.lib;LLVMX86AsmParser.lib;LLVMX86AsmPrinter.lib;LLVMX86Desc.lib;LLVMX86Disassembler.lib;LLVMX86Info.lib;LLVMX86Utils.lib;LLVMRuntimeDyld.lib;LLVMAsmPrinter.lib;LLVMDebugInfoCodeView.lib;LLVMDebugInfoMSF.lib;LLVMGlobalISel.lib;LLVMSelectionDAG.lib;LLVMCodeGen.lib;LLVMTarget.lib;LLVMBitWriter.lib;LLVMScalarOpts.lib;LLVMInstCombine.lib;LLVMTransformUtils.lib;LLVMAnalysis.lib;LLVMProfileData.lib;LLVMBitReader.lib;LLVMBinaryFormat.lib;LLVMMCParser.lib;LLVMMCDisassembler.lib;LLVMMC.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile />
+      <ProgramDatabaseFile>
+      </ProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
       <SubSystem>Console</SubSystem>
-      <TargetMachine>MachineX86</TargetMachine>
       <FixedBaseAddress>false</FixedBaseAddress>
-      <AdditionalLibraryDirectories>D:\Developer\local-package\libs\x86\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Developer\local-package\libs;D:\Developer\LLVM\Release\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <TypeLibraryName>.\Release/dosbox.tlb</TypeLibraryName>
-      <HeaderFileName />
+      <HeaderFileName>
+      </HeaderFileName>
     </Midl>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -140,6 +135,7 @@
     <ClCompile Include="..\src\cpu\core_dynrec.cpp" />
     <ClCompile Include="..\src\cpu\core_dyn_x86.cpp" />
     <ClCompile Include="..\src\cpu\core_full.cpp" />
+    <ClCompile Include="..\src\cpu\core_llvm.cpp" />
     <ClCompile Include="..\src\cpu\core_normal.cpp" />
     <ClCompile Include="..\src\cpu\core_prefetch.cpp" />
     <ClCompile Include="..\src\cpu\core_simple.cpp" />
@@ -246,6 +242,7 @@
     <ClCompile Include="..\src\ints\mouse.cpp" />
     <ClCompile Include="..\src\ints\xms.cpp" />
     <ClCompile Include="..\src\libs\gui_tk\gui_tk.cpp" />
+    <ClCompile Include="..\src\llvm\llvm.cpp" />
     <ClCompile Include="..\src\misc\cross.cpp" />
     <ClCompile Include="..\src\misc\messages.cpp" />
     <ClCompile Include="..\src\misc\programs.cpp" />
@@ -276,6 +273,7 @@
     <ClInclude Include="..\include\inout.h" />
     <ClInclude Include="..\include\joystick.h" />
     <ClInclude Include="..\include\keyboard.h" />
+    <ClInclude Include="..\include\llvm.h" />
     <ClInclude Include="..\include\logging.h" />
     <ClInclude Include="..\include\mem.h" />
     <ClInclude Include="..\include\midi.h" />
@@ -319,10 +317,6 @@
     <ClInclude Include="..\src\cpu\core_full\string.h" />
     <ClInclude Include="..\src\cpu\core_full\support.h" />
     <ClInclude Include="..\src\cpu\core_normal\helpers.h" />
-    <ClInclude Include="..\src\cpu\core_normal\prefix_0f.h" />
-    <ClInclude Include="..\src\cpu\core_normal\prefix_66.h" />
-    <ClInclude Include="..\src\cpu\core_normal\prefix_66_0f.h" />
-    <ClInclude Include="..\src\cpu\core_normal\prefix_none.h" />
     <ClInclude Include="..\src\cpu\core_normal\string.h" />
     <ClInclude Include="..\src\cpu\core_normal\support.h" />
     <ClInclude Include="..\src\cpu\core_normal\table_ea.h" />
@@ -363,6 +357,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\src\dosbox.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\Developer\SDL\SDL-1.2.15-src\SDL-1.2.15\VisualC\SDL\Release\SDL.pdb" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
