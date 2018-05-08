@@ -2,10 +2,9 @@
 .vscode
 cmake-build-*
 build/*
-/visualc_net/*.vcxproj.user
-/visualc_net/.vs
+**/*.vcxproj.user
+**/.vs
 /visualc_net/Debug
 /visualc_net/Release
-/.vs
-/src/libs/zmbv/.vs
 /visualc_net/x64
+src/libs/zmbv/x64
