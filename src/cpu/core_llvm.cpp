@@ -54,6 +54,7 @@ extern Bitu cycle_count;
 #if C_FPU
 #define CPU_FPU    1                        //Enable FPU escape instructions
 #endif
+bool cpu_x86_instruction::defaultSize = false;
 
 #define CPU_PIC_CHECK	1
 #define CPU_TRAP_CHECK	1
