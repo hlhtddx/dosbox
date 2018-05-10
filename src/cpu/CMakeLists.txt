@@ -69,4 +69,4 @@ list(APPEND ${project}_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/core_dynrec/risc_x64.h
 )
 
-add_library ( dosbox_cpu STATIC ${${project}_SOURCES} )
+add_library ( dosbox_cpu STATIC ${${project}_SOURCES} core_llvm/core_llvm.h)
