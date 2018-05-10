@@ -4,6 +4,7 @@ cmake-build-*
 build/*
 **/*.vcxproj.user
 **/.vs
+**/__pycache__
 /visualc_net/Debug
 /visualc_net/Release
 /visualc_net/x64
