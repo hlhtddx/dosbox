@@ -409,7 +409,27 @@ public:
 			}
 			if (type == "floppy") incrementFDD();
 			return;
-		showusage:
+		}
+		if (!newdrive) E_Exit("DOS:Can't create drive");
+		Drives[drive-'A']=newdrive;
+		/* Set the correct media byte in the table */
+		mem_writeb(Real2Phys(dos.tables.mediaid)+(drive-'A')*2,newdrive->GetMediaByte());
+		WriteOut(MSG_Get("PROGRAM_MOUNT_STATUS_2"),drive,newdrive->GetInfo());
+		/* check if volume label is given and don't allow it to updated in the future */
+		if (cmd->FindString("-label",label,true)) newdrive->dirCache.SetLabel(label.c_str(),iscdrom,false);
+		/* For hard drives set the label to DRIVELETTER_Drive.
+		 * For floppy drives set the label to DRIVELETTER_Floppy.
+		 * This way every drive except cdroms should get a label.*/
+		else if(type == "dir") { 
+			label = drive; label += "_DRIVE";
+			newdrive->dirCache.SetLabel(label.c_str(),iscdrom,false);
+		} else if(type == "floppy") {
+			label = drive; label += "_FLOPPY";
+			newdrive->dirCache.SetLabel(label.c_str(),iscdrom,true);
+		}
+		if(type == "floppy") incrementFDD();
+		return;
+showusage:
 #if defined (WIN32) || defined(OS2)
 			WriteOut(MSG_Get("PROGRAM_MOUNT_USAGE"), "d:\\dosprogs", "d:\\dosprogs");
 #else
