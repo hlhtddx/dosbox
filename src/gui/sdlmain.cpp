@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2002-2017  The DOSBox Team
+ *  Copyright (C) 2002-2018  The DOSBox Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1981,7 +1981,7 @@ int main(int argc, char* argv[]) {
 
 		/* Display Welcometext in the console */
 		LOG_MSG("DOSBox version %s", VERSION);
-		LOG_MSG("Copyright 2002-2017 DOSBox Team, published under GNU GPL.");
+		LOG_MSG("Copyright 2002-2018 DOSBox Team, published under GNU GPL.");
 		LOG_MSG("---");
 
 		/* Init SDL */
