@@ -909,12 +909,12 @@ showusage:
 				if (!ldp) return;
 
 				FILE *tmpfile = ldp->GetSystemFilePtr(fullname, "rb");
-				if (tmpfile == NULL) {
+				if(tmpfile == NULL) {
 					WriteOut(MSG_Get("PROGRAM_LOADROM_CANT_OPEN"));
 					return;
 				}
 				fseek(tmpfile, 0L, SEEK_END);
-				if (ftell(tmpfile) > 0x8000) {
+				if (ftell(tmpfile)>0x8000) {
 					WriteOut(MSG_Get("PROGRAM_LOADROM_TOO_LARGE"));
 					fclose(tmpfile);
 					return;
@@ -927,7 +927,7 @@ showusage:
 				/* try to identify ROM type */
 				PhysPt rom_base = 0;
 				if (data_read >= 0x4000 && rom_buffer[0] == 0x55 && rom_buffer[1] == 0xaa &&
-					rom_buffer[3] == 0xeb && strncmp((char*)(&rom_buffer[0x1e]), "IBM", 3) == 0) {
+					(rom_buffer[3] & 0xfc) == 0xe8 && strncmp((char*)(&rom_buffer[0x1e]), "IBM", 3) == 0) {
 
 					if (!IS_EGAVGA_ARCH) {
 						WriteOut(MSG_Get("PROGRAM_LOADROM_INCOMPATIBLE"));
