@@ -172,6 +172,10 @@ bool DOS_IOCTL(void) {
 		case 0x46:
 		case 0x66:	/* Volume label */
 		{
+			if (drive < 2 && !Drives[drive]) {
+				DOS_SetError(DOSERR_ACCESS_DENIED);
+				return false;
+			}
 			if (Drives[drive]->isRemovable()) {
 				DOS_SetError(DOSERR_FUNCTION_NUMBER_INVALID);
 				return false;
