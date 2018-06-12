@@ -126,6 +126,7 @@ public:
 				switch (DriveManager::UnmountDrive(i_drive)) {
 				case 0:
 					Drives[i_drive] = 0;
+					mem_writeb(Real2Phys(dos.tables.mediaid) + i_drive * 5, 0);
 					if (i_drive == DOS_GetDefaultDrive())
 						DOS_SetDrive(ZDRIVE_NUM);
 					WriteOut(MSG_Get("PROGRAM_MOUNT_UMOUNT_SUCCESS"), umount[0]);
@@ -413,7 +414,7 @@ public:
 		if (!newdrive) E_Exit("DOS:Can't create drive");
 		Drives[drive-'A']=newdrive;
 		/* Set the correct media byte in the table */
-		mem_writeb(Real2Phys(dos.tables.mediaid)+(drive-'A')*2,newdrive->GetMediaByte());
+		mem_writeb(Real2Phys(dos.tables.mediaid)+(drive-'A')*5,newdrive->GetMediaByte());
 		WriteOut(MSG_Get("PROGRAM_MOUNT_STATUS_2"),drive,newdrive->GetInfo());
 		/* check if volume label is given and don't allow it to updated in the future */
 		if (cmd->FindString("-label",label,true)) newdrive->dirCache.SetLabel(label.c_str(),iscdrom,false);
@@ -1302,10 +1303,12 @@ showusage:
 						LOG_MSG("autosized image file: %d:%d:%d:%d", sizes[0], sizes[1], sizes[2], sizes[3]);
 					}
 
-					if (Drives[drive - 'A']) {
-						WriteOut(MSG_Get("PROGRAM_IMGMOUNT_ALREADY_MOUNTED"));
-						return;
-					}
+					// Set the correct media byte in the table 
+					mem_writeb(Real2Phys(dos.tables.mediaid) + (drive - 'A') * 5, mediaid);
+					
+					/* Command uses dta so set it to our internal dta */
+					RealPt save_dta = dos.dta();
+					dos.dta(dos.tables.tempdta);
 
 					std::vector<DOS_Drive*> imgDisks;
 					std::vector<std::string>::size_type i;
@@ -1424,8 +1427,23 @@ showusage:
 						WriteOut(MSG_Get("PROGRAM_IMGMOUNT_INVALID_IMAGE"));
 						return;
 					}
-					fseek(newDisk, 0L, SEEK_END);
-					imagesize = (ftell(newDisk) / 1024);
+				}
+				// Update DriveManager
+				for(ct = 0; ct < isoDisks.size(); ct++) {
+					DriveManager::AppendDisk(drive - 'A', isoDisks[ct]);
+				}
+				DriveManager::InitializeDrive(drive - 'A');
+				
+				// Set the correct media byte in the table 
+				mem_writeb(Real2Phys(dos.tables.mediaid) + (drive - 'A') * 5, mediaid);
+				
+				// Print status message (success)
+				WriteOut(MSG_Get("MSCDEX_SUCCESS"));
+				std::string tmp(paths[0]);
+				for (i = 1; i < paths.size(); i++) {
+					tmp += "; " + paths[i];
+				}
+				WriteOut(MSG_Get("PROGRAM_MOUNT_STATUS_2"), drive, tmp.c_str());
 
 					newImage = new imageDisk(newDisk, (Bit8u *)temp_line.c_str(), imagesize, (imagesize > 2880));
 					if (imagesize > 2880) newImage->Set_Geometry(sizes[2], sizes[3], sizes[1], sizes[0]);

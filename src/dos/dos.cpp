@@ -490,19 +490,23 @@ static Bitu DOS_21Handler(void) {
 		break;
 	case 0x1f: /* Get drive parameter block for default drive */
 	case 0x32: /* Get drive parameter block for specific drive */
-	{	/* Officially a dpb should be returned as well. The disk detection part is implemented */
-		Bit8u drive = reg_dl;
-		if (!drive || reg_ah == 0x1f) drive = DOS_GetDefaultDrive();
-		else drive--;
-		if (Drives[drive]) {
-			reg_al = 0x00;
-			SegSet16(ds, dos.tables.dpb);
-			reg_bx = drive;//Faking only the first entry (that is the driveletter)
-			LOG(LOG_DOSMISC, LOG_ERROR)("Get drive parameter block.");
-		} else {
-			reg_al = 0xff;
-		}
-	}
+		{	/* Officially a dpb should be returned as well. The disk detection part is implemented */
+            Bit8u drive = reg_dl;
+            if (!drive || reg_ah == 0x1f)
+                drive = DOS_GetDefaultDrive();
+            else
+                drive--;
+            if (drive < DOS_DRIVES && Drives[drive] && !Drives[drive]->isRemovable()) {
+                reg_al = 0x00;
+                SegSet16(ds, dos.tables.dpb);
+                reg_bx = drive * 5; //Faking the first entry (drive number) and media id
+                LOG(LOG_DOSMISC, LOG_ERROR)
+                ("Get drive parameter block.");
+            } else {
+                reg_al = 0xff;
+            }
+        }
+        }
 	break;
 	case 0x33:		/* Extended Break Checking */
 		switch (reg_al) {

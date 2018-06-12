@@ -87,22 +87,22 @@ static bool DOS_MultiplexFunctions(void) {
 			} else {
 				Bit8u drive = Files[reg_bx]->GetDrive();
 
-				mem_writew(sftptr + sftofs + 0x02, (Bit16u)(Files[reg_bx]->flags & 3));	// file open mode
-				mem_writeb(sftptr + sftofs + 0x04, (Bit8u)(Files[reg_bx]->attr));		// file attribute
-				mem_writew(sftptr + sftofs + 0x05, 0x40 | drive);							// device info word
-				mem_writed(sftptr + sftofs + 0x07, RealMake(dos.tables.dpb, drive));		// dpb of the drive
-				mem_writew(sftptr + sftofs + 0x0d, Files[reg_bx]->time);					// packed file time
-				mem_writew(sftptr + sftofs + 0x0f, Files[reg_bx]->date);					// packed file date
+				mem_writew(sftptr + sftofs + 0x02, (Bit16u)(Files[reg_bx]->flags & 3)); // file open mode
+				mem_writeb(sftptr + sftofs + 0x04, (Bit8u)(Files[reg_bx]->attr)); // file attribute
+				mem_writew(sftptr + sftofs + 0x05, 0x40 | drive); // device info word
+				mem_writed(sftptr + sftofs + 0x07, RealMake(dos.tables.dpb, drive * 5)); // dpb of the drive
+				mem_writew(sftptr + sftofs + 0x0d, Files[reg_bx]->time); // packed file time
+				mem_writew(sftptr + sftofs + 0x0f, Files[reg_bx]->date); // packed file date
 				Bit32u curpos = 0;
 				Files[reg_bx]->Seek(&curpos, DOS_SEEK_CUR);
 				Bit32u endpos = 0;
 				Files[reg_bx]->Seek(&endpos, DOS_SEEK_END);
-				mem_writed(sftptr + sftofs + 0x11, endpos);		// size
-				mem_writed(sftptr + sftofs + 0x15, curpos);		// current position
+				mem_writed(sftptr + sftofs + 0x11, endpos); // size
+				mem_writed(sftptr + sftofs + 0x15, curpos); // current position
 				Files[reg_bx]->Seek(&curpos, DOS_SEEK_SET);
 			}
 
-			// fill in filename in fcb style
+                        // fill in filename in fcb style
 			// (space-padded name (8 chars)+space-padded extension (3 chars))
 			const char* filename = (const char*)Files[reg_bx]->GetName();
 			if (strrchr(filename, '\\')) filename = strrchr(filename, '\\') + 1;
