@@ -2519,7 +2519,17 @@ private:
     /*
      CMP
     */
-    inline bool handler_in_83_07_CMP_Ibs();
+    inline bool handler_in_83_07_CMP_Evqp_Ibs();
+
+	/*
+	 CMP for 16-Bit operand
+	*/
+	inline bool handler_in_83_07_CMP_Evqp_Ibs_16();
+
+	/*
+	 CMP for 32-Bit operand
+	*/
+	inline bool handler_in_83_07_CMP_Evqp_Ibs_32();
 
     /*
      TEST
@@ -2644,17 +2654,7 @@ private:
     /*
      XCHG
     */
-    inline bool handler_in_90_XCHG_rAXvqp();
-
-    /*
-     XCHG for 16-Bit operand
-    */
-    inline bool handler_in_90_XCHG_rAXvqp_16();
-
-    /*
-     XCHG for 32-Bit operand
-    */
-    inline bool handler_in_90_XCHG_rAXvqp_32();
+    inline bool handler_in_90_NOP();
 
     /*
      XCHG
@@ -2762,24 +2762,14 @@ private:
     inline bool handler_in_97_XCHG_rAXvqp_32();
 
     /*
-     CBW
+     CBW/CWDE
     */
-    inline bool handler_in_98_CBW();
+    inline bool handler_in_98_CBW_CWDE();
 
     /*
-     CWDE
+     CWD/CDQ
     */
-    inline bool handler_in_98_CWDE();
-
-    /*
-     CDQ
-    */
-    inline bool handler_in_99_CDQ();
-
-    /*
-     CWD
-    */
-    inline bool handler_in_99_CWD();
+    inline bool handler_in_99_CWD_CDQ();
 
     /*
      CALLF
