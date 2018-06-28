@@ -506,7 +506,8 @@ inline bool CpuRunnerLLVM::handler_in_0F_00_05_VERW_Ew() {
 */
 inline bool CpuRunnerLLVM::handler_in_0F_01_00_SGDT_Ms() {
     auto rmmod = Fetch<Bit8u>();
-    typedef Bit48u data_type;
+    typedef Bit32u data_type;
+    typedef Bit16u data_type2;
     auto destination = GetRmMem<data_type>(rmmod);
     //TODO do the actual operation
     return true;
@@ -517,7 +518,8 @@ inline bool CpuRunnerLLVM::handler_in_0F_01_00_SGDT_Ms() {
 */
 inline bool CpuRunnerLLVM::handler_in_0F_01_01_SIDT_Ms() {
     auto rmmod = Fetch<Bit8u>();
-    typedef Bit48u data_type;
+    typedef Bit32u data_type;
+    typedef Bit16u data_type2;
     auto destination = GetRmMem<data_type>(rmmod);
     //TODO do the actual operation
     return true;
@@ -528,7 +530,8 @@ inline bool CpuRunnerLLVM::handler_in_0F_01_01_SIDT_Ms() {
 */
 inline bool CpuRunnerLLVM::handler_in_0F_01_02_LGDT_Ms() {
     auto rmmod = Fetch<Bit8u>();
-    typedef Bit48u data_type;
+    typedef Bit32u data_type;
+    typedef Bit16u data_type2;
     auto source = GetRmMem<data_type>(rmmod);
     //TODO do the actual operation
     return true;
@@ -539,7 +542,8 @@ inline bool CpuRunnerLLVM::handler_in_0F_01_02_LGDT_Ms() {
 */
 inline bool CpuRunnerLLVM::handler_in_0F_01_03_LIDT_Ms() {
     auto rmmod = Fetch<Bit8u>();
-    typedef Bit48u data_type;
+    typedef Bit32u data_type;
+    typedef Bit16u data_type2;
     auto source = GetRmMem<data_type>(rmmod);
     //TODO do the actual operation
     return true;
@@ -3812,11 +3816,11 @@ inline void DecrementRegister(Bit32u& destination) {
 	lflags.type = t_INCd;
 }
 
-inline void CPU_Push(Bit16u& source) {
+inline void CPU_Push(Bit16u source) {
 	CPU_Push16(source);
 }
 
-inline void CPU_Push(Bit32u& source) {
+inline void CPU_Push(Bit32u source) {
 	CPU_Push32(source);
 }
 
@@ -4970,7 +4974,7 @@ inline bool CpuRunnerLLVM::handler_in_68_PUSH_Ivs() {
 inline bool CpuRunnerLLVM::handler_in_68_PUSH_Ivs_16() {
     typedef Bit16u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    CPU_Push(source);
     return true;
 }
 
@@ -4980,7 +4984,7 @@ inline bool CpuRunnerLLVM::handler_in_68_PUSH_Ivs_16() {
 inline bool CpuRunnerLLVM::handler_in_68_PUSH_Ivs_32() {
     typedef Bit32u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    CPU_Push(source);
     return true;
 }
 
@@ -5002,8 +5006,18 @@ inline bool CpuRunnerLLVM::handler_in_69_IMUL_Gvqp_Ivds_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
     auto destination = GetRmReg<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source1 = static_cast<Bit16s>(GetRmMod<data_type>(rmmod)->Read());
+    auto source2 = static_cast<Bit16s>(GetImmediate<data_type>());
+    Bits res = source1 * source2;
+    destination->Write(static_cast<Bit16u>(res));
+    FillFlagsNoCFOF();
+    if ((res >= INT16_MIN) && (res <= INT16_MAX)) {
+        SETFLAGBIT(CF, false);
+        SETFLAGBIT(OF, false);
+    } else {
+        SETFLAGBIT(CF, true);
+        SETFLAGBIT(OF, true);
+    }
     return true;
 }
 
@@ -5014,8 +5028,19 @@ inline bool CpuRunnerLLVM::handler_in_69_IMUL_Gvqp_Ivds_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
     auto destination = GetRmReg<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source1 = static_cast<Bit32s>(GetRmMod<data_type>(rmmod)->Read());
+    auto source2 = static_cast<Bit32s>(GetImmediate<data_type>());
+    Bit64s res = source1 * source2;
+    destination->Write(static_cast<data_type >(res));
+    FillFlagsNoCFOF();
+    if ((res >= -2147483648LL) &&
+        (res <= 2147483647LL)) {
+        SETFLAGBIT(CF, false);
+        SETFLAGBIT(OF, false);
+    } else {
+        SETFLAGBIT(CF, true);
+        SETFLAGBIT(OF, true);
+    }
     return true;
 }
 
@@ -5023,9 +5048,9 @@ inline bool CpuRunnerLLVM::handler_in_69_IMUL_Gvqp_Ivds_32() {
  PUSH
 */
 inline bool CpuRunnerLLVM::handler_in_6A_PUSH_Ibss() {
-    typedef Bit8u data_type;
+    typedef Bit8s data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    CPU_Push(static_cast<Bit16u>(source));
     return true;
 }
 
@@ -5046,9 +5071,20 @@ inline bool CpuRunnerLLVM::handler_in_6B_IMUL_Gvqp_Ibs() {
 inline bool CpuRunnerLLVM::handler_in_6B_IMUL_Gvqp_Ibs_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
+    typedef Bit8s operand_type;
     auto destination = GetRmReg<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source1 = static_cast<Bit16s>(GetRmMod<data_type>(rmmod)->Read());
+    auto source2 = static_cast<Bit16s>(GetImmediate<operand_type>());
+    Bits res = source1 * source2;
+    destination->Write(static_cast<Bit16u>(res));
+    FillFlagsNoCFOF();
+    if ((res >= INT16_MIN) && (res <= INT16_MAX)) {
+        SETFLAGBIT(CF, false);
+        SETFLAGBIT(OF, false);
+    } else {
+        SETFLAGBIT(CF, true);
+        SETFLAGBIT(OF, true);
+    }
     return true;
 }
 
@@ -5058,9 +5094,21 @@ inline bool CpuRunnerLLVM::handler_in_6B_IMUL_Gvqp_Ibs_16() {
 inline bool CpuRunnerLLVM::handler_in_6B_IMUL_Gvqp_Ibs_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
+    typedef Bit8s operand_type;
     auto destination = GetRmReg<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source1 = static_cast<Bit32s>(GetRmMod<data_type>(rmmod)->Read());
+    auto source2 = static_cast<Bit32s>(GetImmediate<operand_type>());
+    Bit64s res = source1 * source2;
+    destination->Write(static_cast<data_type >(res));
+    FillFlagsNoCFOF();
+    if ((res >= -2147483648LL) &&
+        (res <= 2147483647LL)) {
+        SETFLAGBIT(CF, false);
+        SETFLAGBIT(OF, false);
+    } else {
+        SETFLAGBIT(CF, true);
+        SETFLAGBIT(OF, true);
+    }
     return true;
 }
 
@@ -5071,7 +5119,10 @@ inline bool CpuRunnerLLVM::handler_in_6C_INS_Yb_DXw() {
     typedef Bit8u data_type;
     auto destination = GetMemoryReference<data_type>(reg_bh);
     auto source = reg_dl;
-    //TODO do the actual operation
+    if (CPU_IO_Exception(reg_dx, 1)) {
+        RunException();
+    }
+//    DoString(R_INSB);
     return true;
 }
 
@@ -5156,7 +5207,7 @@ inline bool CpuRunnerLLVM::handler_in_6F_OUTS_DXw_Xwo_32() {
 inline bool CpuRunnerLLVM::handler_in_70_JO_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_O, source);
     return true;
 }
 
@@ -5166,7 +5217,7 @@ inline bool CpuRunnerLLVM::handler_in_70_JO_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_71_JNO_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_NO, source);
     return true;
 }
 
@@ -5176,7 +5227,7 @@ inline bool CpuRunnerLLVM::handler_in_71_JNO_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_72_JB_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_B, source);
     return true;
 }
 
@@ -5186,7 +5237,7 @@ inline bool CpuRunnerLLVM::handler_in_72_JB_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_73_JNB_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_NB, source);
     return true;
 }
 
@@ -5196,7 +5247,7 @@ inline bool CpuRunnerLLVM::handler_in_73_JNB_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_74_JZ_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_Z, source);
     return true;
 }
 
@@ -5206,7 +5257,7 @@ inline bool CpuRunnerLLVM::handler_in_74_JZ_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_75_JNZ_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_NZ, source);
     return true;
 }
 
@@ -5216,7 +5267,7 @@ inline bool CpuRunnerLLVM::handler_in_75_JNZ_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_76_JBE_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_BE, source);
     return true;
 }
 
@@ -5226,7 +5277,7 @@ inline bool CpuRunnerLLVM::handler_in_76_JBE_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_77_JNBE_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_NBE, source);
     return true;
 }
 
@@ -5236,7 +5287,7 @@ inline bool CpuRunnerLLVM::handler_in_77_JNBE_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_78_JS_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_S, source);
     return true;
 }
 
@@ -5246,7 +5297,7 @@ inline bool CpuRunnerLLVM::handler_in_78_JS_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_79_JNS_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_NS, source);
     return true;
 }
 
@@ -5256,7 +5307,7 @@ inline bool CpuRunnerLLVM::handler_in_79_JNS_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_7A_JP_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_P, source);
     return true;
 }
 
@@ -5266,7 +5317,7 @@ inline bool CpuRunnerLLVM::handler_in_7A_JP_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_7B_JNP_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_NP, source);
     return true;
 }
 
@@ -5276,7 +5327,7 @@ inline bool CpuRunnerLLVM::handler_in_7B_JNP_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_7C_JL_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_L, source);
     return true;
 }
 
@@ -5286,7 +5337,7 @@ inline bool CpuRunnerLLVM::handler_in_7C_JL_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_7D_JNL_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_NL, source);
     return true;
 }
 
@@ -5296,7 +5347,7 @@ inline bool CpuRunnerLLVM::handler_in_7D_JNL_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_7E_JLE_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_LE, source);
     return true;
 }
 
@@ -5306,7 +5357,7 @@ inline bool CpuRunnerLLVM::handler_in_7E_JLE_Jbs() {
 inline bool CpuRunnerLLVM::handler_in_7F_JNLE_Jbs() {
     typedef Bit8u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    JumpCondition<data_type>(TFLG_NLE, source);
     return true;
 }
 
@@ -5329,7 +5380,11 @@ inline bool CpuRunnerLLVM::handler_in_81_00_ADD_Evqp_Ivds_16() {
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    lf_var1w = destination->Read();
+    lf_var2w = source;
+    lf_resw = lf_var1w + lf_var2w;
+    destination->Write(lf_resw);
+    lflags.type=t_ADDw;
     return true;
 }
 
@@ -5341,7 +5396,11 @@ inline bool CpuRunnerLLVM::handler_in_81_00_ADD_Evqp_Ivds_32() {
     typedef Bit32u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    lf_var1d = destination->Read();
+    lf_var2d = source;
+    lf_resd = lf_var1d + lf_var2d;
+    destination->Write(lf_resd);
+    lflags.type=t_ADDd;
     return true;
 }
 
@@ -5364,7 +5423,11 @@ inline bool CpuRunnerLLVM::handler_in_81_01_OR_Evqp_Ivds_16() {
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    lf_var1w = destination->Read();
+    lf_var2w = source;
+    lf_resw = lf_var1w | lf_var2w;
+    destination->Write(lf_resw);
+    lflags.type=t_ORw;
     return true;
 }
 
@@ -5376,8 +5439,12 @@ inline bool CpuRunnerLLVM::handler_in_81_01_OR_Evqp_Ivds_32() {
     typedef Bit32u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
-    return true;
+	lf_var1d = destination->Read();
+	lf_var2d = source;
+	lf_resd = lf_var1d | lf_var2d;
+	destination->Write(lf_resd);
+	lflags.type=t_ORd;
+	return true;
 }
 
 /*
@@ -5399,8 +5466,13 @@ inline bool CpuRunnerLLVM::handler_in_81_02_ADC_Evqp_Ivds_16() {
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
-    return true;
+	lflags.oldcf = get_CF() != 0;
+	lf_var1w = destination->Read();
+	lf_var2w = source;
+	lf_resw = lf_var1w + lf_var2w + lflags.oldcf;
+	destination->Write(lf_resw);
+	lflags.type = t_ADCw;
+	return true;
 }
 
 /*
@@ -5411,7 +5483,12 @@ inline bool CpuRunnerLLVM::handler_in_81_02_ADC_Evqp_Ivds_32() {
     typedef Bit32u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lflags.oldcf = get_CF() != 0;
+	lf_var1d = destination->Read();
+	lf_var2d = source;
+	lf_resd = lf_var1d + lf_var2d + lflags.oldcf;
+	destination->Write(lf_resd);
+	lflags.type = t_ADCd;
     return true;
 }
 
@@ -5434,7 +5511,12 @@ inline bool CpuRunnerLLVM::handler_in_81_03_SBB_Evqp_Ivds_16() {
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lflags.oldcf = (get_CF()!=0);
+	lf_var1w = destination->Read();
+	lf_var2w = source;
+	lf_resw = lf_var1w - (lf_var2w + lflags.oldcf);
+	destination->Write(lf_resw);
+	lflags.type = t_SBBw;
     return true;
 }
 
@@ -5446,7 +5528,12 @@ inline bool CpuRunnerLLVM::handler_in_81_03_SBB_Evqp_Ivds_32() {
     typedef Bit32u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lflags.oldcf = (get_CF()!=0);
+	lf_var1d = destination->Read();
+	lf_var2d = source;
+	lf_resd = lf_var1d - (lf_var2d + lflags.oldcf);
+	destination->Write(lf_resd);
+	lflags.type = t_SBBd;
     return true;
 }
 
@@ -5469,7 +5556,11 @@ inline bool CpuRunnerLLVM::handler_in_81_04_AND_Evqp_Ivds_16() {
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    lf_var1w = destination->Read();
+    lf_var2w = source;
+    lf_resw = lf_var1w & lf_var2w;
+    destination->Write(lf_resw);
+    lflags.type=t_ANDw;
     return true;
 }
 
@@ -5481,7 +5572,11 @@ inline bool CpuRunnerLLVM::handler_in_81_04_AND_Evqp_Ivds_32() {
     typedef Bit32u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lf_var1d = destination->Read();
+	lf_var2d = source;
+	lf_resd = lf_var1d & lf_var2d;
+	destination->Write(lf_resd);
+	lflags.type=t_ANDd;
     return true;
 }
 
@@ -5504,7 +5599,11 @@ inline bool CpuRunnerLLVM::handler_in_81_05_SUB_Evqp_Ivds_16() {
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    lf_var1w = destination->Read();
+    lf_var2w = source;
+    lf_resw = lf_var1w - lf_var2w;
+    destination->Write(lf_resw);
+    lflags.type=t_SUBw;
     return true;
 }
 
@@ -5516,7 +5615,11 @@ inline bool CpuRunnerLLVM::handler_in_81_05_SUB_Evqp_Ivds_32() {
     typedef Bit32u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lf_var1d = destination->Read();
+	lf_var2d = source;
+	lf_resd = lf_var1d - lf_var2d;
+	destination->Write(lf_resd);
+	lflags.type=t_SUBd;
     return true;
 }
 
@@ -5539,7 +5642,11 @@ inline bool CpuRunnerLLVM::handler_in_81_06_XOR_Evqp_Ivds_16() {
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lf_var1w = destination->Read();
+	lf_var2w = source;
+	lf_resw = lf_var1w ^ lf_var2w;
+	destination->Write(lf_resw);
+	lflags.type=t_XORw;
     return true;
 }
 
@@ -5551,7 +5658,11 @@ inline bool CpuRunnerLLVM::handler_in_81_06_XOR_Evqp_Ivds_32() {
     typedef Bit32u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lf_var1d = destination->Read();
+	lf_var2d = source;
+	lf_resd = lf_var1d ^ lf_var2d;
+	destination->Write(lf_resd);
+	lflags.type=t_XORd;
     return true;
 }
 
@@ -5572,8 +5683,12 @@ inline bool CpuRunnerLLVM::handler_in_81_07_CMP_Ivds() {
 inline bool CpuRunnerLLVM::handler_in_81_07_CMP_Ivds_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
+	auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lf_var1w = destination->Read();
+	lf_var2w = source;
+	lf_resw = lf_var1w - lf_var2w;
+	lflags.type=t_CMPw;
     return true;
 }
 
@@ -5583,8 +5698,12 @@ inline bool CpuRunnerLLVM::handler_in_81_07_CMP_Ivds_16() {
 inline bool CpuRunnerLLVM::handler_in_81_07_CMP_Ivds_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = GetImmediate<data_type>();
+	lf_var1d = destination->Read();
+	lf_var2d = source;
+	lf_resd = lf_var1d - lf_var2d;
+	lflags.type=t_CMPd;
     return true;
 }
 
@@ -5596,7 +5715,11 @@ inline bool CpuRunnerLLVM::handler_in_82_00_ADD_Eb_Ib() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lf_var1b = destination->Read();
+	lf_var2b = source;
+	lf_resb = lf_var1b + lf_var2b;
+	destination->Write(lf_resb);
+	lflags.type=t_ADDb;
     return true;
 }
 
@@ -5608,7 +5731,11 @@ inline bool CpuRunnerLLVM::handler_in_82_01_OR_Eb_Ib() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lf_var1b = destination->Read();
+	lf_var2b = source;
+	lf_resb = lf_var1b | lf_var2b;
+	destination->Write(lf_resb);
+	lflags.type=t_ORb;
     return true;
 }
 
@@ -5620,7 +5747,12 @@ inline bool CpuRunnerLLVM::handler_in_82_02_ADC_Eb_Ib() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lflags.oldcf = (get_CF() != 0);
+	lf_var1b = destination->Read();
+	lf_var2b = source;
+	lf_resb = lf_var1b + lf_var2b + lflags.oldcf;
+	destination->Write(lf_resb);
+	lflags.type=t_ADCb;
     return true;
 }
 
@@ -5632,7 +5764,12 @@ inline bool CpuRunnerLLVM::handler_in_82_03_SBB_Eb_Ib() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lflags.oldcf = (get_CF() != 0);
+	lf_var1b = destination->Read();
+	lf_var2b = source;
+	lf_resb = lf_var1b - (lf_var2b + lflags.oldcf);
+	destination->Write(lf_resb);
+	lflags.type=t_SBBb;
     return true;
 }
 
@@ -5644,7 +5781,11 @@ inline bool CpuRunnerLLVM::handler_in_82_04_AND_Eb_Ib() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lf_var1b = destination->Read();
+	lf_var2b = source;
+	lf_resb = lf_var1b & lf_var2b;
+	destination->Write(lf_resb);
+	lflags.type=t_ANDb;
     return true;
 }
 
@@ -5656,7 +5797,11 @@ inline bool CpuRunnerLLVM::handler_in_82_05_SUB_Eb_Ib() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	lf_var1b = destination->Read();
+	lf_var2b = source;
+	lf_resb = lf_var1b - lf_var2b;
+	destination->Write(lf_resb);
+	lflags.type=t_SUBb;
     return true;
 }
 
@@ -5667,9 +5812,13 @@ inline bool CpuRunnerLLVM::handler_in_82_06_XOR_Eb_Ib() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
-    return true;
+	auto source = GetImmediate<data_type>();
+	lf_var1b = destination->Read();
+	lf_var2b = source;
+	lf_resb = lf_var1b ^ lf_var2b;
+	destination->Write(lf_resb);
+	lflags.type=t_XORb;
+	return true;
 }
 
 /*
@@ -5678,8 +5827,12 @@ inline bool CpuRunnerLLVM::handler_in_82_06_XOR_Eb_Ib() {
 inline bool CpuRunnerLLVM::handler_in_82_07_CMP_Ib() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit8u data_type;
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = GetImmediate<data_type>();
+	lf_var1b = destination->Read();
+	lf_var2b = source;
+	lf_resb = lf_var1b - lf_var2b;
+	lflags.type=t_CMPb;
     return true;
 }
 
@@ -5701,8 +5854,12 @@ inline bool CpuRunnerLLVM::handler_in_83_00_ADD_Evqp_Ibs_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1w = destination->Read();
+	lf_var2w = static_cast<data_type>(source);
+	lf_resw = lf_var1w + lf_var2w;
+	destination->Write(lf_resw);
+	lflags.type=t_ADDw;
     return true;
 }
 
@@ -5712,9 +5869,13 @@ inline bool CpuRunnerLLVM::handler_in_83_00_ADD_Evqp_Ibs_16() {
 inline bool CpuRunnerLLVM::handler_in_83_00_ADD_Evqp_Ibs_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1d = destination->Read();
+	lf_var2d = static_cast<data_type>(source);
+	lf_resd = lf_var1d + lf_var2d;
+	destination->Write(lf_resd);
+	lflags.type=t_ADDd;
     return true;
 }
 
@@ -5735,9 +5896,13 @@ inline bool CpuRunnerLLVM::handler_in_83_01_OR_Evqp_Ibs() {
 inline bool CpuRunnerLLVM::handler_in_83_01_OR_Evqp_Ibs_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1w = destination->Read();
+	lf_var2w = static_cast<data_type>(source);
+	lf_resw = lf_var1w | lf_var2w;
+	destination->Write(lf_resw);
+	lflags.type=t_ORw;
     return true;
 }
 
@@ -5747,9 +5912,13 @@ inline bool CpuRunnerLLVM::handler_in_83_01_OR_Evqp_Ibs_16() {
 inline bool CpuRunnerLLVM::handler_in_83_01_OR_Evqp_Ibs_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1d = destination->Read();
+	lf_var2d = static_cast<data_type>(source);
+	lf_resd = lf_var1d | lf_var2d;
+	destination->Write(lf_resd);
+	lflags.type=t_ORd;
     return true;
 }
 
@@ -5770,9 +5939,14 @@ inline bool CpuRunnerLLVM::handler_in_83_02_ADC_Evqp_Ibs() {
 inline bool CpuRunnerLLVM::handler_in_83_02_ADC_Evqp_Ibs_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lflags.oldcf = (get_CF() != 0);
+	lf_var1w = destination->Read();
+	lf_var2w = static_cast<data_type>(source);
+	lf_resw = lf_var1w + lf_var2w + lflags.oldcf;
+	destination->Write(lf_resw);
+	lflags.type=t_ADCw;
     return true;
 }
 
@@ -5782,9 +5956,14 @@ inline bool CpuRunnerLLVM::handler_in_83_02_ADC_Evqp_Ibs_16() {
 inline bool CpuRunnerLLVM::handler_in_83_02_ADC_Evqp_Ibs_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lflags.oldcf = (get_CF() != 0);
+	lf_var1d = destination->Read();
+	lf_var2d = static_cast<data_type>(source);
+	lf_resd = lf_var1d + lf_var2d + lflags.oldcf;
+	destination->Write(lf_resd);
+	lflags.type=t_ADCd;
     return true;
 }
 
@@ -5805,9 +5984,14 @@ inline bool CpuRunnerLLVM::handler_in_83_03_SBB_Evqp_Ibs() {
 inline bool CpuRunnerLLVM::handler_in_83_03_SBB_Evqp_Ibs_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lflags.oldcf = (get_CF() != 0);
+	lf_var1w = destination->Read();
+	lf_var2w = static_cast<data_type>(source);
+	lf_resw = lf_var1w - (lf_var2w + lflags.oldcf);
+	destination->Write(lf_resw);
+	lflags.type=t_SBBw;
     return true;
 }
 
@@ -5817,9 +6001,14 @@ inline bool CpuRunnerLLVM::handler_in_83_03_SBB_Evqp_Ibs_16() {
 inline bool CpuRunnerLLVM::handler_in_83_03_SBB_Evqp_Ibs_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lflags.oldcf = (get_CF() != 0);
+	lf_var1d = destination->Read();
+	lf_var2d = static_cast<data_type>(source);
+	lf_resd = lf_var1d - (lf_var2d + lflags.oldcf);
+	destination->Write(lf_resd);
+	lflags.type=t_SBBd;
     return true;
 }
 
@@ -5840,9 +6029,13 @@ inline bool CpuRunnerLLVM::handler_in_83_04_AND_Evqp_Ibs() {
 inline bool CpuRunnerLLVM::handler_in_83_04_AND_Evqp_Ibs_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1w = destination->Read();
+	lf_var2w = static_cast<data_type>(source);
+	lf_resw = lf_var1w & lf_var2w;
+	destination->Write(lf_resw);
+	lflags.type=t_ANDw;
     return true;
 }
 
@@ -5852,9 +6045,13 @@ inline bool CpuRunnerLLVM::handler_in_83_04_AND_Evqp_Ibs_16() {
 inline bool CpuRunnerLLVM::handler_in_83_04_AND_Evqp_Ibs_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1d = destination->Read();
+	lf_var2d = static_cast<data_type>(source);
+	lf_resd = lf_var1d & lf_var2d;
+	destination->Write(lf_resd);
+	lflags.type=t_ANDd;
     return true;
 }
 
@@ -5875,9 +6072,13 @@ inline bool CpuRunnerLLVM::handler_in_83_05_SUB_Evqp_Ibs() {
 inline bool CpuRunnerLLVM::handler_in_83_05_SUB_Evqp_Ibs_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1w = destination->Read();
+	lf_var2w = static_cast<data_type>(source);
+	lf_resw = lf_var1w - lf_var2w;
+	destination->Write(lf_resw);
+	lflags.type=t_SUBw;
     return true;
 }
 
@@ -5887,9 +6088,13 @@ inline bool CpuRunnerLLVM::handler_in_83_05_SUB_Evqp_Ibs_16() {
 inline bool CpuRunnerLLVM::handler_in_83_05_SUB_Evqp_Ibs_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1d = destination->Read();
+	lf_var2d = static_cast<data_type>(source);
+	lf_resd = lf_var1d - lf_var2d;
+	destination->Write(lf_resd);
+	lflags.type=t_SUBd;
     return true;
 }
 
@@ -5897,46 +6102,86 @@ inline bool CpuRunnerLLVM::handler_in_83_05_SUB_Evqp_Ibs_32() {
  XOR
 */
 inline bool CpuRunnerLLVM::handler_in_83_06_XOR_Evqp_Ibs() {
-    if (Is32BitOperandMode()) {
-        return handler_in_83_06_XOR_Evqp_Ibs_32();
-    } else {
-        return handler_in_83_06_XOR_Evqp_Ibs_16();
-    }
+	if (Is32BitOperandMode()) {
+		return handler_in_83_06_XOR_Evqp_Ibs_32();
+	} else {
+		return handler_in_83_06_XOR_Evqp_Ibs_16();
+	}
 }
 
 /*
  XOR
 */
 inline bool CpuRunnerLLVM::handler_in_83_06_XOR_Evqp_Ibs_16() {
-    auto rmmod = Fetch<Bit8u>();
-    typedef Bit16u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
-    return true;
+	auto rmmod = Fetch<Bit8u>();
+	typedef Bit16u data_type;
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1w = destination->Read();
+	lf_var2w = static_cast<data_type>(source);
+	lf_resw = lf_var1w ^ lf_var2w;
+	destination->Write(lf_resw);
+	lflags.type=t_XORw;
+	return true;
 }
 
 /*
  XOR
 */
 inline bool CpuRunnerLLVM::handler_in_83_06_XOR_Evqp_Ibs_32() {
-    auto rmmod = Fetch<Bit8u>();
-    typedef Bit32u data_type;
-    auto destination = GetRmMod<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
-    return true;
+	auto rmmod = Fetch<Bit8u>();
+	typedef Bit32u data_type;
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1d = destination->Read();
+	lf_var2d = static_cast<data_type>(source);
+	lf_resd = lf_var1d ^ lf_var2d;
+	destination->Write(lf_resd);
+	lflags.type=t_XORd;
+	return true;
 }
 
 /*
  CMP
 */
-inline bool CpuRunnerLLVM::handler_in_83_07_CMP_Ibs() {
-    auto rmmod = Fetch<Bit8u>();
-    typedef Bit8u data_type;
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
-    return true;
+inline bool CpuRunnerLLVM::handler_in_83_07_CMP_Evqp_Ibs() {
+	if (Is32BitOperandMode()) {
+		return handler_in_83_07_CMP_Evqp_Ibs_16();
+	} else {
+		return handler_in_83_07_CMP_Evqp_Ibs_32();
+	}
+}
+
+/*
+ CMP
+*/
+inline bool CpuRunnerLLVM::handler_in_83_07_CMP_Evqp_Ibs_16() {
+	auto rmmod = Fetch<Bit8u>();
+	typedef Bit16u data_type;
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1w = destination->Read();
+	lf_var2w = static_cast<data_type>(source);
+	lf_resw = lf_var1w ^ lf_var2w;
+	destination->Write(lf_resw);
+	lflags.type=t_XORw;
+	return true;
+}
+
+/*
+ CMP
+*/
+inline bool CpuRunnerLLVM::handler_in_83_07_CMP_Evqp_Ibs_32() {
+	auto rmmod = Fetch<Bit8u>();
+	typedef Bit32u data_type;
+	auto destination = GetRmMod<data_type>(rmmod);
+	auto source = static_cast<Bit8s>(GetImmediate<Bit8u>());
+	lf_var1d = destination->Read();
+	lf_var2d = static_cast<data_type>(source);
+	lf_resd = lf_var1d ^ lf_var2d;
+	destination->Write(lf_resd);
+	lflags.type=t_XORd;
+	return true;
 }
 
 /*
@@ -5945,8 +6190,12 @@ inline bool CpuRunnerLLVM::handler_in_83_07_CMP_Ibs() {
 inline bool CpuRunnerLLVM::handler_in_84_TEST_Gb() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit8u data_type;
+    auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetRmReg<data_type>(rmmod);
-    //TODO do the actual operation
+    lf_var1b = destination->Read();
+    lf_var2b = source->Read();
+    lf_resb = lf_var1b & lf_var2b;
+    lflags.type = t_TESTb;
     return true;
 }
 
@@ -5967,8 +6216,12 @@ inline bool CpuRunnerLLVM::handler_in_85_TEST_Gvqp() {
 inline bool CpuRunnerLLVM::handler_in_85_TEST_Gvqp_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
+    auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetRmReg<data_type>(rmmod);
-    //TODO do the actual operation
+    lf_var1w = destination->Read();
+    lf_var2w = source->Read();
+    lf_resw = lf_var1w & lf_var2w;
+    lflags.type = t_TESTw;
     return true;
 }
 
@@ -5978,8 +6231,12 @@ inline bool CpuRunnerLLVM::handler_in_85_TEST_Gvqp_16() {
 inline bool CpuRunnerLLVM::handler_in_85_TEST_Gvqp_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
+    auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetRmReg<data_type>(rmmod);
-    //TODO do the actual operation
+    lf_var1d = destination->Read();
+    lf_var2d = source->Read();
+    lf_resd = lf_var1d & lf_var2d;
+    lflags.type = t_TESTd;
     return true;
 }
 
@@ -5990,7 +6247,11 @@ inline bool CpuRunnerLLVM::handler_in_86_XCHG_Eb() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
-    //TODO do the actual operation
+    auto source = GetRmReg<data_type>(rmmod);
+    data_type tmp1 = source->Read();
+    data_type tmp2 = destination->Read();
+    destination->Write(tmp1);
+    source->Write(tmp2);
     return true;
 }
 
@@ -6012,7 +6273,11 @@ inline bool CpuRunnerLLVM::handler_in_87_XCHG_Evqp_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
-    //TODO do the actual operation
+    auto source = GetRmReg<data_type>(rmmod);
+    data_type tmp1 = source->Read();
+    data_type tmp2 = destination->Read();
+    destination->Write(tmp1);
+    source->Write(tmp2);
     return true;
 }
 
@@ -6023,7 +6288,11 @@ inline bool CpuRunnerLLVM::handler_in_87_XCHG_Evqp_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
-    //TODO do the actual operation
+    auto source = GetRmReg<data_type>(rmmod);
+    data_type tmp1 = source->Read();
+    data_type tmp2 = destination->Read();
+    destination->Write(tmp1);
+    source->Write(tmp2);
     return true;
 }
 
@@ -6035,7 +6304,7 @@ inline bool CpuRunnerLLVM::handler_in_88_MOV_Eb_Gb() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetRmReg<data_type>(rmmod);
-    //TODO do the actual operation
+    destination->Write(source->Read());
     return true;
 }
 
@@ -6058,7 +6327,7 @@ inline bool CpuRunnerLLVM::handler_in_89_MOV_Evqp_Gvqp_16() {
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetRmReg<data_type>(rmmod);
-    //TODO do the actual operation
+    destination->Write(source->Read());
     return true;
 }
 
@@ -6070,7 +6339,7 @@ inline bool CpuRunnerLLVM::handler_in_89_MOV_Evqp_Gvqp_32() {
     typedef Bit32u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetRmReg<data_type>(rmmod);
-    //TODO do the actual operation
+    destination->Write(source->Read());
     return true;
 }
 
@@ -6082,7 +6351,7 @@ inline bool CpuRunnerLLVM::handler_in_8A_MOV_Gb_Eb() {
     typedef Bit8u data_type;
     auto destination = GetRmReg<data_type>(rmmod);
     auto source = GetRmMod<data_type>(rmmod);
-    //TODO do the actual operation
+    destination->Write(source->Read());
     return true;
 }
 
@@ -6105,7 +6374,7 @@ inline bool CpuRunnerLLVM::handler_in_8B_MOV_Gvqp_Evqp_16() {
     typedef Bit16u data_type;
     auto destination = GetRmReg<data_type>(rmmod);
     auto source = GetRmMod<data_type>(rmmod);
-    //TODO do the actual operation
+    destination->Write(source->Read());
     return true;
 }
 
@@ -6117,7 +6386,7 @@ inline bool CpuRunnerLLVM::handler_in_8B_MOV_Gvqp_Evqp_32() {
     typedef Bit32u data_type;
     auto destination = GetRmReg<data_type>(rmmod);
     auto source = GetRmMod<data_type>(rmmod);
-    //TODO do the actual operation
+    destination->Write(source->Read());
     return true;
 }
 
@@ -6128,8 +6397,8 @@ inline bool CpuRunnerLLVM::handler_in_8C_MOV_Mw_Sw() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
     auto destination = GetRmMem<data_type>(rmmod);
-    auto source = rmmod & 0x07u;
-    //TODO do the actual operation
+    auto source = GetRmSreg<data_type>(rmmod);
+    destination->Write(source->Read());
     return true;
 }
 
@@ -6150,8 +6419,10 @@ inline bool CpuRunnerLLVM::handler_in_8D_LEA_Gvqp() {
 inline bool CpuRunnerLLVM::handler_in_8D_LEA_Gvqp_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
+    BaseDS = BaseSS = 0;
     auto destination = GetRmReg<data_type>(rmmod);
-    //TODO do the actual operation
+    auto source = GetRmMod<data_type>(rmmod);
+    destination->Write(source->GetEffectiveAddress());
     return true;
 }
 
@@ -6162,7 +6433,8 @@ inline bool CpuRunnerLLVM::handler_in_8D_LEA_Gvqp_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
     auto destination = GetRmReg<data_type>(rmmod);
-    //TODO do the actual operation
+    auto source = GetRmMod<data_type>(rmmod);
+    destination->Write(source->GetEffectiveAddress());
     return true;
 }
 
@@ -6172,9 +6444,9 @@ inline bool CpuRunnerLLVM::handler_in_8D_LEA_Gvqp_32() {
 inline bool CpuRunnerLLVM::handler_in_8E_MOV_Sw_Ew() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
-    auto destination = rmmod & 0x07u;
+    auto destination = GetRmSreg<data_type>(rmmod);
     auto source = GetRmMod<data_type>(rmmod);
-    //TODO do the actual operation
+    destination->Write(source->Read());
     return true;
 }
 
@@ -6196,7 +6468,8 @@ inline bool CpuRunnerLLVM::handler_in_8F_00_POP_Ev_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
-    //TODO do the actual operation
+    auto source = static_cast<data_type>(CPU_Pop16());
+    destination->Write(source);
     return true;
 }
 
@@ -6207,38 +6480,15 @@ inline bool CpuRunnerLLVM::handler_in_8F_00_POP_Ev_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
-    //TODO do the actual operation
+    auto source = static_cast<data_type>(CPU_Pop32());
+    destination->Write(source);
     return true;
 }
 
 /*
  XCHG
 */
-inline bool CpuRunnerLLVM::handler_in_90_XCHG_rAXvqp() {
-    if (Is32BitOperandMode()) {
-        return handler_in_90_XCHG_rAXvqp_32();
-    } else {
-        return handler_in_90_XCHG_rAXvqp_16();
-    }
-}
-
-/*
- XCHG
-*/
-inline bool CpuRunnerLLVM::handler_in_90_XCHG_rAXvqp_16() {
-    typedef Bit16u data_type;
-    auto& destination = reg_ax;
-    //TODO do the actual operation
-    return true;
-}
-
-/*
- XCHG
-*/
-inline bool CpuRunnerLLVM::handler_in_90_XCHG_rAXvqp_32() {
-    typedef Bit32u data_type;
-    auto& destination = reg_eax;
-    //TODO do the actual operation
+inline bool CpuRunnerLLVM::handler_in_90_NOP() {
     return true;
 }
 
@@ -6259,7 +6509,10 @@ inline bool CpuRunnerLLVM::handler_in_91_XCHG_rAXvqp() {
 inline bool CpuRunnerLLVM::handler_in_91_XCHG_rAXvqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_ax;
-    //TODO do the actual operation
+    auto& source = reg_cx;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6269,7 +6522,10 @@ inline bool CpuRunnerLLVM::handler_in_91_XCHG_rAXvqp_16() {
 inline bool CpuRunnerLLVM::handler_in_91_XCHG_rAXvqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_eax;
-    //TODO do the actual operation
+    auto& source = reg_ecx;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6290,7 +6546,10 @@ inline bool CpuRunnerLLVM::handler_in_92_XCHG_rAXvqp() {
 inline bool CpuRunnerLLVM::handler_in_92_XCHG_rAXvqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_ax;
-    //TODO do the actual operation
+    auto& source = reg_dx;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6300,7 +6559,10 @@ inline bool CpuRunnerLLVM::handler_in_92_XCHG_rAXvqp_16() {
 inline bool CpuRunnerLLVM::handler_in_92_XCHG_rAXvqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_eax;
-    //TODO do the actual operation
+    auto& source = reg_edx;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6321,7 +6583,10 @@ inline bool CpuRunnerLLVM::handler_in_93_XCHG_rAXvqp() {
 inline bool CpuRunnerLLVM::handler_in_93_XCHG_rAXvqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_ax;
-    //TODO do the actual operation
+    auto& source = reg_bx;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6331,7 +6596,10 @@ inline bool CpuRunnerLLVM::handler_in_93_XCHG_rAXvqp_16() {
 inline bool CpuRunnerLLVM::handler_in_93_XCHG_rAXvqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_eax;
-    //TODO do the actual operation
+    auto& source = reg_ebx;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6352,7 +6620,10 @@ inline bool CpuRunnerLLVM::handler_in_94_XCHG_rAXvqp() {
 inline bool CpuRunnerLLVM::handler_in_94_XCHG_rAXvqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_ax;
-    //TODO do the actual operation
+    auto& source = reg_sp;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6362,7 +6633,10 @@ inline bool CpuRunnerLLVM::handler_in_94_XCHG_rAXvqp_16() {
 inline bool CpuRunnerLLVM::handler_in_94_XCHG_rAXvqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_eax;
-    //TODO do the actual operation
+    auto& source = reg_esp;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6383,7 +6657,10 @@ inline bool CpuRunnerLLVM::handler_in_95_XCHG_rAXvqp() {
 inline bool CpuRunnerLLVM::handler_in_95_XCHG_rAXvqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_ax;
-    //TODO do the actual operation
+    auto& source = reg_bp;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6393,7 +6670,10 @@ inline bool CpuRunnerLLVM::handler_in_95_XCHG_rAXvqp_16() {
 inline bool CpuRunnerLLVM::handler_in_95_XCHG_rAXvqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_eax;
-    //TODO do the actual operation
+    auto& source = reg_ebp;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6414,7 +6694,10 @@ inline bool CpuRunnerLLVM::handler_in_96_XCHG_rAXvqp() {
 inline bool CpuRunnerLLVM::handler_in_96_XCHG_rAXvqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_ax;
-    //TODO do the actual operation
+    auto& source = reg_si;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6424,7 +6707,10 @@ inline bool CpuRunnerLLVM::handler_in_96_XCHG_rAXvqp_16() {
 inline bool CpuRunnerLLVM::handler_in_96_XCHG_rAXvqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_eax;
-    //TODO do the actual operation
+    auto& source = reg_esi;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6445,7 +6731,10 @@ inline bool CpuRunnerLLVM::handler_in_97_XCHG_rAXvqp() {
 inline bool CpuRunnerLLVM::handler_in_97_XCHG_rAXvqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_ax;
-    //TODO do the actual operation
+    auto& source = reg_di;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
@@ -6455,35 +6744,29 @@ inline bool CpuRunnerLLVM::handler_in_97_XCHG_rAXvqp_16() {
 inline bool CpuRunnerLLVM::handler_in_97_XCHG_rAXvqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_eax;
-    //TODO do the actual operation
+    auto& source = reg_edi;
+    auto tmp = destination;
+    source = destination;
+    destination = tmp;
     return true;
 }
 
 /*
- CBW
+ CBW/CWDE
 */
-inline bool CpuRunnerLLVM::handler_in_98_CBW() {
+inline bool CpuRunnerLLVM::handler_in_98_CBW_CWDE() {
+    if (Is32BitOperandMode()) {
+        reg_eax = static_cast<Bit16s>(reg_ax);
+    } else {
+        reg_ax = static_cast<Bit16s>(reg_al);
+    }
     return true;
 }
 
 /*
- CWDE
+ CWD/CDQ
 */
-inline bool CpuRunnerLLVM::handler_in_98_CWDE() {
-    return true;
-}
-
-/*
- CDQ
-*/
-inline bool CpuRunnerLLVM::handler_in_99_CDQ() {
-    return true;
-}
-
-/*
- CWD
-*/
-inline bool CpuRunnerLLVM::handler_in_99_CWD() {
+inline bool CpuRunnerLLVM::handler_in_99_CWD_CDQ() {
     return true;
 }
 
@@ -6503,8 +6786,9 @@ inline bool CpuRunnerLLVM::handler_in_9A_CALLF_Ap() {
 */
 inline bool CpuRunnerLLVM::handler_in_9A_CALLF_Ap_16() {
     typedef Bit16u data_type;
-    auto source = GetMemoryReference<data_type>(GetImmediate<Bit16u>() + GetImmediate<data_type>());
-    //TODO do the actual operation
+    auto newip = GetImmediate<Bit16u>();
+    auto newcs = GetImmediate<data_type>();
+    CPU_CALL(false, newcs, newip, GetIP());
     return true;
 }
 
@@ -6513,8 +6797,9 @@ inline bool CpuRunnerLLVM::handler_in_9A_CALLF_Ap_16() {
 */
 inline bool CpuRunnerLLVM::handler_in_9A_CALLF_Ap_32() {
     typedef Bit32u data_type;
-    auto source = GetMemoryReference<data_type>(GetImmediate<Bit16u>() + GetImmediate<data_type>());
-    //TODO do the actual operation
+    auto newip = GetImmediate<Bit16u>();
+    auto newcs = GetImmediate<data_type>();
+    CPU_CALL(false, newcs, newip, GetIP());
     return true;
 }
 
@@ -6529,6 +6814,9 @@ inline bool CpuRunnerLLVM::handler_in_9B_FWAIT() {
  PUSHF
 */
 inline bool CpuRunnerLLVM::handler_in_9C_PUSHF() {
+    if (CPU_PUSHF(false)) {
+        RunException();
+    }
     return true;
 }
 
@@ -6536,6 +6824,9 @@ inline bool CpuRunnerLLVM::handler_in_9C_PUSHF() {
  POPF
 */
 inline bool CpuRunnerLLVM::handler_in_9D_POPF() {
+    if (CPU_POPF(false)) {
+        RunException();
+    }
     return true;
 }
 
@@ -6543,6 +6834,7 @@ inline bool CpuRunnerLLVM::handler_in_9D_POPF() {
  SAHF
 */
 inline bool CpuRunnerLLVM::handler_in_9E_SAHF() {
+    SETFLAGSb(reg_ah);
     return true;
 }
 
@@ -6550,6 +6842,8 @@ inline bool CpuRunnerLLVM::handler_in_9E_SAHF() {
  LAHF
 */
 inline bool CpuRunnerLLVM::handler_in_9F_LAHF() {
+    FillFlags();
+    reg_ah = reg_flags & 0xff;
     return true;
 }
 
@@ -6559,8 +6853,8 @@ inline bool CpuRunnerLLVM::handler_in_9F_LAHF() {
 inline bool CpuRunnerLLVM::handler_in_A0_MOV_ALb_Ob() {
     typedef Bit8u data_type;
     auto& destination = reg_al;
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source = GetDirectEffectiveAddress();
+    destination = ReadMemory<data_type>(source);
     return true;
 }
 
@@ -6581,8 +6875,8 @@ inline bool CpuRunnerLLVM::handler_in_A1_MOV_rAXvqp_Ovqp() {
 inline bool CpuRunnerLLVM::handler_in_A1_MOV_rAXvqp_Ovqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_ax;
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source = GetDirectEffectiveAddress();
+    destination = ReadMemory<data_type>(source);
     return true;
 }
 
@@ -6592,8 +6886,8 @@ inline bool CpuRunnerLLVM::handler_in_A1_MOV_rAXvqp_Ovqp_16() {
 inline bool CpuRunnerLLVM::handler_in_A1_MOV_rAXvqp_Ovqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_eax;
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source = GetDirectEffectiveAddress();
+    destination = ReadMemory<data_type>(source);
     return true;
 }
 
@@ -6602,9 +6896,9 @@ inline bool CpuRunnerLLVM::handler_in_A1_MOV_rAXvqp_Ovqp_32() {
 */
 inline bool CpuRunnerLLVM::handler_in_A2_MOV_Ob_ALb() {
     typedef Bit8u data_type;
-    auto destination = GetImmediate<data_type>();
+    auto destination = GetDirectEffectiveAddress();
     auto source = reg_al;
-    //TODO do the actual operation
+    WriteMemory<data_type>(destination, source);
     return true;
 }
 
@@ -6624,9 +6918,9 @@ inline bool CpuRunnerLLVM::handler_in_A3_MOV_Ovqp_rAXvqp() {
 */
 inline bool CpuRunnerLLVM::handler_in_A3_MOV_Ovqp_rAXvqp_16() {
     typedef Bit16u data_type;
-    auto destination = GetImmediate<data_type>();
+    auto destination = GetDirectEffectiveAddress();
     auto source = reg_ax;
-    //TODO do the actual operation
+    WriteMemory<data_type>(destination, source);
     return true;
 }
 
@@ -6635,9 +6929,9 @@ inline bool CpuRunnerLLVM::handler_in_A3_MOV_Ovqp_rAXvqp_16() {
 */
 inline bool CpuRunnerLLVM::handler_in_A3_MOV_Ovqp_rAXvqp_32() {
     typedef Bit32u data_type;
-    auto destination = GetImmediate<data_type>();
+    auto destination = GetDirectEffectiveAddress();
     auto source = reg_eax;
-    //TODO do the actual operation
+    WriteMemory<data_type>(destination, source);
     return true;
 }
 
@@ -6688,8 +6982,12 @@ inline bool CpuRunnerLLVM::handler_in_A7_CMPS_Xwo() {
 */
 inline bool CpuRunnerLLVM::handler_in_A8_TEST_Ib() {
     typedef Bit8u data_type;
+    auto &destination = reg_al;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    lf_var1b = destination;
+    lf_var2b = source;
+    lf_resb = lf_var1b & lf_var2b;
+    lflags.type = t_TESTb;
     return true;
 }
 
@@ -6709,8 +7007,12 @@ inline bool CpuRunnerLLVM::handler_in_A9_TEST_Ivds() {
 */
 inline bool CpuRunnerLLVM::handler_in_A9_TEST_Ivds_16() {
     typedef Bit16u data_type;
+    auto &destination = reg_ax;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    lf_var1w = destination;
+    lf_var2w = source;
+    lf_resw = lf_var1w & lf_var2w;
+    lflags.type = t_TESTw;
     return true;
 }
 
@@ -6719,8 +7021,12 @@ inline bool CpuRunnerLLVM::handler_in_A9_TEST_Ivds_16() {
 */
 inline bool CpuRunnerLLVM::handler_in_A9_TEST_Ivds_32() {
     typedef Bit32u data_type;
+    auto &destination = reg_eax;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    lf_var1d = destination;
+    lf_var2d = source;
+    lf_resd = lf_var1d & lf_var2d;
+    lflags.type = t_TESTd;
     return true;
 }
 
@@ -6791,7 +7097,7 @@ inline bool CpuRunnerLLVM::handler_in_B0_MOV_ALb_Ib() {
     typedef Bit8u data_type;
     auto& destination = reg_al;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6802,7 +7108,7 @@ inline bool CpuRunnerLLVM::handler_in_B1_MOV_CLb_Ib() {
     typedef Bit8u data_type;
     auto& destination = reg_cl;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6813,7 +7119,7 @@ inline bool CpuRunnerLLVM::handler_in_B2_MOV_DLb_Ib() {
     typedef Bit8u data_type;
     auto& destination = reg_dl;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6824,7 +7130,7 @@ inline bool CpuRunnerLLVM::handler_in_B4_MOV_AHb_Ib() {
     typedef Bit8u data_type;
     auto& destination = reg_ah;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6835,7 +7141,7 @@ inline bool CpuRunnerLLVM::handler_in_B5_MOV_CHb_Ib() {
     typedef Bit8u data_type;
     auto& destination = reg_ch;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6846,7 +7152,7 @@ inline bool CpuRunnerLLVM::handler_in_B6_MOV_DHb_Ib() {
     typedef Bit8u data_type;
     auto& destination = reg_dh;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6857,7 +7163,7 @@ inline bool CpuRunnerLLVM::handler_in_B7_MOV_BHb_Ib() {
     typedef Bit8u data_type;
     auto& destination = reg_bh;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6879,7 +7185,7 @@ inline bool CpuRunnerLLVM::handler_in_B8_MOV_rAXvqp_Ivqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_ax;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6890,7 +7196,7 @@ inline bool CpuRunnerLLVM::handler_in_B8_MOV_rAXvqp_Ivqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_eax;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6912,7 +7218,7 @@ inline bool CpuRunnerLLVM::handler_in_B9_MOV_rCXvqp_Ivqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_cx;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6923,7 +7229,7 @@ inline bool CpuRunnerLLVM::handler_in_B9_MOV_rCXvqp_Ivqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_ecx;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6945,7 +7251,7 @@ inline bool CpuRunnerLLVM::handler_in_BA_MOV_rDXvqp_Ivqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_dx;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6956,7 +7262,7 @@ inline bool CpuRunnerLLVM::handler_in_BA_MOV_rDXvqp_Ivqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_edx;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6978,7 +7284,7 @@ inline bool CpuRunnerLLVM::handler_in_BB_MOV_rBXvqp_Ivqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_bx;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -6989,7 +7295,7 @@ inline bool CpuRunnerLLVM::handler_in_BB_MOV_rBXvqp_Ivqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_ebx;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -7011,7 +7317,7 @@ inline bool CpuRunnerLLVM::handler_in_BC_MOV_rSPvqp_Ivqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_sp;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -7022,7 +7328,7 @@ inline bool CpuRunnerLLVM::handler_in_BC_MOV_rSPvqp_Ivqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_esp;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -7044,7 +7350,7 @@ inline bool CpuRunnerLLVM::handler_in_BD_MOV_rBPvqp_Ivqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_bp;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -7055,7 +7361,7 @@ inline bool CpuRunnerLLVM::handler_in_BD_MOV_rBPvqp_Ivqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_ebp;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -7077,7 +7383,7 @@ inline bool CpuRunnerLLVM::handler_in_BE_MOV_rSIvqp_Ivqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_si;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -7088,7 +7394,7 @@ inline bool CpuRunnerLLVM::handler_in_BE_MOV_rSIvqp_Ivqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_esi;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -7110,7 +7416,7 @@ inline bool CpuRunnerLLVM::handler_in_BF_MOV_rDIvqp_Ivqp_16() {
     typedef Bit16u data_type;
     auto& destination = reg_di;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -7121,7 +7427,7 @@ inline bool CpuRunnerLLVM::handler_in_BF_MOV_rDIvqp_Ivqp_32() {
     typedef Bit32u data_type;
     auto& destination = reg_edi;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    destination = source;
     return true;
 }
 
@@ -7133,7 +7439,22 @@ inline bool CpuRunnerLLVM::handler_in_C0_00_ROL_Eb_Ib() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    lf_var1b = destination->Read();
+    if (!(source & 0x7)) {
+        if (source & 0x18) {
+            FillFlagsNoCFOF();
+            SETFLAGBIT(CF, lf_var1b & 1);
+            SETFLAGBIT(OF, (lf_var1b & 1) ^ (lf_var1b >> 7));
+        }
+        return true;
+    }
+    FillFlagsNoCFOF();
+    lf_var2b = source & 0x07u;
+    lf_resb = (lf_var1b << lf_var2b) |
+        (lf_var1b >> (8 - lf_var2b));
+    destination->Write(lf_resb);
+    SETFLAGBIT(CF, lf_resb & 1);
+    SETFLAGBIT(OF, (lf_resb & 1) ^ (lf_resb >> 7));
     return true;
 }
 
@@ -7145,7 +7466,22 @@ inline bool CpuRunnerLLVM::handler_in_C0_01_ROR_Eb_Ib() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    lf_var1b = destination->Read();
+    if (!(source & 0x7)) {
+        if (source & 0x18) {
+            FillFlagsNoCFOF();
+            SETFLAGBIT(CF, lf_var1b >> 7);
+            SETFLAGBIT(OF, (lf_var1b >> 7) ^ ((lf_var1b >> 6) & 1));
+        }
+        return true;
+    }
+    FillFlagsNoCFOF();
+    lf_var2b = source & 0x07;
+    lf_resb = (lf_var1b >> lf_var2b) |
+        (lf_var1b << (8 - lf_var2b));
+    destination->Write(lf_resb);
+    SETFLAGBIT(CF, lf_resb & 0x80);
+    SETFLAGBIT(OF, (lf_resb ^ (lf_resb << 1)) & 0x80);
     return true;
 }
 
@@ -7157,7 +7493,15 @@ inline bool CpuRunnerLLVM::handler_in_C0_02_RCL_Eb_Ib() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    Bit8u cf = (Bit8u) FillFlags() & 0x1;
+    lf_var1b = destination->Read();
+    lf_var2b = source % 9;
+    lf_resb = (lf_var1b << lf_var2b) |
+        (cf << (lf_var2b - 1)) |
+        (lf_var1b >> (9 - lf_var2b));
+    destination->Write(lf_resb);
+    SETFLAGBIT(CF, ((lf_var1b >> (8 - lf_var2b)) & 1));
+    SETFLAGBIT(OF, (reg_flags & 1) ^ (lf_resb >> 7));
     return true;
 }
 
@@ -7169,7 +7513,17 @@ inline bool CpuRunnerLLVM::handler_in_C0_03_RCR_Eb_Ib() {
     typedef Bit8u data_type;
     auto destination = GetRmMod<data_type>(rmmod);
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    if (source % 9) {
+        Bit8u cf = (Bit8u) FillFlags() & 0x1;
+        lf_var1b = destination->Read();
+        lf_var2b = source % 9;
+        lf_resb = (lf_var1b >> lf_var2b) |
+            (cf << (8 - lf_var2b)) |
+            (lf_var1b << (9 - lf_var2b));
+        destination->Write(lf_resb);
+        SETFLAGBIT(CF, (lf_var1b >> (lf_var2b - 1)) & 1);
+        SETFLAGBIT(OF, (lf_resb ^ (lf_resb << 1)) & 0x80);
+    }
     return true;
 }
 
@@ -9661,6 +10015,7 @@ inline bool CpuRunnerLLVM::handler_s0(Bit8u rmmod) {
         return handler_in_7F_JNLE_Jbs();
     case 0x81:
         return handler_st_81();
+    case 0x80:
     case 0x82:
         return handler_st_82();
     case 0x83:
@@ -9690,7 +10045,7 @@ inline bool CpuRunnerLLVM::handler_s0(Bit8u rmmod) {
     case 0x8f:
         return handler_st_8F();
     case 0x90:
-        return handler_in_90_XCHG_rAXvqp();
+        return handler_in_90_NOP();
     case 0x91:
         return handler_in_91_XCHG_rAXvqp();
     case 0x92:
@@ -9706,9 +10061,9 @@ inline bool CpuRunnerLLVM::handler_s0(Bit8u rmmod) {
     case 0x97:
         return handler_in_97_XCHG_rAXvqp();
     case 0x98:
-        return handler_in_98_CWDE();
+        return handler_in_98_CBW_CWDE();
     case 0x99:
-        return handler_in_99_CDQ();
+        return handler_in_99_CWD_CDQ();
     case 0x9a:
         return handler_in_9A_CALLF_Ap();
     case 0x9b:
@@ -10495,7 +10850,7 @@ inline bool CpuRunnerLLVM::handler_st_83() {
     case 0x06:
         return handler_in_83_06_XOR_Evqp_Ibs();
     case 0x07:
-        return handler_in_83_07_CMP_Ibs();
+        return handler_in_83_07_CMP_Evqp_Ibs();
 
     default:
         break;

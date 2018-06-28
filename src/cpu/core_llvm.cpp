@@ -98,6 +98,7 @@ Bit32u * CpuRunnerLLVMBase::SIBIndex[8] = { &reg_eax,&reg_ecx,&reg_edx,&reg_ebx,
 GeneralRegister<Bit8u> **CpuRunnerLLVMBase::mGeneralRegister8Bit = nullptr;
 GeneralRegister<Bit16u> **CpuRunnerLLVMBase::mGeneralRegister16Bit = nullptr;
 GeneralRegister<Bit32u> **CpuRunnerLLVMBase::mGeneralRegister32Bit = nullptr;
+SegmentRegister<Bit16u> **CpuRunnerLLVMBase::mSegmentRegister16Bit = nullptr;
 
 }
 
