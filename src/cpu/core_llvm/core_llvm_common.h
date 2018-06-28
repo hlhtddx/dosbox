@@ -32,22 +32,28 @@
 
 namespace core_llvm {
 
-#pragma pack(push, 1)
-struct Bit48u{
-    Bit16u w_value;
-    Bit32u d_value;
-    Bit48u(Bit16u w, Bit32u d) {
-        w_value = w;
-        d_value = d;
-    }
+class IllegalInstructionException : public std::runtime_error {
+public:
+    explicit IllegalInstructionException() : std::runtime_error("Illegal Instruction") {}
 };
-#pragma pack(pop)
+//
+//#pragma pack(push, 1)
+//struct Bit48u{
+//    Bit16u w_value;
+//    Bit32u d_value;
+//    Bit48u(Bit16u w, Bit32u d) {
+//        w_value = w;
+//        d_value = d;
+//    }
+//};
+//#pragma pack(pop)
 
 template<typename operand_type>
 class GeneralReference {
 public:
     virtual inline operand_type Read() = 0;
     virtual inline void Write(operand_type value) = 0;
+    virtual inline operand_type GetEffectiveAddress() = 0;
 };
 
 template<typename operand_type>
@@ -63,6 +69,31 @@ public:
         mRegister = value;
     }
 
+    virtual inline operand_type GetEffectiveAddress() {
+        throw IllegalInstructionException();
+    }
+
+protected:
+    operand_type &mRegister;
+};
+
+template<typename operand_type>
+class SegmentRegister : public GeneralReference<operand_type> {
+public:
+    explicit SegmentRegister(operand_type &reg_number)
+        : mRegister(reg_number) {}
+
+    virtual inline operand_type Read() {
+        return mRegister;
+    }
+    virtual inline void Write(operand_type value) {
+        mRegister = value;
+    }
+
+    virtual inline operand_type GetEffectiveAddress() {
+        throw IllegalInstructionException();
+    }
+
 protected:
     operand_type &mRegister;
 };
@@ -71,39 +102,66 @@ template <typename operand_type> operand_type ReadMemory(PhysPt address);
 template <typename operand_type> void WriteMemory(PhysPt address, operand_type value);
 
 template<> inline Bit8u ReadMemory<Bit8u>(PhysPt address) {
-    return (address);
+	return LoadMb(address);
 }
 
 template<> inline Bit16u ReadMemory<Bit16u>(PhysPt address) {
-    return mem_readw(address);
+	return LoadMw(address);
 }
 
 template<> inline Bit32u ReadMemory<Bit32u>(PhysPt address) {
-    return mem_readd(address);
+	return LoadMd(address);
+}
+//
+//template<> inline Bit48u ReadMemory<Bit48u>(PhysPt address) {
+//	Bit16u w = mem_readw(address);
+//	Bit32u d = mem_readw(address + sizeof(w));
+//	return Bit48u(w, d);
+//}
+
+template<> inline Bit8s ReadMemory<Bit8s>(PhysPt address) {
+	return LoadMb(address);
 }
 
-template<> inline Bit48u ReadMemory<Bit48u>(PhysPt address) {
-    Bit16u w = mem_readw(address);
-    Bit32u d = mem_readw(address + sizeof(w));
-    return Bit48u(w, d);
+template<> inline Bit16s ReadMemory<Bit16s>(PhysPt address) {
+	return LoadMw(address);
+}
+
+template<> inline Bit32s ReadMemory<Bit32s>(PhysPt address) {
+	return LoadMd(address);
 }
 
 template<> inline void WriteMemory<Bit8u>(PhysPt address, Bit8u value) {
-    return mem_writeb(address, value);
+	return SaveMb(address, value);
 }
 
 template<> inline void WriteMemory<Bit16u>(PhysPt address, Bit16u value) {
-    return mem_writew(address, value);
+	return SaveMw(address, value);
 }
 
 template<> inline void WriteMemory<Bit32u>(PhysPt address, Bit32u value) {
-    return mem_writed(address, value);
+	return SaveMd(address, value);
+}
+//
+//template<> inline void WriteMemory<Bit48u>(PhysPt address, Bit48u value) {
+//	mem_writew(address, value.w_value);
+//	mem_writed(address + sizeof(value.w_value), value.d_value);
+//}
+
+template<> inline void WriteMemory<Bit8s>(PhysPt address, Bit8s value) {
+	return SaveMb(address, static_cast<Bit8u>(value));
 }
 
-template<> inline void WriteMemory<Bit48u>(PhysPt address, Bit48u value) {
-    mem_writeb(address, value.w_value);
-    mem_writed(address + sizeof(value.w_value), value.d_value);
+template<> inline void WriteMemory<Bit16s>(PhysPt address, Bit16s value) {
+	return SaveMw(address, static_cast<Bit16u>(value));
 }
+
+template<> inline void WriteMemory<Bit32s>(PhysPt address, Bit32s value) {
+	return SaveMd(address, static_cast<Bit32u>(value));
+}
+
+template<typename data_type> inline data_type Load(PhysPt address);
+template<typename data_type> inline void Save(PhysPt address, data_type value);
 
 template<typename operand_type>
 class MemoryReference : public GeneralReference<operand_type> {
@@ -123,7 +181,11 @@ public:
         WriteMemory<operand_type>(mAddress, value);
     }
 
-    protected:
+    virtual inline operand_type GetEffectiveAddress() {
+        return mAddress;
+    }
+
+protected:
     PhysPt mAddress;
 };
 
@@ -149,11 +211,6 @@ public:
 protected:
     operand_type &mSegmentRegister;
     operand_type &mGeneralRegister;
-};
-
-class IllegalInstructionException : public std::runtime_error {
-public:
-    explicit IllegalInstructionException() : std::runtime_error("Illegal Instruction") {}
 };
 
 class CpuRunnerLLVMBase {
@@ -183,8 +240,6 @@ public:
     }
 
 public:
-    template<typename data_type>
-    inline data_type Load();
 
     bool Is32BitAddressMode() const {
         return false;
@@ -216,6 +271,11 @@ public:
         return GetGeneralRegister<operand_type>(reg);
     }
 
+    template<typename operand_type> GeneralReference<operand_type> *GetRmSreg(Bit8u rm_mod) {
+        auto reg = static_cast<Bit8u>(rm_mod & 0x38u);
+        return GetSegmentRegister<operand_type>(reg >> 3);
+    }
+
     template<typename operand_type> GeneralReference<operand_type> *GetRmMem(Bit8u rm_mod) {
         auto mod = static_cast<Bit8u>(rm_mod & 0xc0u);
         auto rm = static_cast<Bit8u>(rm_mod & 0x38u);
@@ -241,6 +301,7 @@ protected:
     }
 
     template<typename operand_type> inline GeneralReference<operand_type> *GetGeneralRegister(Bit8u reg);
+    template<typename operand_type> inline GeneralReference<operand_type> *GetSegmentRegister(Bit8u reg);
 
     template<typename operand_type> inline MemoryReference<operand_type> *GetMemoryReference(PhysPt address) {
         static MemoryReference<operand_type> sMemoryAddress;
@@ -255,7 +316,7 @@ protected:
 
     template<typename data_type>
     inline data_type Fetch() {
-        auto temp = Load<data_type>();
+        auto temp = ReadMemory<data_type>(cseip);
         cseip += sizeof(temp);
         return temp;
     }
@@ -268,24 +329,31 @@ protected:
         CPU_Exception(which);
     }
 
+    inline PhysPt GetDirectEffectiveAddress() {
+        PhysPt eaa;
+        if (Is32BitAddressMode()) {
+            eaa = BaseDS + Fetch<Bit32u>();
+        } else {
+            eaa = BaseDS + Fetch<Bit16u>();
+        }
+        return eaa;
+    }
+
+	template<typename operand_type> void JumpCondition(Bit32u condition, operand_type offset) {
+		SaveIP();
+		if (condition) {
+			reg_ip += offset;
+		}
+		reg_ip += sizeof(operand_type);
+	}
+
     static GeneralRegister<Bit8u> **mGeneralRegister8Bit;
     static GeneralRegister<Bit16u> **mGeneralRegister16Bit;
     static GeneralRegister<Bit32u> **mGeneralRegister32Bit;
+    static SegmentRegister<Bit16u> **mSegmentRegister16Bit;
     static Bit32u SIBZero;
     static Bit32u *SIBIndex[8];
 };
-
-template<> inline Bit8u CpuRunnerLLVMBase::Load<Bit8u>() {
-    return LoadMb(cseip);
-}
-
-template<> inline Bit16u CpuRunnerLLVMBase::Load<Bit16u>() {
-    return LoadMw(cseip);
-}
-
-template<> inline Bit32u CpuRunnerLLVMBase::Load<Bit32u>() {
-    return LoadMd(cseip);
-}
 
 inline PhysPt CpuRunnerLLVMBase::GetRM_Sib(Bit8u mode) {
     auto sib = Fetch<Bit8u>();
@@ -438,6 +506,21 @@ template<> inline GeneralReference<Bit32u> *CpuRunnerLLVMBase::GetGeneralRegiste
         mGeneralRegister32Bit[7] = new GeneralRegister<Bit32u>(reg_edi);
     }
     return mGeneralRegister32Bit[reg];
+}
+
+template<> inline GeneralReference<Bit16u> *CpuRunnerLLVMBase::GetSegmentRegister<Bit16u>(Bit8u reg) {
+    if (!mSegmentRegister16Bit) {
+        mSegmentRegister16Bit = new SegmentRegister<Bit16u> *[8];
+        mSegmentRegister16Bit[0] = new SegmentRegister<Bit16u>(Segs.val[es]);
+        mSegmentRegister16Bit[1] = new SegmentRegister<Bit16u>(Segs.val[cs]);
+        mSegmentRegister16Bit[2] = new SegmentRegister<Bit16u>(Segs.val[ss]);
+        mSegmentRegister16Bit[3] = new SegmentRegister<Bit16u>(Segs.val[ds]);
+        mSegmentRegister16Bit[4] = new SegmentRegister<Bit16u>(Segs.val[fs]);
+        mSegmentRegister16Bit[5] = new SegmentRegister<Bit16u>(Segs.val[gs]);
+        mSegmentRegister16Bit[6] = nullptr;
+        mSegmentRegister16Bit[7] = nullptr;
+    }
+    return mSegmentRegister16Bit[reg];
 }
 
 }
