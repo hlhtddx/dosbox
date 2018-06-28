@@ -109,17 +109,21 @@ static struct {
 
 static inline Bit8u Fetchb() {
 	Bit8u temp = LoadMb(core.cseip);
+    printf("%08x - 1:%x \n", core.cseip, temp);
 	core.cseip += 1;
 	return temp;
 }
 
 static inline Bit16u Fetchw() {
 	Bit16u temp = LoadMw(core.cseip);
+    printf("%08x - 2:%x \n", core.cseip, temp);
 	core.cseip += 2;
 	return temp;
 }
+
 static inline Bit32u Fetchd() {
 	Bit32u temp = LoadMd(core.cseip);
+    printf("%08x - 4:%x \n", core.cseip, temp);
 	core.cseip += 4;
 	return temp;
 }
@@ -153,6 +157,8 @@ Bits CPU_Core_Normal_Run(void) {
 #endif
 		cycle_count++;
 #endif
+        DumpRegister();
+		printf("New instruction\n");
 restart_opcode:
 		switch (core.opcode_index + Fetchb()) {
 //#include "core_normal/prefix_none.h"
