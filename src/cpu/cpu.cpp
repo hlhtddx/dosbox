@@ -223,7 +223,8 @@ bool CPU_PUSHF(Bitu use32) {
 	FillFlags();
 	if (use32)
 		CPU_Push32(reg_flags & 0xfcffff);
-	else CPU_Push16(reg_flags);
+	else
+		CPU_Push16(reg_flags);
 	return false;
 }
 
@@ -2435,3 +2436,14 @@ void CPU_Init(Section* sec) {
 }
 //initialize static members
 bool CPU::inited = false;
+
+#ifdef DUMP_RESULT
+void DumpRegister() {
+	printf("EAX:%08X EBX:%08X ECX:%08X EDX:%08X\n",
+		   reg_eax, reg_ebx, reg_ecx, reg_edx);
+	printf("ESP:%08X EBP:%08X ESI:%08X EDI:%08X\n",
+		   reg_esp, reg_ebp, reg_esi, reg_edi);
+	printf("EIP:%08X ES:%04X CS:%04X DS:%04X SS:%04X FS:%04X GS:%04X\n",
+		   reg_eip, SegValue(es), SegValue(cs), SegValue(ds), SegValue(ss), SegValue(fs), SegValue(gs));
+}
+#endif
