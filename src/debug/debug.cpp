@@ -2043,6 +2043,18 @@ static void LogCPUInfo(void) {
 };
 
 #if C_HEAVY_DEBUG
+void LogFillFlags(bool cf) {
+	if (!cpuLog)
+		return;
+
+	if (cf) {
+		cpuLogFile << hex << "FillFlags: " << lflags.type << "flags:" << setw(8) << reg_flags << endl;
+
+	} else {
+		cpuLogFile << hex << "FillFlagsNoCFOF: " << lflags.type << "flags:" << setw(8) << reg_flags << endl;
+	}
+}
+
 static void LogInstruction(Bit16u segValue, Bit32u eipValue, ofstream& out) {
 	static char empty[23] = { 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,0 };
 
@@ -2097,6 +2109,7 @@ static void LogInstruction(Bit16u segValue, Bit32u eipValue, ofstream& out) {
 	if (cpuLogType == 2) {
 		out << " TF:" << GETFLAGBOOL(TF) << " VM:" << GETFLAGBOOL(VM) << " FLG:" << setw(8) << reg_flags
 			<< " CR0:" << setw(8) << cpu.cr0;
+		out << " lflags.type: " << setw(8) << lflags.type;
 	}
 	out << endl;
 };
