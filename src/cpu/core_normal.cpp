@@ -118,6 +118,7 @@ static inline Bit16u Fetchw() {
 	core.cseip += 2;
 	return temp;
 }
+
 static inline Bit32u Fetchd() {
 	Bit32u temp = LoadMd(core.cseip);
 	core.cseip += 4;
@@ -153,7 +154,7 @@ Bits CPU_Core_Normal_Run(void) {
 #endif
 		cycle_count++;
 #endif
-restart_opcode:
+		restart_opcode:
 		switch (core.opcode_index + Fetchb()) {
 //#include "core_normal/prefix_none.h"
 
