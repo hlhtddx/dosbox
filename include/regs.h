@@ -166,4 +166,6 @@ enum {
 
 #define reg_flags cpu_regs.flags
 
+void DumpRegister();
+
 #endif
