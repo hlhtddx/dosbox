@@ -3812,11 +3812,11 @@ inline void DecrementRegister(Bit32u& destination) {
 	lflags.type = t_INCd;
 }
 
-inline void CPU_Push(Bit16u& source) {
+inline void CPU_Push(Bit16u source) {
 	CPU_Push16(source);
 }
 
-inline void CPU_Push(Bit32u& source) {
+inline void CPU_Push(Bit32u source) {
 	CPU_Push32(source);
 }
 
@@ -4970,7 +4970,7 @@ inline bool CpuRunnerLLVM::handler_in_68_PUSH_Ivs() {
 inline bool CpuRunnerLLVM::handler_in_68_PUSH_Ivs_16() {
     typedef Bit16u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    CPU_Push(source);
     return true;
 }
 
@@ -4980,7 +4980,7 @@ inline bool CpuRunnerLLVM::handler_in_68_PUSH_Ivs_16() {
 inline bool CpuRunnerLLVM::handler_in_68_PUSH_Ivs_32() {
     typedef Bit32u data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    CPU_Push(source);
     return true;
 }
 
@@ -5002,8 +5002,18 @@ inline bool CpuRunnerLLVM::handler_in_69_IMUL_Gvqp_Ivds_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
     auto destination = GetRmReg<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source1 = static_cast<Bit16s>(GetRmMod<data_type>(rmmod)->Read());
+    auto source2 = static_cast<Bit16s>(GetImmediate<data_type>());
+    Bits res = source1 * source2;
+    destination->Write(static_cast<Bit16u>(res));
+    FillFlagsNoCFOF();
+    if ((res >= INT16_MIN) && (res <= INT16_MAX)) {
+        SETFLAGBIT(CF, false);
+        SETFLAGBIT(OF, false);
+    } else {
+        SETFLAGBIT(CF, true);
+        SETFLAGBIT(OF, true);
+    }
     return true;
 }
 
@@ -5014,8 +5024,19 @@ inline bool CpuRunnerLLVM::handler_in_69_IMUL_Gvqp_Ivds_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
     auto destination = GetRmReg<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source1 = static_cast<Bit32s>(GetRmMod<data_type>(rmmod)->Read());
+    auto source2 = static_cast<Bit32s>(GetImmediate<data_type>());
+    Bit64s res = source1 * source2;
+    destination->Write(static_cast<data_type >(res));
+    FillFlagsNoCFOF();
+    if ((res >= -2147483648LL) &&
+        (res <= 2147483647LL)) {
+        SETFLAGBIT(CF, false);
+        SETFLAGBIT(OF, false);
+    } else {
+        SETFLAGBIT(CF, true);
+        SETFLAGBIT(OF, true);
+    }
     return true;
 }
 
@@ -5023,9 +5044,9 @@ inline bool CpuRunnerLLVM::handler_in_69_IMUL_Gvqp_Ivds_32() {
  PUSH
 */
 inline bool CpuRunnerLLVM::handler_in_6A_PUSH_Ibss() {
-    typedef Bit8u data_type;
+    typedef Bit8s data_type;
     auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    CPU_Push(static_cast<Bit16u>(source));
     return true;
 }
 
@@ -5046,9 +5067,20 @@ inline bool CpuRunnerLLVM::handler_in_6B_IMUL_Gvqp_Ibs() {
 inline bool CpuRunnerLLVM::handler_in_6B_IMUL_Gvqp_Ibs_16() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit16u data_type;
+    typedef Bit8s operand_type;
     auto destination = GetRmReg<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source1 = static_cast<Bit16s>(GetRmMod<data_type>(rmmod)->Read());
+    auto source2 = static_cast<Bit16s>(GetImmediate<operand_type>());
+    Bits res = source1 * source2;
+    destination->Write(static_cast<Bit16u>(res));
+    FillFlagsNoCFOF();
+    if ((res >= INT16_MIN) && (res <= INT16_MAX)) {
+        SETFLAGBIT(CF, false);
+        SETFLAGBIT(OF, false);
+    } else {
+        SETFLAGBIT(CF, true);
+        SETFLAGBIT(OF, true);
+    }
     return true;
 }
 
@@ -5058,9 +5090,21 @@ inline bool CpuRunnerLLVM::handler_in_6B_IMUL_Gvqp_Ibs_16() {
 inline bool CpuRunnerLLVM::handler_in_6B_IMUL_Gvqp_Ibs_32() {
     auto rmmod = Fetch<Bit8u>();
     typedef Bit32u data_type;
+    typedef Bit8s operand_type;
     auto destination = GetRmReg<data_type>(rmmod);
-    auto source = GetImmediate<data_type>();
-    //TODO do the actual operation
+    auto source1 = static_cast<Bit32s>(GetRmMod<data_type>(rmmod)->Read());
+    auto source2 = static_cast<Bit32s>(GetImmediate<operand_type>());
+    Bit64s res = source1 * source2;
+    destination->Write(static_cast<data_type >(res));
+    FillFlagsNoCFOF();
+    if ((res >= -2147483648LL) &&
+        (res <= 2147483647LL)) {
+        SETFLAGBIT(CF, false);
+        SETFLAGBIT(OF, false);
+    } else {
+        SETFLAGBIT(CF, true);
+        SETFLAGBIT(OF, true);
+    }
     return true;
 }
 
@@ -5071,7 +5115,10 @@ inline bool CpuRunnerLLVM::handler_in_6C_INS_Yb_DXw() {
     typedef Bit8u data_type;
     auto destination = GetMemoryReference<data_type>(reg_bh);
     auto source = reg_dl;
-    //TODO do the actual operation
+    if (CPU_IO_Exception(reg_dx, 1)) {
+        RunException();
+    }
+//    DoString(R_INSB);
     return true;
 }
 
