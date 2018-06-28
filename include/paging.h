@@ -255,8 +255,12 @@ static inline PhysPt PAGING_GetPhysicalAddress(PhysPt linAddr) {
 #endif
 
 /* Special inlined memory reading/writing */
+#include <stdio.h>
 
 static inline Bit8u mem_readb_inline(PhysPt address) {
+#ifdef DUMP_RESULT
+    printf("Read Byte %08x\n", address);
+#endif
 	HostPt tlb_addr = get_tlb_read(address);
 	if (tlb_addr)
 		return host_readb(tlb_addr + address);
@@ -266,6 +270,9 @@ static inline Bit8u mem_readb_inline(PhysPt address) {
 }
 
 static inline Bit16u mem_readw_inline(PhysPt address) {
+#ifdef DUMP_RESULT
+    printf("Read Word %08x\n", address);
+#endif
 	if ((address & 0xfff) < 0xfff) {
 		HostPt tlb_addr = get_tlb_read(address);
 		if (tlb_addr)
@@ -277,6 +284,9 @@ static inline Bit16u mem_readw_inline(PhysPt address) {
 }
 
 static inline Bit32u mem_readd_inline(PhysPt address) {
+#ifdef DUMP_RESULT
+    printf("Read Dword %08x\n", address);
+#endif
 	if ((address & 0xfff) < 0xffd) {
 		HostPt tlb_addr = get_tlb_read(address);
 		if (tlb_addr)
@@ -288,6 +298,9 @@ static inline Bit32u mem_readd_inline(PhysPt address) {
 }
 
 static inline void mem_writeb_inline(PhysPt address, Bit8u val) {
+#ifdef DUMP_RESULT
+    printf("Write Byte %08x\n", address);
+#endif
 	HostPt tlb_addr = get_tlb_write(address);
 	if (tlb_addr)
 		host_writeb(tlb_addr + address, val);
@@ -296,6 +309,9 @@ static inline void mem_writeb_inline(PhysPt address, Bit8u val) {
 }
 
 static inline void mem_writew_inline(PhysPt address, Bit16u val) {
+#ifdef DUMP_RESULT
+    printf("Write Word %08x\n", address);
+#endif
 	if ((address & 0xfff) < 0xfff) {
 		HostPt tlb_addr = get_tlb_write(address);
 		if (tlb_addr)
@@ -307,6 +323,9 @@ static inline void mem_writew_inline(PhysPt address, Bit16u val) {
 }
 
 static inline void mem_writed_inline(PhysPt address, Bit32u val) {
+#ifdef DUMP_RESULT
+    printf("Write Dword %08x\n", address);
+#endif
 	if ((address & 0xfff) < 0xffd) {
 		HostPt tlb_addr = get_tlb_write(address);
 		if (tlb_addr)
