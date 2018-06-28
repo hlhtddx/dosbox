@@ -71,39 +71,66 @@ template <typename operand_type> operand_type ReadMemory(PhysPt address);
 template <typename operand_type> void WriteMemory(PhysPt address, operand_type value);
 
 template<> inline Bit8u ReadMemory<Bit8u>(PhysPt address) {
-    return (address);
+	return LoadMb(address);
 }
 
 template<> inline Bit16u ReadMemory<Bit16u>(PhysPt address) {
-    return mem_readw(address);
+	return LoadMw(address);
 }
 
 template<> inline Bit32u ReadMemory<Bit32u>(PhysPt address) {
-    return mem_readd(address);
+	return LoadMd(address);
 }
 
 template<> inline Bit48u ReadMemory<Bit48u>(PhysPt address) {
-    Bit16u w = mem_readw(address);
-    Bit32u d = mem_readw(address + sizeof(w));
-    return Bit48u(w, d);
+	Bit16u w = mem_readw(address);
+	Bit32u d = mem_readw(address + sizeof(w));
+	return Bit48u(w, d);
+}
+
+template<> inline Bit8s ReadMemory<Bit8s>(PhysPt address) {
+	return LoadMb(address);
+}
+
+template<> inline Bit16s ReadMemory<Bit16s>(PhysPt address) {
+	return LoadMw(address);
+}
+
+template<> inline Bit32s ReadMemory<Bit32s>(PhysPt address) {
+	return LoadMd(address);
 }
 
 template<> inline void WriteMemory<Bit8u>(PhysPt address, Bit8u value) {
-    return mem_writeb(address, value);
+	return SaveMb(address, value);
 }
 
 template<> inline void WriteMemory<Bit16u>(PhysPt address, Bit16u value) {
-    return mem_writew(address, value);
+	return SaveMw(address, value);
 }
 
 template<> inline void WriteMemory<Bit32u>(PhysPt address, Bit32u value) {
-    return mem_writed(address, value);
+	return SaveMd(address, value);
 }
 
 template<> inline void WriteMemory<Bit48u>(PhysPt address, Bit48u value) {
-    mem_writeb(address, value.w_value);
-    mem_writed(address + sizeof(value.w_value), value.d_value);
+	mem_writew(address, value.w_value);
+	mem_writed(address + sizeof(value.w_value), value.d_value);
 }
+
+template<> inline void WriteMemory<Bit8s>(PhysPt address, Bit8s value) {
+	return SaveMb(address, static_cast<Bit8u>(value));
+}
+
+template<> inline void WriteMemory<Bit16s>(PhysPt address, Bit16s value) {
+	return SaveMw(address, static_cast<Bit16u>(value));
+}
+
+template<> inline void WriteMemory<Bit32s>(PhysPt address, Bit32s value) {
+	return SaveMd(address, static_cast<Bit32u>(value));
+}
+
+template<typename data_type> inline data_type Load(PhysPt address);
+template<typename data_type> inline void Save(PhysPt address, data_type value);
 
 template<typename operand_type>
 class MemoryReference : public GeneralReference<operand_type> {
@@ -185,8 +212,6 @@ public:
     }
 
 public:
-    template<typename data_type>
-    inline data_type Load();
 
     bool Is32BitAddressMode() const {
         return false;
@@ -257,7 +282,7 @@ protected:
 
     template<typename data_type>
     inline data_type Fetch() {
-        auto temp = Load<data_type>();
+        auto temp = ReadMemory<data_type>(cseip);
         cseip += sizeof(temp);
         return temp;
     }
@@ -270,24 +295,20 @@ protected:
         CPU_Exception(which);
     }
 
+	template<typename operand_type> void JumpCondition(Bit32u condition, operand_type offset) {
+		SaveIP();
+		if (condition) {
+			reg_ip += offset;
+		}
+		reg_ip += sizeof(operand_type);
+	}
+
     static GeneralRegister<Bit8u> **mGeneralRegister8Bit;
     static GeneralRegister<Bit16u> **mGeneralRegister16Bit;
     static GeneralRegister<Bit32u> **mGeneralRegister32Bit;
     static Bit32u SIBZero;
     static Bit32u *SIBIndex[8];
 };
-
-template<> inline Bit8u CpuRunnerLLVMBase::Load<Bit8u>() {
-    return LoadMb(cseip);
-}
-
-template<> inline Bit16u CpuRunnerLLVMBase::Load<Bit16u>() {
-    return LoadMw(cseip);
-}
-
-template<> inline Bit32u CpuRunnerLLVMBase::Load<Bit32u>() {
-    return LoadMd(cseip);
-}
 
 inline PhysPt CpuRunnerLLVMBase::GetRM_Sib(Bit8u mode) {
     auto sib = Fetch<Bit8u>();
