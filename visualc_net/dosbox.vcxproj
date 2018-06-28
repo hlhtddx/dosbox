@@ -52,8 +52,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>../src/platform/visualc;../include;$(SolutionDir)..\..\SDL\SDL\include;$(SolutionDir)..\..\SDL\SDL_net;$(SolutionDir)..\..\misc\PDCurses;$(SolutionDir)..\..\misc\zlib;$(SolutionDir)..\..\misc\libpng;D:\Developer\LLVM\$(Configuration)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;PDC_DLL_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;winmm.lib;wsock32.lib;PDCurses.lib;SDLmain.lib;SDL.lib;SDL_net.lib;zlib.lib;libpng16.lib;LLVMCore.lib;LLVMExecutionEngine.lib;LLVMObject.lib;LLVMSupport.lib;LLVMX86CodeGen.lib;LLVMX86AsmParser.lib;LLVMX86AsmPrinter.lib;LLVMX86Desc.lib;LLVMX86Disassembler.lib;LLVMX86Info.lib;LLVMX86Utils.lib;LLVMRuntimeDyld.lib;LLVMAsmPrinter.lib;LLVMDebugInfoCodeView.lib;LLVMDebugInfoMSF.lib;LLVMGlobalISel.lib;LLVMSelectionDAG.lib;LLVMCodeGen.lib;LLVMTarget.lib;LLVMBitWriter.lib;LLVMScalarOpts.lib;LLVMInstCombine.lib;LLVMTransformUtils.lib;LLVMAnalysis.lib;LLVMProfileData.lib;LLVMBitReader.lib;LLVMBinaryFormat.lib;LLVMMCParser.lib;LLVMMCDisassembler.lib;LLVMMC.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -74,7 +77,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>../src/platform/visualc;../include;$(SolutionDir)..\..\SDL\SDL\include;$(SolutionDir)..\..\SDL\SDL_net;$(SolutionDir)..\..\misc\PDCurses;$(SolutionDir)..\..\misc\zlib;$(SolutionDir)..\..\misc\libpng;D:\Developer\LLVM\$(Configuration)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;PDC_DLL_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;winmm.lib;wsock32.lib;PDCurses.lib;SDLmain.lib;SDL.lib;SDL_net.lib;zlib.lib;libpng16.lib;LLVMCore.lib;LLVMExecutionEngine.lib;LLVMObject.lib;LLVMSupport.lib;LLVMX86CodeGen.lib;LLVMX86AsmParser.lib;LLVMX86AsmPrinter.lib;LLVMX86Desc.lib;LLVMX86Disassembler.lib;LLVMX86Info.lib;LLVMX86Utils.lib;LLVMRuntimeDyld.lib;LLVMAsmPrinter.lib;LLVMDebugInfoCodeView.lib;LLVMDebugInfoMSF.lib;LLVMGlobalISel.lib;LLVMSelectionDAG.lib;LLVMCodeGen.lib;LLVMTarget.lib;LLVMBitWriter.lib;LLVMScalarOpts.lib;LLVMInstCombine.lib;LLVMTransformUtils.lib;LLVMAnalysis.lib;LLVMProfileData.lib;LLVMBitReader.lib;LLVMBinaryFormat.lib;LLVMMCParser.lib;LLVMMCDisassembler.lib;LLVMMC.lib;%(AdditionalDependencies)</AdditionalDependencies>

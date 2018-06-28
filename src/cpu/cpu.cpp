@@ -223,7 +223,8 @@ bool CPU_PUSHF(Bitu use32) {
 	FillFlags();
 	if (use32)
 		CPU_Push32(reg_flags & 0xfcffff);
-	else CPU_Push16(reg_flags);
+	else
+		CPU_Push16(reg_flags);
 	return false;
 }
 
