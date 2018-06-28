@@ -87,7 +87,7 @@ extern Bitu cycle_count;
     core.rep_zero=_ZERO;					\
     goto restart_opcode;
 
-typedef PhysPt(*GetEAHandler)(void);
+typedef PhysPt(*GetEAHandler)();
 
 namespace core_llvm {
 
@@ -98,6 +98,7 @@ Bit32u * CpuRunnerLLVMBase::SIBIndex[8] = { &reg_eax,&reg_ecx,&reg_edx,&reg_ebx,
 GeneralRegister<Bit8u> **CpuRunnerLLVMBase::mGeneralRegister8Bit = nullptr;
 GeneralRegister<Bit16u> **CpuRunnerLLVMBase::mGeneralRegister16Bit = nullptr;
 GeneralRegister<Bit32u> **CpuRunnerLLVMBase::mGeneralRegister32Bit = nullptr;
+SegmentRegister<Bit16u> **CpuRunnerLLVMBase::mSegmentRegister16Bit = nullptr;
 
 }
 
@@ -105,20 +106,28 @@ static const Bit32u AddrMaskTable[2] = {0x0000ffff, 0xffffffff};
 
 core_llvm::CpuRunnerLLVM llvm_runner;
 
-Bits CPU_Core_LLVM_Run(void) {
+Bits CPU_Core_LLVM_Run() {
 	while (CPU_Cycles-- > 0) {
 		llvm_runner.LoadIP();
+        llvm_runner.base_ds = SegBase(ds);
+        llvm_runner.base_ss = SegBase(ss);
+        llvm_runner.base_val_ds = ds;
+        llvm_runner.mPrefixRepeat = false;
+        llvm_runner.mRepeatZero = false;
+        llvm_runner.m_bRestoreIP = true;
 		if (!llvm_runner.Parse()) {
 		    CPU_Exception(EXCEPTION_UD, 0);
 		    continue;
 		}
-		llvm_runner.SaveIP();
+		if (llvm_runner.RestoreEIP()) {
+            llvm_runner.SaveIP();
+		}
 	}
 	FillFlags();
 	return CBRET_NONE;
 }
 
-Bits CPU_Core_LLVM_Trap_Run(void) {
+Bits CPU_Core_LLVM_Trap_Run() {
 	Bits oldCycles = CPU_Cycles;
 	CPU_Cycles = 1;
 	cpu.trap_skip = false;
@@ -131,6 +140,6 @@ Bits CPU_Core_LLVM_Trap_Run(void) {
 	return ret;
 }
 
-void CPU_Core_LLVM_Init(void) {
+void CPU_Core_LLVM_Init() {
 
 }
