@@ -255,6 +255,7 @@ static inline PhysPt PAGING_GetPhysicalAddress(PhysPt linAddr) {
 #endif
 
 /* Special inlined memory reading/writing */
+#include <stdio.h>
 
 static inline Bit8u mem_readb_inline(PhysPt address) {
 	HostPt tlb_addr = get_tlb_read(address);
