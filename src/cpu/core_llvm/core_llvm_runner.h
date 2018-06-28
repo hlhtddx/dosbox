@@ -179,67 +179,67 @@ private:
     /*
      SLDT
     */
-    inline bool handler_in_0F_00_00_SLDT_Mw();
+    inline bool handler_in_0F_00_00_SLDT_Mw(Bit8u rmmod);
 
     /*
      STR
     */
-    inline bool handler_in_0F_00_01_STR_Mw();
+    inline bool handler_in_0F_00_01_STR_Mw(Bit8u rmmod);
 
     /*
      LLDT
     */
-    inline bool handler_in_0F_00_02_LLDT_Ew();
+    inline bool handler_in_0F_00_02_LLDT_Ew(Bit8u rmmod);
 
     /*
      LTR
     */
-    inline bool handler_in_0F_00_03_LTR_Ew();
+    inline bool handler_in_0F_00_03_LTR_Ew(Bit8u rmmod);
 
     /*
      VERR
     */
-    inline bool handler_in_0F_00_04_VERR_Ew();
+    inline bool handler_in_0F_00_04_VERR_Ew(Bit8u rmmod);
 
     /*
      VERW
     */
-    inline bool handler_in_0F_00_05_VERW_Ew();
+    inline bool handler_in_0F_00_05_VERW_Ew(Bit8u rmmod);
 
     /*
      SGDT
     */
-    inline bool handler_in_0F_01_00_SGDT_Ms();
+    inline bool handler_in_0F_01_00_SGDT_Ms(Bit8u rmmod);
 
     /*
      SIDT
     */
-    inline bool handler_in_0F_01_01_SIDT_Ms();
+    inline bool handler_in_0F_01_01_SIDT_Ms(Bit8u rmmod);
 
     /*
      LGDT
     */
-    inline bool handler_in_0F_01_02_LGDT_Ms();
+    inline bool handler_in_0F_01_02_LGDT_Ms(Bit8u rmmod);
 
     /*
      LIDT
     */
-    inline bool handler_in_0F_01_03_LIDT_Ms();
+    inline bool handler_in_0F_01_03_LIDT_Ms(Bit8u rmmod);
 
     /*
      SMSW
     */
-    inline bool handler_in_0F_01_04_SMSW_Mw();
+    inline bool handler_in_0F_01_04_SMSW_Mw(Bit8u rmmod);
 
     /*
      LMSW
     */
-    inline bool handler_in_0F_01_06_LMSW_Ew();
+    inline bool handler_in_0F_01_06_LMSW_Ew(Bit8u rmmod);
 
     /*
      INVLPG
     */
-    inline bool handler_in_0F_01_07_INVLPG();
+    inline bool handler_in_0F_01_07_INVLPG(Bit8u rmmod);
 
     /*
      LAR
@@ -564,82 +564,82 @@ private:
     /*
      SETO
     */
-    inline bool handler_in_0F_90_00_SETO_Eb();
+    inline bool handler_in_0F_90_00_SETO_Eb(Bit8u rmmod);
 
     /*
      SETNO
     */
-    inline bool handler_in_0F_91_00_SETNO_Eb();
+    inline bool handler_in_0F_91_00_SETNO_Eb(Bit8u rmmod);
 
     /*
      SETB
     */
-    inline bool handler_in_0F_92_00_SETB_Eb();
+    inline bool handler_in_0F_92_00_SETB_Eb(Bit8u rmmod);
 
     /*
      SETNB
     */
-    inline bool handler_in_0F_93_00_SETNB_Eb();
+    inline bool handler_in_0F_93_00_SETNB_Eb(Bit8u rmmod);
 
     /*
      SETZ
     */
-    inline bool handler_in_0F_94_00_SETZ_Eb();
+    inline bool handler_in_0F_94_00_SETZ_Eb(Bit8u rmmod);
 
     /*
      SETNZ
     */
-    inline bool handler_in_0F_95_00_SETNZ_Eb();
+    inline bool handler_in_0F_95_00_SETNZ_Eb(Bit8u rmmod);
 
     /*
      SETBE
     */
-    inline bool handler_in_0F_96_00_SETBE_Eb();
+    inline bool handler_in_0F_96_00_SETBE_Eb(Bit8u rmmod);
 
     /*
      SETNBE
     */
-    inline bool handler_in_0F_97_00_SETNBE_Eb();
+    inline bool handler_in_0F_97_00_SETNBE_Eb(Bit8u rmmod);
 
     /*
      SETS
     */
-    inline bool handler_in_0F_98_00_SETS_Eb();
+    inline bool handler_in_0F_98_00_SETS_Eb(Bit8u rmmod);
 
     /*
      SETNS
     */
-    inline bool handler_in_0F_99_00_SETNS_Eb();
+    inline bool handler_in_0F_99_00_SETNS_Eb(Bit8u rmmod);
 
     /*
      SETP
     */
-    inline bool handler_in_0F_9A_00_SETP_Eb();
+    inline bool handler_in_0F_9A_00_SETP_Eb(Bit8u rmmod);
 
     /*
      SETNP
     */
-    inline bool handler_in_0F_9B_00_SETNP_Eb();
+    inline bool handler_in_0F_9B_00_SETNP_Eb(Bit8u rmmod);
 
     /*
      SETL
     */
-    inline bool handler_in_0F_9C_00_SETL_Eb();
+    inline bool handler_in_0F_9C_00_SETL_Eb(Bit8u rmmod);
 
     /*
      SETNL
     */
-    inline bool handler_in_0F_9D_00_SETNL_Eb();
+    inline bool handler_in_0F_9D_00_SETNL_Eb(Bit8u rmmod);
 
     /*
      SETLE
     */
-    inline bool handler_in_0F_9E_00_SETLE_Eb();
+    inline bool handler_in_0F_9E_00_SETLE_Eb(Bit8u rmmod);
 
     /*
      SETNLE
     */
-    inline bool handler_in_0F_9F_00_SETNLE_Eb();
+    inline bool handler_in_0F_9F_00_SETNLE_Eb(Bit8u rmmod);
 
     /*
      PUSH
@@ -889,52 +889,52 @@ private:
     /*
      BT
     */
-    inline bool handler_in_0F_BA_04_BT_Ib();
+    inline bool handler_in_0F_BA_04_BT_Ib(Bit8u rmmod);
 
     /*
      BTS
     */
-    inline bool handler_in_0F_BA_05_BTS_Evqp_Ib();
+    inline bool handler_in_0F_BA_05_BTS_Evqp_Ib(Bit8u rmmod);
 
     /*
      BTS for 16-Bit operand
     */
-    inline bool handler_in_0F_BA_05_BTS_Evqp_Ib_16();
+    inline bool handler_in_0F_BA_05_BTS_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      BTS for 32-Bit operand
     */
-    inline bool handler_in_0F_BA_05_BTS_Evqp_Ib_32();
+    inline bool handler_in_0F_BA_05_BTS_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      BTR
     */
-    inline bool handler_in_0F_BA_06_BTR_Evqp_Ib();
+    inline bool handler_in_0F_BA_06_BTR_Evqp_Ib(Bit8u rmmod);
 
     /*
      BTR for 16-Bit operand
     */
-    inline bool handler_in_0F_BA_06_BTR_Evqp_Ib_16();
+    inline bool handler_in_0F_BA_06_BTR_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      BTR for 32-Bit operand
     */
-    inline bool handler_in_0F_BA_06_BTR_Evqp_Ib_32();
+    inline bool handler_in_0F_BA_06_BTR_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      BTC
     */
-    inline bool handler_in_0F_BA_07_BTC_Evqp_Ib();
+    inline bool handler_in_0F_BA_07_BTC_Evqp_Ib(Bit8u rmmod);
 
     /*
      BTC for 16-Bit operand
     */
-    inline bool handler_in_0F_BA_07_BTC_Evqp_Ib_16();
+    inline bool handler_in_0F_BA_07_BTC_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      BTC for 32-Bit operand
     */
-    inline bool handler_in_0F_BA_07_BTC_Evqp_Ib_32();
+    inline bool handler_in_0F_BA_07_BTC_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      BTC
@@ -2254,272 +2254,282 @@ private:
     /*
      ADD
     */
-    inline bool handler_in_81_00_ADD_Evqp_Ivds();
+    inline bool handler_in_81_00_ADD_Evqp_Ivds(Bit8u rmmod);
 
     /*
      ADD for 16-Bit operand
     */
-    inline bool handler_in_81_00_ADD_Evqp_Ivds_16();
+    inline bool handler_in_81_00_ADD_Evqp_Ivds_16(Bit8u rmmod);
 
     /*
      ADD for 32-Bit operand
     */
-    inline bool handler_in_81_00_ADD_Evqp_Ivds_32();
+    inline bool handler_in_81_00_ADD_Evqp_Ivds_32(Bit8u rmmod);
 
     /*
      OR
     */
-    inline bool handler_in_81_01_OR_Evqp_Ivds();
+    inline bool handler_in_81_01_OR_Evqp_Ivds(Bit8u rmmod);
 
     /*
      OR for 16-Bit operand
     */
-    inline bool handler_in_81_01_OR_Evqp_Ivds_16();
+    inline bool handler_in_81_01_OR_Evqp_Ivds_16(Bit8u rmmod);
 
     /*
      OR for 32-Bit operand
     */
-    inline bool handler_in_81_01_OR_Evqp_Ivds_32();
+    inline bool handler_in_81_01_OR_Evqp_Ivds_32(Bit8u rmmod);
 
     /*
      ADC
     */
-    inline bool handler_in_81_02_ADC_Evqp_Ivds();
+    inline bool handler_in_81_02_ADC_Evqp_Ivds(Bit8u rmmod);
 
     /*
      ADC for 16-Bit operand
     */
-    inline bool handler_in_81_02_ADC_Evqp_Ivds_16();
+    inline bool handler_in_81_02_ADC_Evqp_Ivds_16(Bit8u rmmod);
 
     /*
      ADC for 32-Bit operand
     */
-    inline bool handler_in_81_02_ADC_Evqp_Ivds_32();
+    inline bool handler_in_81_02_ADC_Evqp_Ivds_32(Bit8u rmmod);
 
     /*
      SBB
     */
-    inline bool handler_in_81_03_SBB_Evqp_Ivds();
+    inline bool handler_in_81_03_SBB_Evqp_Ivds(Bit8u rmmod);
 
     /*
      SBB for 16-Bit operand
     */
-    inline bool handler_in_81_03_SBB_Evqp_Ivds_16();
+    inline bool handler_in_81_03_SBB_Evqp_Ivds_16(Bit8u rmmod);
 
     /*
      SBB for 32-Bit operand
     */
-    inline bool handler_in_81_03_SBB_Evqp_Ivds_32();
+    inline bool handler_in_81_03_SBB_Evqp_Ivds_32(Bit8u rmmod);
 
     /*
      AND
     */
-    inline bool handler_in_81_04_AND_Evqp_Ivds();
+    inline bool handler_in_81_04_AND_Evqp_Ivds(Bit8u rmmod);
 
     /*
      AND for 16-Bit operand
     */
-    inline bool handler_in_81_04_AND_Evqp_Ivds_16();
+    inline bool handler_in_81_04_AND_Evqp_Ivds_16(Bit8u rmmod);
 
     /*
      AND for 32-Bit operand
     */
-    inline bool handler_in_81_04_AND_Evqp_Ivds_32();
+    inline bool handler_in_81_04_AND_Evqp_Ivds_32(Bit8u rmmod);
 
     /*
      SUB
     */
-    inline bool handler_in_81_05_SUB_Evqp_Ivds();
+    inline bool handler_in_81_05_SUB_Evqp_Ivds(Bit8u rmmod);
 
     /*
      SUB for 16-Bit operand
     */
-    inline bool handler_in_81_05_SUB_Evqp_Ivds_16();
+    inline bool handler_in_81_05_SUB_Evqp_Ivds_16(Bit8u rmmod);
 
     /*
      SUB for 32-Bit operand
     */
-    inline bool handler_in_81_05_SUB_Evqp_Ivds_32();
+    inline bool handler_in_81_05_SUB_Evqp_Ivds_32(Bit8u rmmod);
 
     /*
      XOR
     */
-    inline bool handler_in_81_06_XOR_Evqp_Ivds();
+    inline bool handler_in_81_06_XOR_Evqp_Ivds(Bit8u rmmod);
 
     /*
      XOR for 16-Bit operand
     */
-    inline bool handler_in_81_06_XOR_Evqp_Ivds_16();
+    inline bool handler_in_81_06_XOR_Evqp_Ivds_16(Bit8u rmmod);
 
     /*
      XOR for 32-Bit operand
     */
-    inline bool handler_in_81_06_XOR_Evqp_Ivds_32();
+    inline bool handler_in_81_06_XOR_Evqp_Ivds_32(Bit8u rmmod);
 
     /*
      CMP
     */
-    inline bool handler_in_81_07_CMP_Ivds();
+    inline bool handler_in_81_07_CMP_Ivds(Bit8u rmmod);
 
     /*
      CMP for 16-Bit operand
     */
-    inline bool handler_in_81_07_CMP_Ivds_16();
+    inline bool handler_in_81_07_CMP_Ivds_16(Bit8u rmmod);
 
     /*
      CMP for 32-Bit operand
     */
-    inline bool handler_in_81_07_CMP_Ivds_32();
+    inline bool handler_in_81_07_CMP_Ivds_32(Bit8u rmmod);
 
     /*
      ADD
     */
-    inline bool handler_in_82_00_ADD_Eb_Ib();
+    inline bool handler_in_82_00_ADD_Eb_Ib(Bit8u rmmod);
 
     /*
      OR
     */
-    inline bool handler_in_82_01_OR_Eb_Ib();
+    inline bool handler_in_82_01_OR_Eb_Ib(Bit8u rmmod);
 
     /*
      ADC
     */
-    inline bool handler_in_82_02_ADC_Eb_Ib();
+    inline bool handler_in_82_02_ADC_Eb_Ib(Bit8u rmmod);
 
     /*
      SBB
     */
-    inline bool handler_in_82_03_SBB_Eb_Ib();
+    inline bool handler_in_82_03_SBB_Eb_Ib(Bit8u rmmod);
 
     /*
      AND
     */
-    inline bool handler_in_82_04_AND_Eb_Ib();
+    inline bool handler_in_82_04_AND_Eb_Ib(Bit8u rmmod);
 
     /*
      SUB
     */
-    inline bool handler_in_82_05_SUB_Eb_Ib();
+    inline bool handler_in_82_05_SUB_Eb_Ib(Bit8u rmmod);
 
     /*
      XOR
     */
-    inline bool handler_in_82_06_XOR_Eb_Ib();
+    inline bool handler_in_82_06_XOR_Eb_Ib(Bit8u rmmod);
 
     /*
      CMP
     */
-    inline bool handler_in_82_07_CMP_Ib();
+    inline bool handler_in_82_07_CMP_Ib(Bit8u rmmod);
 
     /*
      ADD
     */
-    inline bool handler_in_83_00_ADD_Evqp_Ibs();
+    inline bool handler_in_83_00_ADD_Evqp_Ibs(Bit8u rmmod);
 
     /*
      ADD for 16-Bit operand
     */
-    inline bool handler_in_83_00_ADD_Evqp_Ibs_16();
+    inline bool handler_in_83_00_ADD_Evqp_Ibs_16(Bit8u rmmod);
 
     /*
      ADD for 32-Bit operand
     */
-    inline bool handler_in_83_00_ADD_Evqp_Ibs_32();
+    inline bool handler_in_83_00_ADD_Evqp_Ibs_32(Bit8u rmmod);
 
     /*
      OR
     */
-    inline bool handler_in_83_01_OR_Evqp_Ibs();
+    inline bool handler_in_83_01_OR_Evqp_Ibs(Bit8u rmmod);
 
     /*
      OR for 16-Bit operand
     */
-    inline bool handler_in_83_01_OR_Evqp_Ibs_16();
+    inline bool handler_in_83_01_OR_Evqp_Ibs_16(Bit8u rmmod);
 
     /*
      OR for 32-Bit operand
     */
-    inline bool handler_in_83_01_OR_Evqp_Ibs_32();
+    inline bool handler_in_83_01_OR_Evqp_Ibs_32(Bit8u rmmod);
 
     /*
      ADC
     */
-    inline bool handler_in_83_02_ADC_Evqp_Ibs();
+    inline bool handler_in_83_02_ADC_Evqp_Ibs(Bit8u rmmod);
 
     /*
      ADC for 16-Bit operand
     */
-    inline bool handler_in_83_02_ADC_Evqp_Ibs_16();
+    inline bool handler_in_83_02_ADC_Evqp_Ibs_16(Bit8u rmmod);
 
     /*
      ADC for 32-Bit operand
     */
-    inline bool handler_in_83_02_ADC_Evqp_Ibs_32();
+    inline bool handler_in_83_02_ADC_Evqp_Ibs_32(Bit8u rmmod);
 
     /*
      SBB
     */
-    inline bool handler_in_83_03_SBB_Evqp_Ibs();
+    inline bool handler_in_83_03_SBB_Evqp_Ibs(Bit8u rmmod);
 
     /*
      SBB for 16-Bit operand
     */
-    inline bool handler_in_83_03_SBB_Evqp_Ibs_16();
+    inline bool handler_in_83_03_SBB_Evqp_Ibs_16(Bit8u rmmod);
 
     /*
      SBB for 32-Bit operand
     */
-    inline bool handler_in_83_03_SBB_Evqp_Ibs_32();
+    inline bool handler_in_83_03_SBB_Evqp_Ibs_32(Bit8u rmmod);
 
     /*
      AND
     */
-    inline bool handler_in_83_04_AND_Evqp_Ibs();
+    inline bool handler_in_83_04_AND_Evqp_Ibs(Bit8u rmmod);
 
     /*
      AND for 16-Bit operand
     */
-    inline bool handler_in_83_04_AND_Evqp_Ibs_16();
+    inline bool handler_in_83_04_AND_Evqp_Ibs_16(Bit8u rmmod);
 
     /*
      AND for 32-Bit operand
     */
-    inline bool handler_in_83_04_AND_Evqp_Ibs_32();
+    inline bool handler_in_83_04_AND_Evqp_Ibs_32(Bit8u rmmod);
 
     /*
      SUB
     */
-    inline bool handler_in_83_05_SUB_Evqp_Ibs();
+    inline bool handler_in_83_05_SUB_Evqp_Ibs(Bit8u rmmod);
 
     /*
      SUB for 16-Bit operand
     */
-    inline bool handler_in_83_05_SUB_Evqp_Ibs_16();
+    inline bool handler_in_83_05_SUB_Evqp_Ibs_16(Bit8u rmmod);
 
     /*
      SUB for 32-Bit operand
     */
-    inline bool handler_in_83_05_SUB_Evqp_Ibs_32();
+    inline bool handler_in_83_05_SUB_Evqp_Ibs_32(Bit8u rmmod);
 
     /*
      XOR
     */
-    inline bool handler_in_83_06_XOR_Evqp_Ibs();
+    inline bool handler_in_83_06_XOR_Evqp_Ibs(Bit8u rmmod);
 
     /*
      XOR for 16-Bit operand
     */
-    inline bool handler_in_83_06_XOR_Evqp_Ibs_16();
+    inline bool handler_in_83_06_XOR_Evqp_Ibs_16(Bit8u rmmod);
 
     /*
      XOR for 32-Bit operand
     */
-    inline bool handler_in_83_06_XOR_Evqp_Ibs_32();
+    inline bool handler_in_83_06_XOR_Evqp_Ibs_32(Bit8u rmmod);
 
     /*
      CMP
     */
-    inline bool handler_in_83_07_CMP_Ibs();
+    inline bool handler_in_83_07_CMP_Evqp_Ibs(Bit8u rmmod);
+
+	/*
+	 CMP for 16-Bit operand
+	*/
+	inline bool handler_in_83_07_CMP_Evqp_Ibs_16(Bit8u rmmod);
+
+	/*
+	 CMP for 32-Bit operand
+	*/
+	inline bool handler_in_83_07_CMP_Evqp_Ibs_32(Bit8u rmmod);
 
     /*
      TEST
@@ -2629,32 +2639,22 @@ private:
     /*
      POP
     */
-    inline bool handler_in_8F_00_POP_Ev();
+    inline bool handler_in_8F_00_POP_Ev(Bit8u rmmod);
 
     /*
      POP for 16-Bit operand
     */
-    inline bool handler_in_8F_00_POP_Ev_16();
+    inline bool handler_in_8F_00_POP_Ev_16(Bit8u rmmod);
 
     /*
      POP for 32-Bit operand
     */
-    inline bool handler_in_8F_00_POP_Ev_32();
+    inline bool handler_in_8F_00_POP_Ev_32(Bit8u rmmod);
 
     /*
      XCHG
     */
-    inline bool handler_in_90_XCHG_rAXvqp();
-
-    /*
-     XCHG for 16-Bit operand
-    */
-    inline bool handler_in_90_XCHG_rAXvqp_16();
-
-    /*
-     XCHG for 32-Bit operand
-    */
-    inline bool handler_in_90_XCHG_rAXvqp_32();
+    inline bool handler_in_90_NOP();
 
     /*
      XCHG
@@ -2762,24 +2762,14 @@ private:
     inline bool handler_in_97_XCHG_rAXvqp_32();
 
     /*
-     CBW
+     CBW/CWDE
     */
-    inline bool handler_in_98_CBW();
+    inline bool handler_in_98_CBW_CWDE();
 
     /*
-     CWDE
+     CWD/CDQ
     */
-    inline bool handler_in_98_CWDE();
-
-    /*
-     CDQ
-    */
-    inline bool handler_in_99_CDQ();
-
-    /*
-     CWD
-    */
-    inline bool handler_in_99_CWD();
+    inline bool handler_in_99_CWD_CDQ();
 
     /*
      CALLF
@@ -3089,162 +3079,162 @@ private:
     /*
      ROL
     */
-    inline bool handler_in_C0_00_ROL_Eb_Ib();
+    inline bool handler_in_C0_00_ROL_Eb_Ib(Bit8u rmmod);
 
     /*
      ROR
     */
-    inline bool handler_in_C0_01_ROR_Eb_Ib();
+    inline bool handler_in_C0_01_ROR_Eb_Ib(Bit8u rmmod);
 
     /*
      RCL
     */
-    inline bool handler_in_C0_02_RCL_Eb_Ib();
+    inline bool handler_in_C0_02_RCL_Eb_Ib(Bit8u rmmod);
 
     /*
      RCR
     */
-    inline bool handler_in_C0_03_RCR_Eb_Ib();
+    inline bool handler_in_C0_03_RCR_Eb_Ib(Bit8u rmmod);
 
     /*
      SHL
     */
-    inline bool handler_in_C0_04_SHL_Eb_Ib();
+    inline bool handler_in_C0_04_SHL_Eb_Ib(Bit8u rmmod);
 
     /*
      SHR
     */
-    inline bool handler_in_C0_05_SHR_Eb_Ib();
+    inline bool handler_in_C0_05_SHR_Eb_Ib(Bit8u rmmod);
 
     /*
      SAL
     */
-    inline bool handler_in_C0_06_SAL_Eb_Ib();
+    inline bool handler_in_C0_06_SAL_Eb_Ib(Bit8u rmmod);
 
     /*
      SAR
     */
-    inline bool handler_in_C0_07_SAR_Eb_Ib();
+    inline bool handler_in_C0_07_SAR_Eb_Ib(Bit8u rmmod);
 
     /*
      ROL
     */
-    inline bool handler_in_C1_00_ROL_Evqp_Ib();
+    inline bool handler_in_C1_00_ROL_Evqp_Ib(Bit8u rmmod);
 
     /*
      ROL for 16-Bit operand
     */
-    inline bool handler_in_C1_00_ROL_Evqp_Ib_16();
+    inline bool handler_in_C1_00_ROL_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      ROL for 32-Bit operand
     */
-    inline bool handler_in_C1_00_ROL_Evqp_Ib_32();
+    inline bool handler_in_C1_00_ROL_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      ROR
     */
-    inline bool handler_in_C1_01_ROR_Evqp_Ib();
+    inline bool handler_in_C1_01_ROR_Evqp_Ib(Bit8u rmmod);
 
     /*
      ROR for 16-Bit operand
     */
-    inline bool handler_in_C1_01_ROR_Evqp_Ib_16();
+    inline bool handler_in_C1_01_ROR_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      ROR for 32-Bit operand
     */
-    inline bool handler_in_C1_01_ROR_Evqp_Ib_32();
+    inline bool handler_in_C1_01_ROR_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      RCL
     */
-    inline bool handler_in_C1_02_RCL_Evqp_Ib();
+    inline bool handler_in_C1_02_RCL_Evqp_Ib(Bit8u rmmod);
 
     /*
      RCL for 16-Bit operand
     */
-    inline bool handler_in_C1_02_RCL_Evqp_Ib_16();
+    inline bool handler_in_C1_02_RCL_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      RCL for 32-Bit operand
     */
-    inline bool handler_in_C1_02_RCL_Evqp_Ib_32();
+    inline bool handler_in_C1_02_RCL_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      RCR
     */
-    inline bool handler_in_C1_03_RCR_Evqp_Ib();
+    inline bool handler_in_C1_03_RCR_Evqp_Ib(Bit8u rmmod);
 
     /*
      RCR for 16-Bit operand
     */
-    inline bool handler_in_C1_03_RCR_Evqp_Ib_16();
+    inline bool handler_in_C1_03_RCR_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      RCR for 32-Bit operand
     */
-    inline bool handler_in_C1_03_RCR_Evqp_Ib_32();
+    inline bool handler_in_C1_03_RCR_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      SHL
     */
-    inline bool handler_in_C1_04_SHL_Evqp_Ib();
+    inline bool handler_in_C1_04_SHL_Evqp_Ib(Bit8u rmmod);
 
     /*
      SHL for 16-Bit operand
     */
-    inline bool handler_in_C1_04_SHL_Evqp_Ib_16();
+    inline bool handler_in_C1_04_SHL_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      SHL for 32-Bit operand
     */
-    inline bool handler_in_C1_04_SHL_Evqp_Ib_32();
+    inline bool handler_in_C1_04_SHL_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      SHR
     */
-    inline bool handler_in_C1_05_SHR_Evqp_Ib();
+    inline bool handler_in_C1_05_SHR_Evqp_Ib(Bit8u rmmod);
 
     /*
      SHR for 16-Bit operand
     */
-    inline bool handler_in_C1_05_SHR_Evqp_Ib_16();
+    inline bool handler_in_C1_05_SHR_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      SHR for 32-Bit operand
     */
-    inline bool handler_in_C1_05_SHR_Evqp_Ib_32();
+    inline bool handler_in_C1_05_SHR_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      SAL
     */
-    inline bool handler_in_C1_06_SAL_Evqp_Ib();
+    inline bool handler_in_C1_06_SAL_Evqp_Ib(Bit8u rmmod);
 
     /*
      SAL for 16-Bit operand
     */
-    inline bool handler_in_C1_06_SAL_Evqp_Ib_16();
+    inline bool handler_in_C1_06_SAL_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      SAL for 32-Bit operand
     */
-    inline bool handler_in_C1_06_SAL_Evqp_Ib_32();
+    inline bool handler_in_C1_06_SAL_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      SAR
     */
-    inline bool handler_in_C1_07_SAR_Evqp_Ib();
+    inline bool handler_in_C1_07_SAR_Evqp_Ib(Bit8u rmmod);
 
     /*
      SAR for 16-Bit operand
     */
-    inline bool handler_in_C1_07_SAR_Evqp_Ib_16();
+    inline bool handler_in_C1_07_SAR_Evqp_Ib_16(Bit8u rmmod);
 
     /*
      SAR for 32-Bit operand
     */
-    inline bool handler_in_C1_07_SAR_Evqp_Ib_32();
+    inline bool handler_in_C1_07_SAR_Evqp_Ib_32(Bit8u rmmod);
 
     /*
      RETN
@@ -3289,22 +3279,22 @@ private:
     /*
      MOV
     */
-    inline bool handler_in_C6_00_MOV_Eb_Ib();
+    inline bool handler_in_C6_00_MOV_Eb_Ib(Bit8u rmmod);
 
     /*
      MOV
     */
-    inline bool handler_in_C7_00_MOV_Evqp_Ivds();
+    inline bool handler_in_C7_00_MOV_Evqp_Ivds(Bit8u rmmod);
 
     /*
      MOV for 16-Bit operand
     */
-    inline bool handler_in_C7_00_MOV_Evqp_Ivds_16();
+    inline bool handler_in_C7_00_MOV_Evqp_Ivds_16(Bit8u rmmod);
 
     /*
      MOV for 32-Bit operand
     */
-    inline bool handler_in_C7_00_MOV_Evqp_Ivds_32();
+    inline bool handler_in_C7_00_MOV_Evqp_Ivds_32(Bit8u rmmod);
 
     /*
      ENTER
@@ -3349,322 +3339,322 @@ private:
     /*
      ROL
     */
-    inline bool handler_in_D0_00_ROL_Eb();
+    inline bool handler_in_D0_00_ROL_Eb(Bit8u rmmod);
 
     /*
      ROR
     */
-    inline bool handler_in_D0_01_ROR_Eb();
+    inline bool handler_in_D0_01_ROR_Eb(Bit8u rmmod);
 
     /*
      RCL
     */
-    inline bool handler_in_D0_02_RCL_Eb();
+    inline bool handler_in_D0_02_RCL_Eb(Bit8u rmmod);
 
     /*
      RCR
     */
-    inline bool handler_in_D0_03_RCR_Eb();
+    inline bool handler_in_D0_03_RCR_Eb(Bit8u rmmod);
 
     /*
      SHL
     */
-    inline bool handler_in_D0_04_SHL_Eb();
+    inline bool handler_in_D0_04_SHL_Eb(Bit8u rmmod);
 
     /*
      SHR
     */
-    inline bool handler_in_D0_05_SHR_Eb();
+    inline bool handler_in_D0_05_SHR_Eb(Bit8u rmmod);
 
     /*
      SAL
     */
-    inline bool handler_in_D0_06_SAL_Eb();
+    inline bool handler_in_D0_06_SAL_Eb(Bit8u rmmod);
 
     /*
      SAR
     */
-    inline bool handler_in_D0_07_SAR_Eb();
+    inline bool handler_in_D0_07_SAR_Eb(Bit8u rmmod);
 
     /*
      ROL
     */
-    inline bool handler_in_D1_00_ROL_Evqp();
+    inline bool handler_in_D1_00_ROL_Evqp(Bit8u rmmod);
 
     /*
      ROL for 16-Bit operand
     */
-    inline bool handler_in_D1_00_ROL_Evqp_16();
+    inline bool handler_in_D1_00_ROL_Evqp_16(Bit8u rmmod);
 
     /*
      ROL for 32-Bit operand
     */
-    inline bool handler_in_D1_00_ROL_Evqp_32();
+    inline bool handler_in_D1_00_ROL_Evqp_32(Bit8u rmmod);
 
     /*
      ROR
     */
-    inline bool handler_in_D1_01_ROR_Evqp();
+    inline bool handler_in_D1_01_ROR_Evqp(Bit8u rmmod);
 
     /*
      ROR for 16-Bit operand
     */
-    inline bool handler_in_D1_01_ROR_Evqp_16();
+    inline bool handler_in_D1_01_ROR_Evqp_16(Bit8u rmmod);
 
     /*
      ROR for 32-Bit operand
     */
-    inline bool handler_in_D1_01_ROR_Evqp_32();
+    inline bool handler_in_D1_01_ROR_Evqp_32(Bit8u rmmod);
 
     /*
      RCL
     */
-    inline bool handler_in_D1_02_RCL_Evqp();
+    inline bool handler_in_D1_02_RCL_Evqp(Bit8u rmmod);
 
     /*
      RCL for 16-Bit operand
     */
-    inline bool handler_in_D1_02_RCL_Evqp_16();
+    inline bool handler_in_D1_02_RCL_Evqp_16(Bit8u rmmod);
 
     /*
      RCL for 32-Bit operand
     */
-    inline bool handler_in_D1_02_RCL_Evqp_32();
+    inline bool handler_in_D1_02_RCL_Evqp_32(Bit8u rmmod);
 
     /*
      RCR
     */
-    inline bool handler_in_D1_03_RCR_Evqp();
+    inline bool handler_in_D1_03_RCR_Evqp(Bit8u rmmod);
 
     /*
      RCR for 16-Bit operand
     */
-    inline bool handler_in_D1_03_RCR_Evqp_16();
+    inline bool handler_in_D1_03_RCR_Evqp_16(Bit8u rmmod);
 
     /*
      RCR for 32-Bit operand
     */
-    inline bool handler_in_D1_03_RCR_Evqp_32();
+    inline bool handler_in_D1_03_RCR_Evqp_32(Bit8u rmmod);
 
     /*
      SHL
     */
-    inline bool handler_in_D1_04_SHL_Evqp();
+    inline bool handler_in_D1_04_SHL_Evqp(Bit8u rmmod);
 
     /*
      SHL for 16-Bit operand
     */
-    inline bool handler_in_D1_04_SHL_Evqp_16();
+    inline bool handler_in_D1_04_SHL_Evqp_16(Bit8u rmmod);
 
     /*
      SHL for 32-Bit operand
     */
-    inline bool handler_in_D1_04_SHL_Evqp_32();
+    inline bool handler_in_D1_04_SHL_Evqp_32(Bit8u rmmod);
 
     /*
      SHR
     */
-    inline bool handler_in_D1_05_SHR_Evqp();
+    inline bool handler_in_D1_05_SHR_Evqp(Bit8u rmmod);
 
     /*
      SHR for 16-Bit operand
     */
-    inline bool handler_in_D1_05_SHR_Evqp_16();
+    inline bool handler_in_D1_05_SHR_Evqp_16(Bit8u rmmod);
 
     /*
      SHR for 32-Bit operand
     */
-    inline bool handler_in_D1_05_SHR_Evqp_32();
+    inline bool handler_in_D1_05_SHR_Evqp_32(Bit8u rmmod);
 
     /*
      SAL
     */
-    inline bool handler_in_D1_06_SAL_Evqp();
+    inline bool handler_in_D1_06_SAL_Evqp(Bit8u rmmod);
 
     /*
      SAL for 16-Bit operand
     */
-    inline bool handler_in_D1_06_SAL_Evqp_16();
+    inline bool handler_in_D1_06_SAL_Evqp_16(Bit8u rmmod);
 
     /*
      SAL for 32-Bit operand
     */
-    inline bool handler_in_D1_06_SAL_Evqp_32();
+    inline bool handler_in_D1_06_SAL_Evqp_32(Bit8u rmmod);
 
     /*
      SAR
     */
-    inline bool handler_in_D1_07_SAR_Evqp();
+    inline bool handler_in_D1_07_SAR_Evqp(Bit8u rmmod);
 
     /*
      SAR for 16-Bit operand
     */
-    inline bool handler_in_D1_07_SAR_Evqp_16();
+    inline bool handler_in_D1_07_SAR_Evqp_16(Bit8u rmmod);
 
     /*
      SAR for 32-Bit operand
     */
-    inline bool handler_in_D1_07_SAR_Evqp_32();
+    inline bool handler_in_D1_07_SAR_Evqp_32(Bit8u rmmod);
 
     /*
      ROL
     */
-    inline bool handler_in_D2_00_ROL_Eb_CLb();
+    inline bool handler_in_D2_00_ROL_Eb_CLb(Bit8u rmmod);
 
     /*
      ROR
     */
-    inline bool handler_in_D2_01_ROR_Eb_CLb();
+    inline bool handler_in_D2_01_ROR_Eb_CLb(Bit8u rmmod);
 
     /*
      RCL
     */
-    inline bool handler_in_D2_02_RCL_Eb_CLb();
+    inline bool handler_in_D2_02_RCL_Eb_CLb(Bit8u rmmod);
 
     /*
      RCR
     */
-    inline bool handler_in_D2_03_RCR_Eb_CLb();
+    inline bool handler_in_D2_03_RCR_Eb_CLb(Bit8u rmmod);
 
     /*
      SHL
     */
-    inline bool handler_in_D2_04_SHL_Eb_CLb();
+    inline bool handler_in_D2_04_SHL_Eb_CLb(Bit8u rmmod);
 
     /*
      SHR
     */
-    inline bool handler_in_D2_05_SHR_Eb_CLb();
+    inline bool handler_in_D2_05_SHR_Eb_CLb(Bit8u rmmod);
 
     /*
      SAL
     */
-    inline bool handler_in_D2_06_SAL_Eb_CLb();
+    inline bool handler_in_D2_06_SAL_Eb_CLb(Bit8u rmmod);
 
     /*
      SAR
     */
-    inline bool handler_in_D2_07_SAR_Eb_CLb();
+    inline bool handler_in_D2_07_SAR_Eb_CLb(Bit8u rmmod);
 
     /*
      ROL
     */
-    inline bool handler_in_D3_00_ROL_Evqp_CLb();
+    inline bool handler_in_D3_00_ROL_Evqp_CLb(Bit8u rmmod);
 
     /*
      ROL for 16-Bit operand
     */
-    inline bool handler_in_D3_00_ROL_Evqp_CLb_16();
+    inline bool handler_in_D3_00_ROL_Evqp_CLb_16(Bit8u rmmod);
 
     /*
      ROL for 32-Bit operand
     */
-    inline bool handler_in_D3_00_ROL_Evqp_CLb_32();
+    inline bool handler_in_D3_00_ROL_Evqp_CLb_32(Bit8u rmmod);
 
     /*
      ROR
     */
-    inline bool handler_in_D3_01_ROR_Evqp_CLb();
+    inline bool handler_in_D3_01_ROR_Evqp_CLb(Bit8u rmmod);
 
     /*
      ROR for 16-Bit operand
     */
-    inline bool handler_in_D3_01_ROR_Evqp_CLb_16();
+    inline bool handler_in_D3_01_ROR_Evqp_CLb_16(Bit8u rmmod);
 
     /*
      ROR for 32-Bit operand
     */
-    inline bool handler_in_D3_01_ROR_Evqp_CLb_32();
+    inline bool handler_in_D3_01_ROR_Evqp_CLb_32(Bit8u rmmod);
 
     /*
      RCL
     */
-    inline bool handler_in_D3_02_RCL_Evqp_CLb();
+    inline bool handler_in_D3_02_RCL_Evqp_CLb(Bit8u rmmod);
 
     /*
      RCL for 16-Bit operand
     */
-    inline bool handler_in_D3_02_RCL_Evqp_CLb_16();
+    inline bool handler_in_D3_02_RCL_Evqp_CLb_16(Bit8u rmmod);
 
     /*
      RCL for 32-Bit operand
     */
-    inline bool handler_in_D3_02_RCL_Evqp_CLb_32();
+    inline bool handler_in_D3_02_RCL_Evqp_CLb_32(Bit8u rmmod);
 
     /*
      RCR
     */
-    inline bool handler_in_D3_03_RCR_Evqp_CLb();
+    inline bool handler_in_D3_03_RCR_Evqp_CLb(Bit8u rmmod);
 
     /*
      RCR for 16-Bit operand
     */
-    inline bool handler_in_D3_03_RCR_Evqp_CLb_16();
+    inline bool handler_in_D3_03_RCR_Evqp_CLb_16(Bit8u rmmod);
 
     /*
      RCR for 32-Bit operand
     */
-    inline bool handler_in_D3_03_RCR_Evqp_CLb_32();
+    inline bool handler_in_D3_03_RCR_Evqp_CLb_32(Bit8u rmmod);
 
     /*
      SHL
     */
-    inline bool handler_in_D3_04_SHL_Evqp_CLb();
+    inline bool handler_in_D3_04_SHL_Evqp_CLb(Bit8u rmmod);
 
     /*
      SHL for 16-Bit operand
     */
-    inline bool handler_in_D3_04_SHL_Evqp_CLb_16();
+    inline bool handler_in_D3_04_SHL_Evqp_CLb_16(Bit8u rmmod);
 
     /*
      SHL for 32-Bit operand
     */
-    inline bool handler_in_D3_04_SHL_Evqp_CLb_32();
+    inline bool handler_in_D3_04_SHL_Evqp_CLb_32(Bit8u rmmod);
 
     /*
      SHR
     */
-    inline bool handler_in_D3_05_SHR_Evqp_CLb();
+    inline bool handler_in_D3_05_SHR_Evqp_CLb(Bit8u rmmod);
 
     /*
      SHR for 16-Bit operand
     */
-    inline bool handler_in_D3_05_SHR_Evqp_CLb_16();
+    inline bool handler_in_D3_05_SHR_Evqp_CLb_16(Bit8u rmmod);
 
     /*
      SHR for 32-Bit operand
     */
-    inline bool handler_in_D3_05_SHR_Evqp_CLb_32();
+    inline bool handler_in_D3_05_SHR_Evqp_CLb_32(Bit8u rmmod);
 
     /*
      SAL
     */
-    inline bool handler_in_D3_06_SAL_Evqp_CLb();
+    inline bool handler_in_D3_06_SAL_Evqp_CLb(Bit8u rmmod);
 
     /*
      SAL for 16-Bit operand
     */
-    inline bool handler_in_D3_06_SAL_Evqp_CLb_16();
+    inline bool handler_in_D3_06_SAL_Evqp_CLb_16(Bit8u rmmod);
 
     /*
      SAL for 32-Bit operand
     */
-    inline bool handler_in_D3_06_SAL_Evqp_CLb_32();
+    inline bool handler_in_D3_06_SAL_Evqp_CLb_32(Bit8u rmmod);
 
     /*
      SAR
     */
-    inline bool handler_in_D3_07_SAR_Evqp_CLb();
+    inline bool handler_in_D3_07_SAR_Evqp_CLb(Bit8u rmmod);
 
     /*
      SAR for 16-Bit operand
     */
-    inline bool handler_in_D3_07_SAR_Evqp_CLb_16();
+    inline bool handler_in_D3_07_SAR_Evqp_CLb_16(Bit8u rmmod);
 
     /*
      SAR for 32-Bit operand
     */
-    inline bool handler_in_D3_07_SAR_Evqp_CLb_32();
+    inline bool handler_in_D3_07_SAR_Evqp_CLb_32(Bit8u rmmod);
 
     /*
      AMX
@@ -3859,142 +3849,142 @@ private:
     /*
      TEST
     */
-    inline bool handler_in_F6_01_TEST_Ib();
+    inline bool handler_in_F6_01_TEST_Ib(Bit8u rmmod);
 
     /*
      NOT
     */
-    inline bool handler_in_F6_02_NOT_Eb();
+    inline bool handler_in_F6_02_NOT_Eb(Bit8u rmmod);
 
     /*
      NEG
     */
-    inline bool handler_in_F6_03_NEG_Eb();
+    inline bool handler_in_F6_03_NEG_Eb(Bit8u rmmod);
 
     /*
      MUL
     */
-    inline bool handler_in_F6_04_MUL_Eb();
+    inline bool handler_in_F6_04_MUL_Eb(Bit8u rmmod);
 
     /*
      IMUL
     */
-    inline bool handler_in_F6_05_IMUL_Eb();
+    inline bool handler_in_F6_05_IMUL_Eb(Bit8u rmmod);
 
     /*
      DIV
     */
-    inline bool handler_in_F6_06_DIV_Eb();
+    inline bool handler_in_F6_06_DIV_Eb(Bit8u rmmod);
 
     /*
      IDIV
     */
-    inline bool handler_in_F6_07_IDIV_Eb();
+    inline bool handler_in_F6_07_IDIV_Eb(Bit8u rmmod);
 
     /*
      TEST
     */
-    inline bool handler_in_F7_01_TEST_Ivqp();
+    inline bool handler_in_F7_01_TEST_Ivqp(Bit8u rmmod);
 
     /*
      TEST for 16-Bit operand
     */
-    inline bool handler_in_F7_01_TEST_Ivqp_16();
+    inline bool handler_in_F7_01_TEST_Ivqp_16(Bit8u rmmod);
 
     /*
      TEST for 32-Bit operand
     */
-    inline bool handler_in_F7_01_TEST_Ivqp_32();
+    inline bool handler_in_F7_01_TEST_Ivqp_32(Bit8u rmmod);
 
     /*
      NOT
     */
-    inline bool handler_in_F7_02_NOT_Evqp();
+    inline bool handler_in_F7_02_NOT_Evqp(Bit8u rmmod);
 
     /*
      NOT for 16-Bit operand
     */
-    inline bool handler_in_F7_02_NOT_Evqp_16();
+    inline bool handler_in_F7_02_NOT_Evqp_16(Bit8u rmmod);
 
     /*
      NOT for 32-Bit operand
     */
-    inline bool handler_in_F7_02_NOT_Evqp_32();
+    inline bool handler_in_F7_02_NOT_Evqp_32(Bit8u rmmod);
 
     /*
      NEG
     */
-    inline bool handler_in_F7_03_NEG_Evqp();
+    inline bool handler_in_F7_03_NEG_Evqp(Bit8u rmmod);
 
     /*
      NEG for 16-Bit operand
     */
-    inline bool handler_in_F7_03_NEG_Evqp_16();
+    inline bool handler_in_F7_03_NEG_Evqp_16(Bit8u rmmod);
 
     /*
      NEG for 32-Bit operand
     */
-    inline bool handler_in_F7_03_NEG_Evqp_32();
+    inline bool handler_in_F7_03_NEG_Evqp_32(Bit8u rmmod);
 
     /*
      MUL
     */
-    inline bool handler_in_F7_04_MUL_Evqp();
+    inline bool handler_in_F7_04_MUL_Evqp(Bit8u rmmod);
 
     /*
      MUL for 16-Bit operand
     */
-    inline bool handler_in_F7_04_MUL_Evqp_16();
+    inline bool handler_in_F7_04_MUL_Evqp_16(Bit8u rmmod);
 
     /*
      MUL for 32-Bit operand
     */
-    inline bool handler_in_F7_04_MUL_Evqp_32();
+    inline bool handler_in_F7_04_MUL_Evqp_32(Bit8u rmmod);
 
     /*
      IMUL
     */
-    inline bool handler_in_F7_05_IMUL_Evqp();
+    inline bool handler_in_F7_05_IMUL_Evqp(Bit8u rmmod);
 
     /*
      IMUL for 16-Bit operand
     */
-    inline bool handler_in_F7_05_IMUL_Evqp_16();
+    inline bool handler_in_F7_05_IMUL_Evqp_16(Bit8u rmmod);
 
     /*
      IMUL for 32-Bit operand
     */
-    inline bool handler_in_F7_05_IMUL_Evqp_32();
+    inline bool handler_in_F7_05_IMUL_Evqp_32(Bit8u rmmod);
 
     /*
      DIV
     */
-    inline bool handler_in_F7_06_DIV_Evqp();
+    inline bool handler_in_F7_06_DIV_Evqp(Bit8u rmmod);
 
     /*
      DIV for 16-Bit operand
     */
-    inline bool handler_in_F7_06_DIV_Evqp_16();
+    inline bool handler_in_F7_06_DIV_Evqp_16(Bit8u rmmod);
 
     /*
      DIV for 32-Bit operand
     */
-    inline bool handler_in_F7_06_DIV_Evqp_32();
+    inline bool handler_in_F7_06_DIV_Evqp_32(Bit8u rmmod);
 
     /*
      IDIV
     */
-    inline bool handler_in_F7_07_IDIV_Evqp();
+    inline bool handler_in_F7_07_IDIV_Evqp(Bit8u rmmod);
 
     /*
      IDIV for 16-Bit operand
     */
-    inline bool handler_in_F7_07_IDIV_Evqp_16();
+    inline bool handler_in_F7_07_IDIV_Evqp_16(Bit8u rmmod);
 
     /*
      IDIV for 32-Bit operand
     */
-    inline bool handler_in_F7_07_IDIV_Evqp_32();
+    inline bool handler_in_F7_07_IDIV_Evqp_32(Bit8u rmmod);
 
     /*
      CLC
@@ -4029,117 +4019,122 @@ private:
     /*
      INC
     */
-    inline bool handler_in_FE_00_INC_Eb();
+    inline bool handler_in_FE_00_INC_Eb(Bit8u rmmod);
 
     /*
      DEC
     */
-    inline bool handler_in_FE_01_DEC_Eb();
+    inline bool handler_in_FE_01_DEC_Eb(Bit8u rmmod);
+
+    /*
+     CALLBACK
+    */
+    inline bool handler_in_FE_07_CALLBACK(Bit8u rmmod);
 
     /*
      INC
     */
-    inline bool handler_in_FF_00_INC_Evqp();
+    inline bool handler_in_FF_00_INC_Evqp(Bit8u rmmod);
 
     /*
      INC for 16-Bit operand
     */
-    inline bool handler_in_FF_00_INC_Evqp_16();
+    inline bool handler_in_FF_00_INC_Evqp_16(Bit8u rmmod);
 
     /*
      INC for 32-Bit operand
     */
-    inline bool handler_in_FF_00_INC_Evqp_32();
+    inline bool handler_in_FF_00_INC_Evqp_32(Bit8u rmmod);
 
     /*
      DEC
     */
-    inline bool handler_in_FF_01_DEC_Evqp();
+    inline bool handler_in_FF_01_DEC_Evqp(Bit8u rmmod);
 
     /*
      DEC for 16-Bit operand
     */
-    inline bool handler_in_FF_01_DEC_Evqp_16();
+    inline bool handler_in_FF_01_DEC_Evqp_16(Bit8u rmmod);
 
     /*
      DEC for 32-Bit operand
     */
-    inline bool handler_in_FF_01_DEC_Evqp_32();
+    inline bool handler_in_FF_01_DEC_Evqp_32(Bit8u rmmod);
 
     /*
      CALL
     */
-    inline bool handler_in_FF_02_CALL_Ev();
+    inline bool handler_in_FF_02_CALL_Ev(Bit8u rmmod);
 
     /*
      CALL for 16-Bit operand
     */
-    inline bool handler_in_FF_02_CALL_Ev_16();
+    inline bool handler_in_FF_02_CALL_Ev_16(Bit8u rmmod);
 
     /*
      CALL for 32-Bit operand
     */
-    inline bool handler_in_FF_02_CALL_Ev_32();
+    inline bool handler_in_FF_02_CALL_Ev_32(Bit8u rmmod);
 
     /*
      CALLF
     */
-    inline bool handler_in_FF_03_CALLF_Mptp();
+    inline bool handler_in_FF_03_CALLF_Mptp(Bit8u rmmod);
 
     /*
      CALLF for 16-Bit operand
     */
-    inline bool handler_in_FF_03_CALLF_Mptp_16();
+    inline bool handler_in_FF_03_CALLF_Mptp_16(Bit8u rmmod);
 
     /*
      CALLF for 32-Bit operand
     */
-    inline bool handler_in_FF_03_CALLF_Mptp_32();
+    inline bool handler_in_FF_03_CALLF_Mptp_32(Bit8u rmmod);
 
     /*
      JMP
     */
-    inline bool handler_in_FF_04_JMP_Ev();
+    inline bool handler_in_FF_04_JMP_Ev(Bit8u rmmod);
 
     /*
      JMP for 16-Bit operand
     */
-    inline bool handler_in_FF_04_JMP_Ev_16();
+    inline bool handler_in_FF_04_JMP_Ev_16(Bit8u rmmod);
 
     /*
      JMP for 32-Bit operand
     */
-    inline bool handler_in_FF_04_JMP_Ev_32();
+    inline bool handler_in_FF_04_JMP_Ev_32(Bit8u rmmod);
 
     /*
      JMPF
     */
-    inline bool handler_in_FF_05_JMPF_Mptp();
+    inline bool handler_in_FF_05_JMPF_Mptp(Bit8u rmmod);
 
     /*
      JMPF for 16-Bit operand
     */
-    inline bool handler_in_FF_05_JMPF_Mptp_16();
+    inline bool handler_in_FF_05_JMPF_Mptp_16(Bit8u rmmod);
 
     /*
      JMPF for 32-Bit operand
     */
-    inline bool handler_in_FF_05_JMPF_Mptp_32();
+    inline bool handler_in_FF_05_JMPF_Mptp_32(Bit8u rmmod);
 
     /*
      PUSH
     */
-    inline bool handler_in_FF_06_PUSH_Ev();
+    inline bool handler_in_FF_06_PUSH_Ev(Bit8u rmmod);
 
     /*
      PUSH for 16-Bit operand
     */
-    inline bool handler_in_FF_06_PUSH_Ev_16();
+    inline bool handler_in_FF_06_PUSH_Ev_16(Bit8u rmmod);
 
     /*
      PUSH for 32-Bit operand
     */
-    inline bool handler_in_FF_06_PUSH_Ev_32();
+    inline bool handler_in_FF_06_PUSH_Ev_32(Bit8u rmmod);
 
     /* Init state */
     inline bool handler_s0(Bit8u rmmod);
