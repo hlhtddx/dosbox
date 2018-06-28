@@ -9,3 +9,7 @@ build/*
 /visualc_net/Release
 /visualc_net/x64
 src/libs/zmbv/x64
+tests/*.exe
+tests/*.com
+tests/*.txt
+**/*.log
