@@ -5,7 +5,7 @@
 #ifndef PROJECT_CORE_LLVM_COMMON_H
 #define PROJECT_CORE_LLVM_COMMON_H
 
-#include <exception>
+#include <stdexcept>
 #include "cpu.h"
 #include "../lazyflags.h"
 
@@ -151,11 +151,9 @@ protected:
     operand_type &mGeneralRegister;
 };
 
-class IllegalInstructionException : public std::exception {
+class IllegalInstructionException : public std::runtime_error {
 public:
-    const char* what() const _NOEXCEPT {
-        return "Illegal Instruction";
-    }
+    explicit IllegalInstructionException() : std::runtime_error("Illegal Instruction") {}
 };
 
 class CpuRunnerLLVMBase {
