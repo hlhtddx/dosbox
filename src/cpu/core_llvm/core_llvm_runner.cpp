@@ -10850,7 +10850,7 @@ inline bool CpuRunnerLLVM::handler_st_FF() {
 Bit8u CpuRunnerLLVM::ParsePrefix() {
     option_prefix.all_prefix = 0;
     mandatory_prefix = 0;
-    bool expect_prefix = false;
+    bool expect_prefix = true;
     Bit8u insb = 0;
     do {
         insb = Fetch<Bit8u>();
@@ -10900,7 +10900,7 @@ Bit8u CpuRunnerLLVM::ParsePrefix() {
             mandatory_prefix = insb;
             break;
         default:
-            expect_prefix = true;
+            expect_prefix = false;
             break;
         }
     } while (expect_prefix);
