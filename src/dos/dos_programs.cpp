@@ -1326,11 +1326,8 @@ showusage:
 						}
 					}
 
-					// Update DriveManager
-					for (ct = 0; ct < imgDisks.size(); ct++) {
-						DriveManager::AppendDisk(drive - 'A', imgDisks[ct]);
-					}
-					DriveManager::InitializeDrive(drive - 'A');
+					for(ct = 0; ct < imgDisks.size(); ct++) {
+						DriveManager::CycleDisks(drive - 'A', (ct == (imgDisks.size() - 1)));
 
 					// Set the correct media byte in the table 
 					mem_writeb(Real2Phys(dos.tables.mediaid) + (drive - 'A') * 2, mediaid);
@@ -1339,74 +1336,24 @@ showusage:
 					RealPt save_dta = dos.dta();
 					dos.dta(dos.tables.tempdta);
 
-					for (ct = 0; ct < imgDisks.size(); ct++) {
-						DriveManager::CycleAllDisks();
-
-						char root[7] = { drive,':','\\','*','.','*',0 };
-						DOS_FindFirst(root, DOS_ATTR_VOLUME); // force obtaining the label and saving it in dirCache
-					}
-					dos.dta(save_dta);
-
-					std::string tmp(paths[0]);
-					for (i = 1; i < paths.size(); i++) {
-						tmp += "; " + paths[i];
-					}
-					WriteOut(MSG_Get("PROGRAM_MOUNT_STATUS_2"), drive, tmp.c_str());
-
-					if (paths.size() == 1) {
-						newdrive = imgDisks[0];
-						if (((fatDrive *)newdrive)->loadedDisk->hardDrive) {
-							if (imageDiskList[2] == NULL) {
-								imageDiskList[2] = ((fatDrive *)newdrive)->loadedDisk;
-								updateDPT();
-								return;
-							}
-							if (imageDiskList[3] == NULL) {
-								imageDiskList[3] = ((fatDrive *)newdrive)->loadedDisk;
-								updateDPT();
-								return;
-							}
+				if (paths.size() == 1) {
+					newdrive = imgDisks[0];
+					switch (drive - 'A') {
+					case 0:
+					case 1:
+						if(!((fatDrive *)newdrive)->loadedDisk->hardDrive) {
+							if(imageDiskList[drive - 'A'] != NULL) delete imageDiskList[drive - 'A'];
+							imageDiskList[drive - 'A'] = ((fatDrive *)newdrive)->loadedDisk;
 						}
-						if (!((fatDrive *)newdrive)->loadedDisk->hardDrive) {
-							imageDiskList[0] = ((fatDrive *)newdrive)->loadedDisk;
+						break;
+					case 2:
+					case 3:
+						if(((fatDrive *)newdrive)->loadedDisk->hardDrive) {
+							if(imageDiskList[drive - 'A'] != NULL) delete imageDiskList[drive - 'A'];
+							imageDiskList[drive - 'A'] = ((fatDrive *)newdrive)->loadedDisk;
+							updateDPT();
 						}
-					}
-				} else if (fstype == "iso") {
-
-					if (Drives[drive - 'A']) {
-						WriteOut(MSG_Get("PROGRAM_IMGMOUNT_ALREADY_MOUNTED"));
-						return;
-					}
-					MSCDEX_SetCDInterface(CDROM_USE_SDL, -1);
-					// create new drives for all images
-					std::vector<DOS_Drive*> isoDisks;
-					std::vector<std::string>::size_type i;
-					std::vector<DOS_Drive*>::size_type ct;
-					for (i = 0; i < paths.size(); i++) {
-						int error = -1;
-						DOS_Drive* newDrive = new isoDrive(drive, paths[i].c_str(), mediaid, error);
-						isoDisks.push_back(newDrive);
-						switch (error) {
-						case 0:	break;
-						case 1:	WriteOut(MSG_Get("MSCDEX_ERROR_MULTIPLE_CDROMS"));	break;
-						case 2:	WriteOut(MSG_Get("MSCDEX_ERROR_NOT_SUPPORTED"));	break;
-						case 3:	WriteOut(MSG_Get("MSCDEX_ERROR_OPEN"));				break;
-						case 4:	WriteOut(MSG_Get("MSCDEX_TOO_MANY_DRIVES"));		break;
-						case 5:	WriteOut(MSG_Get("MSCDEX_LIMITED_SUPPORT"));		break;
-						case 6:	WriteOut(MSG_Get("MSCDEX_INVALID_FILEFORMAT"));		break;
-						default:	WriteOut(MSG_Get("MSCDEX_UNKNOWN_ERROR"));			break;
-						}
-						// error: clean up and leave
-						if (error) {
-							for (ct = 0; ct < isoDisks.size(); ct++) {
-								delete isoDisks[ct];
-							}
-							return;
-						}
-					}
-					// Update DriveManager
-					for (ct = 0; ct < isoDisks.size(); ct++) {
-						DriveManager::AppendDisk(drive - 'A', isoDisks[ct]);
+						break;
 					}
 					DriveManager::InitializeDrive(drive - 'A');
 
