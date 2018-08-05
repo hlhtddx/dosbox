@@ -1457,7 +1457,8 @@ bool INT10_SetVideoMode(Bit16u mode) {
 
 	/* Set vga attrib register into defined state */
 	IO_Read(mono_mode ? 0x3ba : 0x3da);
-	IO_Write(0x3c0, 0x20);
+	IO_Write(0x3c0,0x20);
+	IO_Read(mono_mode ? 0x3ba : 0x3da); // Kukoo2 demo 
 
 	/* Load text mode font */
 	if (CurMode->type == M_TEXT) {
