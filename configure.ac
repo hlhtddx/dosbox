@@ -289,11 +289,47 @@ case "$host_cpu" in
     c_targetcpu="arm"
     dnl c_unalignedmemory=yes
     ;;
+   aarch64)
+    AC_DEFINE(C_TARGETCPU,ARMV8LE)
+    AC_MSG_RESULT(ARMv8 Little Endian 64-bit)
+    c_targetcpu="arm"
+    c_unalignedmemory=yes
+    ;;
    *)
     AC_DEFINE(C_TARGETCPU,UNKNOWN)
     AC_MSG_RESULT(unknown)
     c_unalignedmemory=no
     ;;
+esac
+
+dnl check for size of pointer being 4 
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+#if SIZEOF_INT_P != 4
+#error size intp is not 4, this not something to worry about
+#endif
+void blah() {
+;
+}
+])],[c_sizep=4],[c_sizep=0])
+
+
+dnl automake 1.14 and upwards rewrite the host to have always 64 bit unless i386 as host is passed
+dnl this can make building a 32 bit executable a bit tricky, as dosbox relies on the host to select the
+dnl dynamic/dynrec core
+AC_MSG_CHECKING([whether Apple user wants to override the build process to produce a 32 bit binary])
+case "$host" in 
+  *-*-darwin*)
+   if test x$c_targetcpu = xx86_64 -a x$c_sizep = x4 ; then
+     AC_MSG_RESULT(yes)
+     AC_DEFINE(C_TARGETCPU,X86)
+     c_targetcpu="x86"
+   else
+     AC_MSG_RESULT(no)
+   fi
+   ;;
+  *)
+   AC_MSG_RESULT([no, not on Apple])
+   ;;
 esac
 
 AC_ARG_ENABLE(dynamic-core,AC_HELP_STRING([--disable-dynamic-core],[Disable all dynamic cores]),,enable_dynamic_core=yes)

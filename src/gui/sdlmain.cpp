@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2002-2017  The DOSBox Team
+ *  Copyright (C) 2002-2018  The DOSBox Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -685,9 +685,9 @@ Bitu GFX_SetSize(Bitu width, Bitu height, Bitu flags, double scalex, double scal
 			LOG_MSG("SDL:OPENGL: No support for texturesize of %d, falling back to surface", texsize);
 			goto dosurface;
 		}
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-#if defined (WIN32) && SDL_VERSION_ATLEAST(1, 2, 11)
-		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 0);
+		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+#if SDL_VERSION_ATLEAST(1, 2, 11)
+		SDL_GL_SetAttribute( SDL_GL_SWAP_CONTROL, 0 );
 #endif
 		GFX_SetupSurfaceScaled(SDL_OPENGL, 0);
 		if (!sdl.surface || sdl.surface->format->BitsPerPixel < 15) {
@@ -1952,8 +1952,8 @@ int main(int argc, char* argv[]) {
 		}
 #endif  //defined(WIN32) && !(C_DEBUG)
 		if (control->cmdline->FindExist("-version") ||
-			control->cmdline->FindExist("--version")) {
-			printf("\nDOSBox version %s, copyright 2002-2017 DOSBox Team.\n\n", VERSION);
+		    control->cmdline->FindExist("--version") ) {
+			printf("\nDOSBox version %s, copyright 2002-2018 DOSBox Team.\n\n",VERSION);
 			printf("DOSBox is written by the DOSBox Team (See AUTHORS file))\n");
 			printf("DOSBox comes with ABSOLUTELY NO WARRANTY.  This is free software,\n");
 			printf("and you are welcome to redistribute it under certain conditions;\n");
@@ -1979,10 +1979,10 @@ int main(int argc, char* argv[]) {
 		setbuf(stderr, NULL);
 #endif
 
-		/* Display Welcometext in the console */
-		LOG_MSG("DOSBox version %s", VERSION);
-		LOG_MSG("Copyright 2002-2017 DOSBox Team, published under GNU GPL.");
-		LOG_MSG("---");
+	/* Display Welcometext in the console */
+	LOG_MSG("DOSBox version %s",VERSION);
+	LOG_MSG("Copyright 2002-2018 DOSBox Team, published under GNU GPL.");
+	LOG_MSG("---");
 
 		/* Init SDL */
 #if SDL_VERSION_ATLEAST(1, 2, 14)

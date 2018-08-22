@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2002-2017  The DOSBox Team
+ *  Copyright (C) 2002-2018  The DOSBox Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -267,8 +267,8 @@ void CSerialModem::EnterIdleState(void) {
 		waitingclientsocket = 0;
 	}
 	// get rid of everything
-	if (serversocket) {
-		while (waitingclientsocket = serversocket->Accept())
+	if(serversocket) {
+		while( (waitingclientsocket=serversocket->Accept()) )
 			delete waitingclientsocket;
 	} else if (listenport) {
 

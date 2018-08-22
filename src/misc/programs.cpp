@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2002-2017  The DOSBox Team
+ *  Copyright (C) 2002-2018  The DOSBox Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -138,29 +138,33 @@ void Program::WriteOut(const char * format, ...) {
 	va_end(msg);
 
 	Bit16u size = (Bit16u)strlen(buf);
-	for (Bit16u i = 0; i < size; i++) {
-		Bit8u out; Bit16u s = 1;
+	dos.internal_output=true;
+	for(Bit16u i = 0; i < size;i++) {
+		Bit8u out;Bit16u s=1;
 		if (buf[i] == 0xA && last_written_character != 0xD) {
 			out = 0xD; DOS_WriteFile(STDOUT, &out, &s);
 		}
 		last_written_character = out = buf[i];
 		DOS_WriteFile(STDOUT, &out, &s);
 	}
-
-	//	DOS_WriteFile(STDOUT,(Bit8u *)buf,&size);
+	dos.internal_output=false;
+	
+//	DOS_WriteFile(STDOUT,(Bit8u *)buf,&size);
 }
 
 void Program::WriteOut_NoParsing(const char * format) {
 	Bit16u size = (Bit16u)strlen(format);
 	char const* buf = format;
-	for (Bit16u i = 0; i < size; i++) {
-		Bit8u out; Bit16u s = 1;
+	dos.internal_output=true;
+	for(Bit16u i = 0; i < size;i++) {
+		Bit8u out;Bit16u s=1;
 		if (buf[i] == 0xA && last_written_character != 0xD) {
 			out = 0xD; DOS_WriteFile(STDOUT, &out, &s);
 		}
 		last_written_character = out = buf[i];
 		DOS_WriteFile(STDOUT, &out, &s);
 	}
+	dos.internal_output=false;
 
 	//	DOS_WriteFile(STDOUT,(Bit8u *)format,&size);
 }

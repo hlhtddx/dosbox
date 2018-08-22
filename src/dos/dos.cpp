@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2002-2017  The DOSBox Team
+ *  Copyright (C) 2002-2018  The DOSBox Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -490,17 +490,18 @@ static Bitu DOS_21Handler(void) {
 		break;
 	case 0x1f: /* Get drive parameter block for default drive */
 	case 0x32: /* Get drive parameter block for specific drive */
-	{	/* Officially a dpb should be returned as well. The disk detection part is implemented */
-		Bit8u drive = reg_dl;
-		if (!drive || reg_ah == 0x1f) drive = DOS_GetDefaultDrive();
-		else drive--;
-		if (Drives[drive]) {
-			reg_al = 0x00;
-			SegSet16(ds, dos.tables.dpb);
-			reg_bx = drive;//Faking only the first entry (that is the driveletter)
-			LOG(LOG_DOSMISC, LOG_ERROR)("Get drive parameter block.");
-		} else {
-			reg_al = 0xff;
+		{	/* Officially a dpb should be returned as well. The disk detection part is implemented */
+			Bit8u drive=reg_dl;
+			if (!drive || reg_ah==0x1f) drive = DOS_GetDefaultDrive();
+			else drive--;
+			if (drive < DOS_DRIVES && Drives[drive] && !Drives[drive]->isRemovable()) {
+				reg_al = 0x00;
+				SegSet16(ds,dos.tables.dpb);
+				reg_bx = drive*5;//Faking the first entry (drive number) and media id
+				LOG(LOG_DOSMISC,LOG_ERROR)("Get drive parameter block.");
+			} else {
+				reg_al=0xff;
+			}
 		}
 	}
 	break;
@@ -840,10 +841,13 @@ static Bitu DOS_21Handler(void) {
 		reg_bx = dos.psp();
 		break;
 	case 0x52: {				/* Get list of lists */
-		RealPt addr = dos_infoblock.GetPointer();
-		SegSet16(es, RealSeg(addr));
-		reg_bx = RealOff(addr);
-		LOG(LOG_DOSMISC, LOG_NORMAL)("Call is made for list of lists - let's hope for the best");
+		Bit8u count=2; // floppy drives always counted
+		while (count<DOS_DRIVES && Drives[count] && !Drives[count]->isRemovable()) count++;
+		dos_infoblock.SetBlockDevices(count);
+		RealPt addr=dos_infoblock.GetPointer();
+		SegSet16(es,RealSeg(addr));
+		reg_bx=RealOff(addr);
+		LOG(LOG_DOSMISC,LOG_NORMAL)("Call is made for list of lists - let's hope for the best");
 		break; }
 			   //TODO Think hard how shit this is gonna be
 			   //And will any game ever use this :)
@@ -1102,11 +1106,24 @@ static Bitu DOS_21Handler(void) {
 		}
 		break;
 	case 0x69:					/* Get/Set disk serial number */
-	{
-		switch (reg_al) {
-		case 0x00:				/* Get */
-			LOG(LOG_DOSMISC, LOG_ERROR)("DOS:Get Disk serial number");
-			CALLBACK_SCF(true);
+		{
+			Bit16u old_cx=reg_cx;
+			switch(reg_al)		{
+			case 0x00:				/* Get */
+				LOG(LOG_DOSMISC,LOG_WARN)("DOS:Get Disk serial number");
+				reg_cl=0x66;// IOCTL function
+				break;
+			case 0x01:				/* Set */
+				LOG(LOG_DOSMISC,LOG_WARN)("DOS:Set Disk serial number");
+				reg_cl=0x46;// IOCTL function
+				break;
+			default:
+				E_Exit("DOS:Illegal Get Serial Number call %2X",reg_al);
+			}	
+			reg_ch=0x08;	// IOCTL category: disk drive
+			reg_ax=0x440d;	// Generic block device request
+			DOS_21Handler();
+			reg_cx=old_cx;
 			break;
 		case 0x01:
 			LOG(LOG_DOSMISC, LOG_ERROR)("DOS:Set Disk serial number");
@@ -1164,22 +1181,28 @@ static Bitu DOS_27Handler(void) {
 }
 
 static Bitu DOS_25Handler(void) {
-	if (Drives[reg_al] == 0) {
+	if (reg_al >= DOS_DRIVES || !Drives[reg_al] || Drives[reg_al]->isRemovable()) {
 		reg_ax = 0x8002;
 		SETFLAGBIT(CF, true);
 	} else {
-		SETFLAGBIT(CF, false);
-		if ((reg_cx != 1) || (reg_dx != 1))
-			LOG(LOG_DOSMISC, LOG_NORMAL)("int 25 called but not as diskdetection drive %X", reg_al);
-
+		if (reg_cx == 1 && reg_dx == 0) {
+			if (reg_al >= 2) {
+				PhysPt ptr = PhysMake(SegValue(ds),reg_bx);
+				// write some BPB data into buffer for MicroProse installers
+				mem_writew(ptr+0x1c,0x3f); // hidden sectors
+			}
+		} else {
+			LOG(LOG_DOSMISC,LOG_NORMAL)("int 25 called but not as disk detection drive %u",reg_al);
+		}
+		SETFLAGBIT(CF,false);
 		reg_ax = 0;
 	}
 	SETFLAGBIT(IF, true);
 	return CBRET_NONE;
 }
 static Bitu DOS_26Handler(void) {
-	LOG(LOG_DOSMISC, LOG_NORMAL)("int 26 called: hope for the best!");
-	if (Drives[reg_al] == 0) {
+	LOG(LOG_DOSMISC,LOG_NORMAL)("int 26 called: hope for the best!");
+	if (reg_al >= DOS_DRIVES || !Drives[reg_al] || Drives[reg_al]->isRemovable()) {	
 		reg_ax = 0x8002;
 		SETFLAGBIT(CF, true);
 	} else {
@@ -1236,10 +1259,11 @@ public:
 		DOS_SetupMisc();							/* Some additional dos interrupts */
 		DOS_SDA(DOS_SDA_SEG, DOS_SDA_OFS).SetDrive(25); /* Else the next call gives a warning. */
 		DOS_SetDefaultDrive(25);
-
-		dos.version.major = 5;
-		dos.version.minor = 0;
-		dos.direct_output = false;
+	
+		dos.version.major=5;
+		dos.version.minor=0;
+		dos.direct_output=false;
+		dos.internal_output=false;
 	}
 	~DOS() {
 		for (Bit16u i = 0; i < DOS_DRIVES; i++) delete Drives[i];

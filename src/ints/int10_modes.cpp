@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2002-2017  The DOSBox Team
+ *  Copyright (C) 2002-2018  The DOSBox Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1457,7 +1457,8 @@ bool INT10_SetVideoMode(Bit16u mode) {
 
 	/* Set vga attrib register into defined state */
 	IO_Read(mono_mode ? 0x3ba : 0x3da);
-	IO_Write(0x3c0, 0x20);
+	IO_Write(0x3c0,0x20);
+	IO_Read(mono_mode ? 0x3ba : 0x3da); // Kukoo2 demo 
 
 	/* Load text mode font */
 	if (CurMode->type == M_TEXT) {
