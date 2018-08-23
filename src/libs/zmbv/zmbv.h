@@ -18,6 +18,10 @@
 
 #define CODEC_4CC "ZMBV"
 
+#ifndef INLINE
+#define INLINE inline
+#endif
+
 typedef enum {
 	ZMBV_FORMAT_NONE		= 0x00,
 	ZMBV_FORMAT_1BPP		= 0x01,
