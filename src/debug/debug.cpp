@@ -1808,7 +1808,7 @@ Bit32u DEBUG_CheckKeys(void) {
 		}
 		if (ret<0) return ret;
 		if (ret>0) {
-			if (GCC_UNLIKELY(ret >= CB_MAX)) 
+			if (ret >= CB_MAX)
 				ret = 0;
 			else
 				ret = (*CallBack_Handlers[ret])();
@@ -2567,7 +2567,7 @@ bool DEBUG_HeavyIsBreakpoint(void) {
 			if (value == 0) zero_count++;
 			else zero_count = 0;
 		}
-		if (GCC_UNLIKELY(zero_count == 10)) E_Exit("running zeroed code");
+		if (zero_count == 10) E_Exit("running zeroed code");
 	}
 
 	if (skipFirstInstruction) {

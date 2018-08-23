@@ -70,7 +70,7 @@ static void PIT0_Event(Bitu /*val*/) {
 	if (pit[0].mode != 0) {
 		pit[0].start += pit[0].delay;
 
-		if (GCC_UNLIKELY(pit[0].update_count)) {
+		if (pit[0].update_count) {
 			pit[0].delay=(1000.0f/((float)PIT_TICK_RATE/(float)pit[0].cntr));
 			pit[0].update_count=false;
 		}
@@ -138,7 +138,7 @@ static void counter_latch(Bitu counter) {
 
 	//If gate2 is disabled don't update the read_latch
 	if (counter == 2 && !gate2 && p->mode !=1) return;
-	if (GCC_UNLIKELY(p->new_mode)) {
+	if (p->new_mode) {
 		double passed_time = PIC_FullIndex() - p->start;
 		Bitu ticks_since_then = (Bitu)(passed_time / (1000.0/PIT_TICK_RATE));
 		//if (p->mode==3) ticks_since_then /= 2; // TODO figure this out on real hardware
@@ -256,7 +256,7 @@ static Bitu read_latch(Bitu port,Bitu /*iolen*/) {
 //LOG(LOG_PIT,LOG_ERROR)("port read %X",port);
 	Bit32u counter=port-0x40;
 	Bit8u ret=0;
-	if(GCC_UNLIKELY(pit[counter].counterstatus_set)){
+	if(pit[counter].counterstatus_set){
 		pit[counter].counterstatus_set = false;
 		latched_timerstatus_locked = false;
 		ret = latched_timerstatus;

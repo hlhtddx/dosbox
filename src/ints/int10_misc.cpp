@@ -69,7 +69,7 @@ struct Dynamic_Functionality {
 									7 reserved
 								*/
 	Bit8u reserved2[13];		/*  33h 13 BYTEs reserved (00h) */
-} GCC_ATTRIBUTE(packed);
+};
 #pragma pack()
 
 void INT10_GetFuncStateInformation(PhysPt save) {

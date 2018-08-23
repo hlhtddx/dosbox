@@ -131,7 +131,7 @@ static struct DynDecode {
 static bool MakeCodePage(Bitu lin_addr,CodePageHandlerDynRec * &cph) {
 	Bit8u rdval;
 	//Ensure page contains memory:
-	if (GCC_UNLIKELY(mem_readb_checked(lin_addr,&rdval))) return true;
+	if (mem_readb_checked(lin_addr,&rdval)) return true;
 
 	PageHandler * handler=get_tlb_readhandler(lin_addr);
 	if (handler->flags & PFLAG_HASCODE) {
@@ -213,7 +213,7 @@ static void decode_advancepage(void) {
 
 // fetch the next byte of the instruction stream
 static Bit8u decode_fetchb(void) {
-	if (GCC_UNLIKELY(decode.page.index>=4096)) {
+	if (decode.page.index>=4096) {
 		decode_advancepage();
 	}
 	decode.page.wmap[decode.page.index]+=0x01;
@@ -223,7 +223,7 @@ static Bit8u decode_fetchb(void) {
 }
 // fetch the next word of the instruction stream
 static Bit16u decode_fetchw(void) {
-	if (GCC_UNLIKELY(decode.page.index>=4095)) {
+	if (decode.page.index>=4095) {
    		Bit16u val=decode_fetchb();
 		val|=decode_fetchb() << 8;
 		return val;
@@ -234,7 +234,7 @@ static Bit16u decode_fetchw(void) {
 }
 // fetch the next dword of the instruction stream
 static Bit32u decode_fetchd(void) {
-	if (GCC_UNLIKELY(decode.page.index>=4093)) {
+	if (decode.page.index>=4093) {
    		Bit32u val=decode_fetchb();
 		val|=decode_fetchb() << 8;
 		val|=decode_fetchb() << 16;
@@ -254,7 +254,7 @@ static Bit32u decode_fetchd(void) {
 static void INLINE decode_increase_wmapmask(Bitu size) {
 	Bitu mapidx;
 	CacheBlockDynRec* activecb=decode.active_block; 
-	if (GCC_UNLIKELY(!activecb->cache.wmapmask)) {
+	if (!activecb->cache.wmapmask) {
 		// no mask memory yet allocated, start with a small buffer
 		activecb->cache.wmapmask=(Bit8u*)malloc(START_WMMEM);
 		memset(activecb->cache.wmapmask,0,START_WMMEM);
@@ -263,7 +263,7 @@ static void INLINE decode_increase_wmapmask(Bitu size) {
 		mapidx=0;
 	} else {
 		mapidx=decode.page.index-activecb->cache.maskstart;
-		if (GCC_UNLIKELY(mapidx+size>=activecb->cache.masklen)) {
+		if (mapidx+size>=activecb->cache.masklen) {
 			// mask buffer too small, increase
 			Bitu newmasklen=activecb->cache.masklen*4;
 			if (newmasklen<mapidx+size) newmasklen=((mapidx+size)&~3)*2;
@@ -286,7 +286,7 @@ static void INLINE decode_increase_wmapmask(Bitu size) {
 // fetch a byte, val points to the code location if possible,
 // otherwise val contains the current value read from the position
 static bool decode_fetchb_imm(Bitu & val) {
-	if (GCC_UNLIKELY(decode.page.index>=4096)) {
+	if (decode.page.index>=4096) {
 		decode_advancepage();
 	}
 	// see if position is directly accessible

@@ -237,7 +237,7 @@ static void cache_checkinstr(Bit32u size) {
 // returns address of item
 static Bit8u * cache_reservedata(void) {
 	// if data pool not yet initialized, then initialize data pool
-	if (GCC_UNLIKELY(cache_datapos == NULL)) {
+	if (cache_datapos == NULL) {
 		if (cache.pos + CACHE_DATA_MIN + CACHE_DATA_ALIGN < cache.block.active->cache.start + CACHE_DATA_MAX) {
 			cache_datapos = (Bit8u *) (((Bitu)cache.block.active->cache.start + CACHE_DATA_MAX) & ~(CACHE_DATA_ALIGN - 1));
 		}
@@ -303,7 +303,7 @@ static void gen_mov_regs(HostReg reg_dst,HostReg reg_src) {
 static bool val_single_shift(Bit32u value, Bit32u *val_shift) {
 	Bit32u shift;
 
-	if (GCC_UNLIKELY(value == 0)) {
+	if (value == 0) {
 		*val_shift = 0;
 		return true;
 	}

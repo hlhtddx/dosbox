@@ -32,16 +32,6 @@
 // type with the same size as a pointer
 #define DRC_PTR_SIZE_IM Bit32u
 
-// calling convention modifier
-#if defined (WIN32)
-#define DRC_CALL_CONV _fastcall
-#define DRC_FC /* nothing */
-#else
-#define DRC_CALL_CONV /* nothing */
-#define DRC_FC GCC_ATTRIBUTE(fastcall)
-#endif
-
-
 // register mapping
 enum HostReg {
 	HOST_EAX=0,

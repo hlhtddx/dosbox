@@ -73,13 +73,13 @@ restart_prefix:
 			// some entries in the invalidation map, see if the next
 			// instruction is known to be modified a lot
 			if (decode.page.index<4096) {
-				if (GCC_UNLIKELY(decode.page.invmap[decode.page.index]>=4)) goto illegalopcode;
+				if (decode.page.invmap[decode.page.index]>=4) goto illegalopcode;
 				opcode=decode_fetchb();
 			} else {
 				// switch to the next page
 				opcode=decode_fetchb();
-				if (GCC_UNLIKELY(decode.page.invmap && 
-					(decode.page.invmap[decode.page.index-1]>=4))) goto illegalopcode;
+				if (decode.page.invmap &&
+					(decode.page.invmap[decode.page.index-1]>=4)) goto illegalopcode;
 			}
 		}
 		switch (opcode) {
@@ -222,13 +222,13 @@ restart_prefix:
 				// lfs
 				case 0xb4:
 					dyn_get_modrm();
-					if (GCC_UNLIKELY(decode.modrm.mod==3)) goto illegalopcode;
+					if (decode.modrm.mod==3) goto illegalopcode;
 					dyn_load_seg_off_ea(DRC_SEG_FS);
 					break;
 				// lgs
 				case 0xb5:
 					dyn_get_modrm();
-					if (GCC_UNLIKELY(decode.modrm.mod==3)) goto illegalopcode;
+					if (decode.modrm.mod==3) goto illegalopcode;
 					dyn_load_seg_off_ea(DRC_SEG_GS);
 					break;
 
@@ -425,13 +425,13 @@ restart_prefix:
 		// les
 		case 0xc4:
 			dyn_get_modrm();
-			if (GCC_UNLIKELY(decode.modrm.mod==3)) goto illegalopcode;
+			if (decode.modrm.mod==3) goto illegalopcode;
 			dyn_load_seg_off_ea(DRC_SEG_ES);
 			break;
 		// lds
 		case 0xc5:
 			dyn_get_modrm();
-			if (GCC_UNLIKELY(decode.modrm.mod==3)) goto illegalopcode;
+			if (decode.modrm.mod==3) goto illegalopcode;
 			dyn_load_seg_off_ea(DRC_SEG_DS);break;
 
 		// 'mov []/reg8/16/32,imm8/16/32'

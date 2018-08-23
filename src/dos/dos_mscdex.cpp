@@ -69,9 +69,7 @@ public:
 	void	SetStrategy			(Bit16u ofs)	{ sSave(sDeviceHeader,strategy,ofs);			};
 
 public:
-	#ifdef _MSC_VER
 	#pragma pack(1)
-	#endif
 	struct sDeviceHeader{
 		RealPt	nextDeviceHeader;
 		Bit16u	devAttributes;
@@ -81,10 +79,8 @@ public:
 		Bit16u  wReserved;
 		Bit8u	driveLetter;
 		Bit8u	numSubUnits;
-	} GCC_ATTRIBUTE(packed) TDeviceHeader;
-	#ifdef _MSC_VER
+	} TDeviceHeader;
 	#pragma pack()
-	#endif
 };
 
 class CMscdex {

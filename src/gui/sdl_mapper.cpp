@@ -779,7 +779,7 @@ public:
 	}
 
 	void ActivateJoystickBoundEvents() {
-		if (GCC_UNLIKELY(sdl_joystick==NULL)) return;
+		if (sdl_joystick==NULL) return;
 
 		Bitu i;
 
@@ -1370,7 +1370,7 @@ public:
 	CCaptionButton(Bitu _x,Bitu _y,Bitu _dx,Bitu _dy) : CButton(_x,_y,_dx,_dy){
 		caption[0]=0;
 	}
-	void Change(const char * format,...) GCC_ATTRIBUTE(__format__(__printf__,2,3));
+	void Change(const char * format,...);
 
 	void Draw(void) {
 		if (!enabled) return;

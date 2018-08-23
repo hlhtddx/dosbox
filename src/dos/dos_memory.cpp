@@ -32,7 +32,7 @@ static void DOS_CompressMemory(void) {
 
 	while (mcb.GetType()!=0x5a) {
 		mcb_next.SetPt((Bit16u)(mcb_segment+mcb.GetSize()+1));
-		if (GCC_UNLIKELY((mcb_next.GetType()!=0x4d) && (mcb_next.GetType()!=0x5a))) E_Exit("Corrupt MCB chain");
+		if ((mcb_next.GetType()!=0x4d && (mcb_next.GetType()!=0x5a))) E_Exit("Corrupt MCB chain");
 		if ((mcb.GetPSPSeg()==MCB_FREE) && (mcb_next.GetPSPSeg()==MCB_FREE)) {
 			mcb.SetSize(mcb.GetSize()+mcb_next.GetSize()+1);
 			mcb.SetType(mcb_next.GetType());
@@ -58,7 +58,7 @@ void DOS_FreeProcessMemory(Bit16u pspseg) {
 				mcb.SetType(0x4d);
 			} else break;
 		}
-		if (GCC_UNLIKELY(mcb.GetType()!=0x4d)) E_Exit("Corrupt MCB chain");
+		if (mcb.GetType()!=0x4d) E_Exit("Corrupt MCB chain");
 		mcb_segment+=mcb.GetSize()+1;
 		mcb.SetPt(mcb_segment);
 	}
@@ -230,7 +230,7 @@ bool DOS_ResizeMemory(Bit16u segment,Bit16u * blocks) {
 	Bit16u total=mcb.GetSize();
 	DOS_MCB	mcb_next(segment+total);
 	if (*blocks<=total) {
-		if (GCC_UNLIKELY(*blocks==total)) {
+		if (*blocks==total) {
 			/* Nothing to do */
 			return true;
 		}

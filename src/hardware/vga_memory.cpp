@@ -335,7 +335,7 @@ public:
 	template <class Size>
 	static INLINE void writeCache(PhysPt addr, Bitu val) {
 		hostWrite<Size>( &vga.fastmem[addr], val );
-		if (GCC_UNLIKELY(addr < 320)) {
+		if (addr < 320) {
 			// And replicate the first line
 			hostWrite<Size>( &vga.fastmem[addr+64*1024], val );
 		}
@@ -355,7 +355,7 @@ public:
 		addr = PAGING_GetPhysicalAddress(addr) & vgapages.mask;
 		addr += vga.svga.bank_read_full;
 		addr = CHECKED(addr);
-		if (GCC_UNLIKELY(addr & 1)) {
+		if (addr & 1) {
 			Bitu ret = (readHandler<Bit8u>( addr+0 ) << 0 );
 			ret     |= (readHandler<Bit8u>( addr+1 ) << 8 );
 			return ret;
@@ -366,7 +366,7 @@ public:
 		addr = PAGING_GetPhysicalAddress(addr) & vgapages.mask;
 		addr += vga.svga.bank_read_full;
 		addr = CHECKED(addr);
-		if (GCC_UNLIKELY(addr & 3)) {
+		if (addr & 3) {
 			Bitu ret = (readHandler<Bit8u>( addr+0 ) << 0 );
 			ret     |= (readHandler<Bit8u>( addr+1 ) << 8 );
 			ret     |= (readHandler<Bit8u>( addr+2 ) << 16 );
@@ -389,7 +389,7 @@ public:
 		addr = CHECKED(addr);
 		MEM_CHANGED( addr );
 //		MEM_CHANGED( addr + 1);
-		if (GCC_UNLIKELY(addr & 1)) {
+		if (addr & 1) {
 			writeHandler<Bit8u>( addr+0, val >> 0 );
 			writeHandler<Bit8u>( addr+1, val >> 8 );
 		} else {
@@ -403,7 +403,7 @@ public:
 		addr = CHECKED(addr);
 		MEM_CHANGED( addr );
 //		MEM_CHANGED( addr + 3);
-		if (GCC_UNLIKELY(addr & 3)) {
+		if (addr & 3) {
 			writeHandler<Bit8u>( addr+0, val >> 0 );
 			writeHandler<Bit8u>( addr+1, val >> 8 );
 			writeHandler<Bit8u>( addr+2, val >> 16 );
@@ -479,7 +479,7 @@ public:
 	void writeb(PhysPt addr,Bitu val){
 		addr = PAGING_GetPhysicalAddress(addr) & vgapages.mask;
 		
-		if (GCC_LIKELY(vga.seq.map_mask == 0x4)) {
+		if (vga.seq.map_mask == 0x4) {
 			vga.draw.font[addr]=(Bit8u)val;
 		} else {
 			if (vga.seq.map_mask & 0x4) // font map

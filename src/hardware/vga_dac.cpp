@@ -120,7 +120,7 @@ static void write_p3c9(Bitu port,Bitu val,Bitu iolen) {
 		case M_VGA:
 		case M_LIN8:
 			VGA_DAC_UpdateColor( vga.dac.write_index );
-			if ( GCC_UNLIKELY( vga.dac.pel_mask != 0xff)) {
+			if (  vga.dac.pel_mask != 0xff) {
 				Bitu index = vga.dac.write_index;
 				if ( (index & vga.dac.pel_mask) == index ) {
 					for ( Bitu i = index+1;i<256;i++) 

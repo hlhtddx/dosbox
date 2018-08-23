@@ -432,7 +432,7 @@
 			if (rm >= 0xc0 ) {GetEArb;*earb=*rmrb;}
 			else {
 				if (cpu.pmode) {
-					if (GCC_UNLIKELY((rm==0x05) && (!cpu.code.big))) {
+					if ((rm==0x05 && (!cpu.code.big))) {
 						Descriptor desc;
 						cpu.gdt.GetDescriptor(SegValue(core.base_val_ds),desc);
 						if ((desc.Type()==DESC_CODE_R_NC_A) || (desc.Type()==DESC_CODE_R_NC_NA)) {

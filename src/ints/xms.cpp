@@ -81,9 +81,7 @@ struct XMS_Block {
 	bool	free;
 };
 
-#ifdef _MSC_VER
-#pragma pack (1)
-#endif
+#pragma pack(1)
 struct XMS_MemMove{
 	Bit32u length;
 	Bit16u src_handle;
@@ -97,10 +95,8 @@ struct XMS_MemMove{
 		Bit32u offset;
 	} dest;
 
-} GCC_ATTRIBUTE(packed);
-#ifdef _MSC_VER
-#pragma pack ()
-#endif
+};
+#pragma pack()
 
 
 Bitu XMS_EnableA20(bool enable) {

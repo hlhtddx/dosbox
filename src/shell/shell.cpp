@@ -49,7 +49,7 @@ typedef std::list<std::string>::iterator auto_it;
 void VFILE_Remove(const char *name);
 
 void AutoexecObject::Install(const std::string &in) {
-	if(GCC_UNLIKELY(installed)) E_Exit("autoexec: already created %s",buf.c_str());
+	if(installed) E_Exit("autoexec: already created %s",buf.c_str());
 	installed = true;
 	buf = in;
 	autoexec_strings.push_back(buf);
@@ -77,7 +77,7 @@ void AutoexecObject::Install(const std::string &in) {
 }
 
 void AutoexecObject::InstallBefore(const std::string &in) {
-	if(GCC_UNLIKELY(installed)) E_Exit("autoexec: already created %s",buf.c_str());
+	if(installed) E_Exit("autoexec: already created %s",buf.c_str());
 	installed = true;
 	buf = in;
 	autoexec_strings.push_front(buf);

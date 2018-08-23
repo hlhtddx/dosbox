@@ -184,7 +184,7 @@ static void gen_mov_regs(HostReg reg_dst,HostReg reg_src) {
 static bool val_single_shift(Bit32u value, Bit32u *val_shift) {
 	Bit32u shift;
 
-	if (GCC_UNLIKELY(value == 0)) {
+	if (value == 0) {
 		*val_shift = 0;
 		return true;
 	}

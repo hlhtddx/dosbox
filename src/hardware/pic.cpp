@@ -117,7 +117,7 @@ Bitu PIC_IRQCheck = 0; //Maybe make it a bool and/or ensure 32bit size (x86 dyna
 
 
 void PIC_Controller::set_imr(Bit8u val) {
-	if (GCC_UNLIKELY(machine==MCH_PCJR)) {
+	if (machine==MCH_PCJR) {
 		//irq 6 is a NMI on the PCJR
 		if (this == &master) val &= ~(1 <<(6));
 	}
@@ -158,7 +158,7 @@ void PIC_Controller::start_irq(Bit8u val){
 		active_irq = val;
 		isr |= 1<<(val);
 		isrr = ~isr;
-	} else if (GCC_UNLIKELY(rotate_on_auto_eoi)) {
+	} else if (rotate_on_auto_eoi) {
 		E_Exit("rotate on auto EOI not handled");
 	}
 }
@@ -180,14 +180,14 @@ static struct {
 static void write_command(Bitu port,Bitu val,Bitu iolen) {
 	PIC_Controller * pic=&pics[port==0x20 ? 0 : 1];
 
-	if (GCC_UNLIKELY(val&0x10)) {		// ICW1 issued
+	if (val&0x10) {		// ICW1 issued
 		if (val&0x04) E_Exit("PIC: 4 byte interval not handled");
 		if (val&0x08) E_Exit("PIC: level triggered mode not handled");
 		if (val&0xe0) E_Exit("PIC: 8080/8085 mode not handled");
 		pic->single=(val&0x02)==0x02;
 		pic->icw_index=1;			// next is ICW2
 		pic->icw_words=2 + (val&0x01);	// =3 if ICW4 needed
-	} else if (GCC_UNLIKELY(val&0x08)) {	// OCW3 issued
+	} else if (val&0x08) {	// OCW3 issued
 		if (val&0x04) E_Exit("PIC: poll command not handled");
 		if (val&0x02) {		// function select
 			if (val&0x01) pic->request_issr=true;	/* select read interrupt in-service register */
@@ -202,7 +202,7 @@ static void write_command(Bitu port,Bitu val,Bitu iolen) {
 		}
 	} else {	// OCW2 issued
 		if (val&0x20) {		// EOI commands
-			if (GCC_UNLIKELY(val&0x80)) E_Exit("rotate mode not supported");
+			if (val&0x80) E_Exit("rotate mode not supported");
 			if (val&0x40) {		// specific EOI
 				pic->isr &= ~(1<< ((val-0x60)));
 				pic->isrr = ~pic->isr;
@@ -291,7 +291,7 @@ void PIC_ActivateIRQ(Bitu irq) {
 	Bit32s OldCycles = CPU_Cycles;
 	pic->raise_irq(t); //Will set the CPU_Cycles to zero if this IRQ will be handled directly
 
-	if (GCC_UNLIKELY(OldCycles != CPU_Cycles)) {
+	if (OldCycles != CPU_Cycles) {
 		// if CPU_Cycles have changed, this means that the interrupt was triggered by an I/O
 		// register write rather than an event.
 		// Real hardware executes 0 to ~13 NOPs or comparable instructions
@@ -325,7 +325,7 @@ static void slave_startIRQ(){
 		}
 	}
 	// Maybe change the E_Exit to a return
-	if (GCC_UNLIKELY(pic1_irq == 8)) E_Exit("irq 2 is active, but no irq active on the slave PIC.");
+	if (pic1_irq == 8) E_Exit("irq 2 is active, but no irq active on the slave PIC.");
 
 	slave.start_irq(pic1_irq);
 	master.start_irq(2);
@@ -339,8 +339,8 @@ static void inline master_startIRQ(Bitu i){
 
 void PIC_runIRQs(void) {
 	if (!GETFLAG(IF)) return;
-	if (GCC_UNLIKELY(!PIC_IRQCheck)) return;
-	if (GCC_UNLIKELY(cpudecoder==CPU_Core_Normal_Trap_Run)) return;
+	if (!PIC_IRQCheck) return;
+	if (cpudecoder==CPU_Core_Normal_Trap_Run) return;
 
 	const Bit8u p = (master.irr & master.imrr)&master.isrr;
 	const Bit8u max = master.special?8:master.active_irq;
@@ -371,7 +371,7 @@ void PIC_SetIRQMask(Bitu irq, bool masked) {
 
 static void AddEntry(PICEntry * entry) {
 	PICEntry * find_entry=pic_queue.next_entry;
-	if (GCC_UNLIKELY(find_entry ==0)) {
+	if (find_entry ==0) {
 		entry->next=0;
 		pic_queue.next_entry=entry;
 	} else if (find_entry->index>entry->index) {
@@ -403,7 +403,7 @@ static bool InEventService = false;
 static float srv_lag = 0;
 
 void PIC_AddEvent(PIC_EventHandler handler,float delay,Bitu val) {
-	if (GCC_UNLIKELY(!pic_queue.free_entry)) {
+	if (!pic_queue.free_entry) {
 		LOG(LOG_PIC,LOG_ERROR)("Event queue full");
 		return;
 	}
@@ -422,7 +422,7 @@ void PIC_RemoveSpecificEvents(PIC_EventHandler handler, Bitu val) {
 	PICEntry * prev_entry;
 	prev_entry = 0;
 	while (entry) {
-		if (GCC_UNLIKELY((entry->pic_event == handler)) && (entry->value == val)) {
+		if ((entry->pic_event == handler) && (entry->value == val)) {
 			if (prev_entry) {
 				prev_entry->next=entry->next;
 				entry->next=pic_queue.free_entry;
@@ -447,7 +447,7 @@ void PIC_RemoveEvents(PIC_EventHandler handler) {
 	PICEntry * prev_entry;
 	prev_entry=0;
 	while (entry) {
-		if (GCC_UNLIKELY(entry->pic_event==handler)) {
+		if (entry->pic_event==handler) {
 			if (prev_entry) {
 				prev_entry->next=entry->next;
 				entry->next=pic_queue.free_entry;
@@ -494,7 +494,7 @@ bool PIC_RunQueue(void) {
 	/* Check when to set the new cycle end */
 	if (pic_queue.next_entry) {
 		Bits cycles=(Bits)(pic_queue.next_entry->index*CPU_CycleMax-index_nd);
-		if (GCC_UNLIKELY(!cycles)) cycles=1;
+		if (!cycles) cycles=1;
 		if (cycles<CPU_CycleLeft) {
 			CPU_Cycles=cycles;
 		} else {

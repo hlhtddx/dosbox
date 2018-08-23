@@ -65,9 +65,7 @@
 #define COMP_UNDELIVERABLE    0xfe
 #define COMP_HARDWAREERROR    0xff
 
-#ifdef _MSC_VER
 #pragma pack(1)
-#endif
 
 // For Uint8 type
 #include "SDL_net.h"
@@ -75,11 +73,11 @@
 struct PackedIP {
 	Uint32 host;
 	Uint16 port;
-} GCC_ATTRIBUTE(packed);
+};
 
 struct nodeType {
 	Uint8 node[6];
-} GCC_ATTRIBUTE(packed) ;
+};
 
 struct IPXHeader {
 	Uint8 checkSum[2];
@@ -92,10 +90,10 @@ struct IPXHeader {
 		union addrtype {
 			nodeType byNode;
 			PackedIP byIP ;
-		} GCC_ATTRIBUTE(packed) addr;
+		} addr;
 		Uint8 socket[2];
 	} dest, src;
-} GCC_ATTRIBUTE(packed);
+};
 
 struct fragmentDescriptor {
 	Bit16u offset;
@@ -153,8 +151,6 @@ public:
 void UnpackIP(PackedIP ipPack, IPaddress * ipAddr);
 void PackIP(IPaddress ipAddr, PackedIP *ipPack);
 
-#ifdef _MSC_VER
 #pragma pack()
-#endif
 
 #endif

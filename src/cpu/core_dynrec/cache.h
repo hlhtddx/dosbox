@@ -313,7 +313,7 @@ public:
 		*bwhere=block->hash.next;
 
 		// remove the cleared block from the write map
-		if (GCC_UNLIKELY(block->cache.wmapmask!=NULL)) {
+		if (block->cache.wmapmask!=NULL) {
 			// first part is not influenced by the mask
 			for (Bitu i=block->page.start;i<block->cache.maskstart;i++) {
 				if (write_map[i]) write_map[i]--;

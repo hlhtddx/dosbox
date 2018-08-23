@@ -142,19 +142,19 @@ void XGA_DrawPoint(Bitu x, Bitu y, Bitu c) {
 	   during windows dragging. */
 	switch(XGA_COLOR_MODE) {
 		case M_LIN8:
-			if (GCC_UNLIKELY(memaddr >= vga.vmemsize)) break;
+			if (memaddr >= vga.vmemsize) break;
 			vga.mem.linear[memaddr] = c;
 			break;
 		case M_LIN15:
-			if (GCC_UNLIKELY(memaddr*2 >= vga.vmemsize)) break;
+			if (memaddr*2 >= vga.vmemsize) break;
 			((Bit16u*)(vga.mem.linear))[memaddr] = (Bit16u)(c&0x7fff);
 			break;
 		case M_LIN16:
-			if (GCC_UNLIKELY(memaddr*2 >= vga.vmemsize)) break;
+			if (memaddr*2 >= vga.vmemsize) break;
 			((Bit16u*)(vga.mem.linear))[memaddr] = (Bit16u)(c&0xffff);
 			break;
 		case M_LIN32:
-			if (GCC_UNLIKELY(memaddr*4 >= vga.vmemsize)) break;
+			if (memaddr*4 >= vga.vmemsize) break;
 			((Bit32u*)(vga.mem.linear))[memaddr] = c;
 			break;
 		default:
@@ -168,14 +168,14 @@ Bitu XGA_GetPoint(Bitu x, Bitu y) {
 
 	switch(XGA_COLOR_MODE) {
 	case M_LIN8:
-		if (GCC_UNLIKELY(memaddr >= vga.vmemsize)) break;
+		if (memaddr >= vga.vmemsize) break;
 		return vga.mem.linear[memaddr];
 	case M_LIN15:
 	case M_LIN16:
-		if (GCC_UNLIKELY(memaddr*2 >= vga.vmemsize)) break;
+		if (memaddr*2 >= vga.vmemsize) break;
 		return ((Bit16u*)(vga.mem.linear))[memaddr];
 	case M_LIN32:
-		if (GCC_UNLIKELY(memaddr*4 >= vga.vmemsize)) break;
+		if (memaddr*4 >= vga.vmemsize) break;
 		return ((Bit32u*)(vga.mem.linear))[memaddr];
 	default:
 		break;
@@ -1180,7 +1180,7 @@ Bitu XGA_Read(Bitu port, Bitu len) {
 		case 0x83da:
 			{
 				Bits delaycyc = CPU_CycleMax/5000;
-				if(GCC_UNLIKELY(CPU_Cycles < 3*delaycyc)) delaycyc = 0;
+				if(CPU_Cycles < 3*delaycyc) delaycyc = 0;
 				CPU_Cycles -= delaycyc;
 				CPU_IODelayRemoved += delaycyc;
 				return vga_read_p3da(0,0);

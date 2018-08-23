@@ -226,26 +226,26 @@ static inline Bits MakeVolume( Bitu wave, Bitu volume ) {
 	return (sig >> exp);
 };
 
-static Bits DB_FASTCALL WaveForm0( Bitu i, Bitu volume ) {
+static Bits WaveForm0( Bitu i, Bitu volume ) {
 	Bits neg = 0 - (( i >> 9) & 1);//Create ~0 or 0
 	Bitu wave = SinTable[i & 511];
 	return (MakeVolume( wave, volume ) ^ neg) - neg;
 }
-static Bits DB_FASTCALL WaveForm1( Bitu i, Bitu volume ) {
+static Bits WaveForm1( Bitu i, Bitu volume ) {
 	Bit32u wave = SinTable[i & 511];
 	wave |= ( ( (i ^ 512 ) & 512) - 1) >> ( 32 - 12 );
 	return MakeVolume( wave, volume );
 }
-static Bits DB_FASTCALL WaveForm2( Bitu i, Bitu volume ) {
+static Bits WaveForm2( Bitu i, Bitu volume ) {
 	Bitu wave = SinTable[i & 511];
 	return MakeVolume( wave, volume );
 }
-static Bits DB_FASTCALL WaveForm3( Bitu i, Bitu volume ) {
+static Bits WaveForm3( Bitu i, Bitu volume ) {
 	Bitu wave = SinTable[i & 255];
 	wave |= ( ( (i ^ 256 ) & 256) - 1) >> ( 32 - 12 );
 	return MakeVolume( wave, volume );
 }
-static Bits DB_FASTCALL WaveForm4( Bitu i, Bitu volume ) {
+static Bits WaveForm4( Bitu i, Bitu volume ) {
 	//Twice as fast
 	i <<= 1;
 	Bits neg = 0 - (( i >> 9) & 1);//Create ~0 or 0
@@ -253,18 +253,18 @@ static Bits DB_FASTCALL WaveForm4( Bitu i, Bitu volume ) {
 	wave |= ( ( (i ^ 512 ) & 512) - 1) >> ( 32 - 12 );
 	return (MakeVolume( wave, volume ) ^ neg) - neg;
 }
-static Bits DB_FASTCALL WaveForm5( Bitu i, Bitu volume ) {
+static Bits WaveForm5( Bitu i, Bitu volume ) {
 	//Twice as fast
 	i <<= 1;
 	Bitu wave = SinTable[i & 511];
 	wave |= ( ( (i ^ 512 ) & 512) - 1) >> ( 32 - 12 );
 	return MakeVolume( wave, volume );
 }
-static Bits DB_FASTCALL WaveForm6( Bitu i, Bitu volume ) {
+static Bits WaveForm6( Bitu i, Bitu volume ) {
 	Bits neg = 0 - (( i >> 9) & 1);//Create ~0 or 0
 	return (MakeVolume( 0, volume ) ^ neg) - neg;
 }
-static Bits DB_FASTCALL WaveForm7( Bitu i, Bitu volume ) {
+static Bits WaveForm7( Bitu i, Bitu volume ) {
 	//Negative is reversed here
 	Bits neg = (( i >> 9) & 1) - 1;
 	Bitu wave = (i << 3);
@@ -400,9 +400,9 @@ Bits Operator::TemplateVolume(  ) {
 		break;
 	case DECAY:
 		vol += RateForward( decayAdd );
-		if ( GCC_UNLIKELY(vol >= sustainLevel) ) {
+		if ( vol >= sustainLevel ) {
 			//Check if we didn't overshoot max attenuation, then just go off
-			if ( GCC_UNLIKELY(vol >= ENV_MAX) ) {
+			if ( vol >= ENV_MAX ) {
 				volume = ENV_MAX;
 				SetState( OFF );
 				return ENV_MAX;
@@ -419,7 +419,7 @@ Bits Operator::TemplateVolume(  ) {
 		//In sustain phase, but not sustaining, do regular release
 	case RELEASE: 
 		vol += RateForward( releaseAdd );;
-		if ( GCC_UNLIKELY(vol >= ENV_MAX) ) {
+		if ( vol >= ENV_MAX ) {
 			volume = ENV_MAX;
 			SetState( OFF );
 			return ENV_MAX;
@@ -444,7 +444,7 @@ INLINE Bitu Operator::ForwardVolume() {
 
 
 INLINE Bitu Operator::ForwardWave() {
-	waveIndex += waveCurrent;	
+	waveIndex += waveCurrent;
 	return waveIndex >> WAVE_SH;
 }
 
@@ -882,6 +882,8 @@ Channel* Channel::BlockTemplate( Chip* chip, Bit32u samples, Bit32s* output ) {
 			return (this + 2);
 		}
 		break;
+	default:
+		break;
 	}
 	//Init the operators with the the current vibrato and tremolo values
 	Op( 0 )->Prepare( chip );
@@ -946,6 +948,8 @@ Channel* Channel::BlockTemplate( Chip* chip, Bit32u samples, Bit32s* output ) {
 		case sm3AMAM:
 			output[ i * 2 + 0 ] += sample & maskLeft;
 			output[ i * 2 + 1 ] += sample & maskRight;
+			break;
+		default:
 			break;
 		}
 	}
@@ -1265,7 +1269,7 @@ void Chip::Setup( Bit32u rate ) {
 				count += guessAdd;
 				Bit32s change = count >> RATE_SH;
 				count &= RATE_MASK;
-				if ( GCC_UNLIKELY(change) ) { // less than 1 % 
+				if ( change ) { // less than 1 %
 					volume += ( ~volume * change ) >> 3;
 				}
 				samples++;
@@ -1501,7 +1505,7 @@ void Handler::WriteReg( Bit32u addr, Bit8u val ) {
 
 void Handler::Generate( MixerChannel* chan, Bitu samples ) {
 	Bit32s buffer[ 512 * 2 ];
-	if ( GCC_UNLIKELY(samples > 512) )
+	if ( samples > 512 )
 		samples = 512;
 	if ( !chip.opl3Active ) {
 		chip.GenerateBlock2( samples, buffer );

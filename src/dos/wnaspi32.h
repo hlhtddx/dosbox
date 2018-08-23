@@ -25,9 +25,7 @@
 #pragma option -a1
 #endif //__BORLANDC__
 
-#ifdef _MSC_VER
 #pragma pack(1)
-#endif //__MSC_VER
 
 #ifdef __cplusplus
 extern "C" {
@@ -343,9 +341,7 @@ extern BOOL TranslateASPI32Address( PDWORD, PDWORD );
 #pragma option -a.
 #endif //__BORLANDC__
 
-#ifdef _MSC_VER
 #pragma pack()
-#endif //_MSC_VER
 
 #ifdef __cplusplus
 }

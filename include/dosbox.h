@@ -22,7 +22,7 @@
 
 #include "config.h"
 
-GCC_ATTRIBUTE(noreturn) void E_Exit(const char * message,...) GCC_ATTRIBUTE( __format__(__printf__, 1, 2));
+void E_Exit(const char * message,...);
 
 void MSG_Add(const char*,const char*); //add messages to the internal languagefile
 const char* MSG_Get(char const *);     //get messages from the internal languagefile
