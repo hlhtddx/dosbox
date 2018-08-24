@@ -376,11 +376,11 @@ public:
 public:
 
     bool Is32BitAddressMode() const {
-        return false;
+        return option_prefix.prefixes.operand_size_override == OPERAND_SIZE_OVERRIDE;
     }
 
     bool Is32BitOperandMode() const {
-        return false;
+        return option_prefix.prefixes.address_size_override == ADDRESS_SIZE_OVERRIDE;
     }
 
     bool Is_REP_Zero() const {

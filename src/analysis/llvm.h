@@ -23,35 +23,42 @@ namespace LLVM {
 		DosMemoryRegion(DosMemoryRegion* parent, PhysPt startAddress, Bit32u regionSize = 0, const char* regionName = NULL);
 		~DosMemoryRegion();
 
-		using DosMemList = std::vector<DosMemoryRegion>;
+		using DosMemoryRegionPtr = std::shared_ptr<DosMemoryRegion>;
+		using DosMemList = std::vector<DosMemoryRegionPtr>;
 
 	public:
-		PhysPt GetEndAddress() const {
-			return start + size;
+		PhysPt GetStartAddress() const {
+			return start_address;
 		}
-		bool SetSize(Bit32u newSize);
+
+		PhysPt GetEndAddress() const {
+			return end_address;
+		}
+
+		Bitu GetRegionSize() const {
+			return end_address - start_address;
+		}
+
+		bool SetRegionSize(Bit32u newSize) {
+			return false;
+		}
+
 		bool InsertSubMemRegion(PhysPt startAddress, Bit32u regionSize = 0, const char* u_name = NULL);
 
 		DosMemoryRegion * GetParent() {
 			return parent;
 		}
-		bool OutOfRange(PhysPt pointer) const {
-			if (pointer < start) {
-				return true;
-			}
-			if (size > 0 && pointer >= start + size) {
-				return true;
-			}
-			return false;
+		bool InRange(PhysPt pointer) const {
+			return pointer >= start_address && pointer < end_address;
 		}
 
 		bool Insects(const DosMemoryRegion& region) const {
-			return !OutOfRange(region.start) || !region.OutOfRange(start);
+			return InRange(region.start_address) || region.InRange(start_address);
 		}
 
 	private:
-		PhysPt start;
-		Bit32u size;
+		PhysPt start_address;
+		PhysPt end_address;
 		std::string name;
 		DosMemoryRegion * parent;
 		std::shared_ptr<DosMemList> subMemoryRegions;
@@ -73,4 +80,5 @@ namespace LLVM {
 		llvm::IRBuilder<> llvmBuilder;
 		std::unique_ptr<llvm::Module> llvmModule;
 	};
+
 }
