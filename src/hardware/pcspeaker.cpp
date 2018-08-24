@@ -25,9 +25,8 @@
 #include "pic.h"
 
 
-#ifndef PI
-#define PI 3.14159265358979323846
-#endif
+
+static const double PI = 3.14159265358979323846;
 
 #define SPKR_ENTRIES 1024
 #define SPKR_VOLUME 5000

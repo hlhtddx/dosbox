@@ -84,21 +84,19 @@ endif( DYNAMIC_CORE )
 
 if( FPU )
     message(" FPU Enabled")
-    add_definitions(-DC_FPU=1)
-    add_definitions(-DC_FPU_X86=1)
+
+    if( FPU_X64 )
+        message(" FPU_X64 Enabled")
+        add_definitions(-DC_FPU=1)
+        add_definitions(-DC_FPU_X64=1)
+    endif( FPU_X64 )
+
+    if( FPU_X86 )
+        message(" FPU_X86 Enabled")
+        add_definitions(-DC_FPU=1)
+        add_definitions(-DC_FPU_X86=1)
+    endif( FPU_X86 )
 endif( FPU )
-
-if( FPU_X64 )
-    message(" FPU_X64 Enabled")
-    add_definitions(-DC_FPU=1)
-    add_definitions(-DC_FPU_X86=1)
-endif( FPU_X64 )
-
-if( FPU_X86 )
-    message(" FPU_X86 Enabled")
-    add_definitions(-DC_FPU=1)
-    add_definitions(-DC_FPU_X86=1)
-endif( FPU_X86 )
 
 if( OPENGL )
     message(" OPENGL Enabled")
@@ -157,6 +155,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_definitions(-DLINUX=1)
     add_definitions(-DDB_HAVE_CLOCK_GETTIME=1)
 endif()
+
+add_definitions(-std=c++14)
 
 include_directories( ${CMAKE_SOURCE_DIR}/include )
 

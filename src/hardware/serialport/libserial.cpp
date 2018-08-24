@@ -41,8 +41,8 @@ bool SERIAL_open(const char* portname, COMPORT* port) {
 
 	// open the port in NT object space (recommended by Microsoft)
 	// allows the user to open COM10+ and custom port names.
-	int len = strlen(portname);
-	if(len > 240) {
+	size_t len = strlen(portname);
+	if (len > 240) {
 		SetLastError(ERROR_BUFFER_OVERFLOW);
 		free(cp);
 		return false;
@@ -141,7 +141,7 @@ void SERIAL_getErrorString(char* buffer, int length) {
 	const char* err5text = "The specified port is already in use.\n";
 	const char* err2text = "The specified port does not exist.\n";
 
-	int sysmsg_offset = 0;
+	size_t sysmsg_offset = 0;
 
 	if(error == 5) {
 		sysmsg_offset = strlen(err5text);

@@ -9,6 +9,7 @@ list(APPEND ${project}_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/core_normal.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core_prefetch.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core_simple.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/core_llvm.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/cpu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/flags.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/instructions.h
@@ -68,4 +69,10 @@ list(APPEND ${project}_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/core_dynrec/risc_x64.h
         )
 
-add_library ( dosbox_cpu STATIC ${${project}_SOURCES} )
+list(APPEND ${project}_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/core_llvm/core_llvm_runner.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/core_llvm/core_llvm_runner.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/core_llvm/core_llvm_common.h
+)
+
+add_library ( dosbox_cpu STATIC ${${project}_SOURCES})

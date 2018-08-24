@@ -23,22 +23,22 @@
 #include "mem.h"
 #endif
 
-#define FLAG_CF		0x00000001
-#define FLAG_PF		0x00000004
-#define FLAG_AF		0x00000010
-#define FLAG_ZF		0x00000040
-#define FLAG_SF		0x00000080
-#define FLAG_OF		0x00000800
+#define FLAG_CF		0x00000001u
+#define FLAG_PF		0x00000004u
+#define FLAG_AF		0x00000010u
+#define FLAG_ZF		0x00000040u
+#define FLAG_SF		0x00000080u
+#define FLAG_OF		0x00000800u
 
-#define FLAG_TF		0x00000100
-#define FLAG_IF		0x00000200
-#define FLAG_DF		0x00000400
+#define FLAG_TF		0x00000100u
+#define FLAG_IF		0x00000200u
+#define FLAG_DF		0x00000400u
 
-#define FLAG_IOPL	0x00003000
-#define FLAG_NT		0x00004000
-#define FLAG_VM		0x00020000
-#define FLAG_AC		0x00040000
-#define FLAG_ID		0x00200000
+#define FLAG_IOPL	0x00003000u
+#define FLAG_NT		0x00004000u
+#define FLAG_VM		0x00020000u
+#define FLAG_AC		0x00040000u
+#define FLAG_ID		0x00200000u
 
 #define FMASK_TEST		(FLAG_CF | FLAG_PF | FLAG_AF | FLAG_ZF | FLAG_SF | FLAG_OF)
 #define FMASK_NORMAL	(FMASK_TEST | FLAG_DF | FLAG_TF | FLAG_IF )	
