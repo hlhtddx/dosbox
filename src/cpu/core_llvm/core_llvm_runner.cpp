@@ -9317,6 +9317,7 @@ inline bool CpuRunnerLLVM::handler_in_F6_06_DIV_Eb(Bit8u rmmod) {
     }
     reg_ah = rem;
     reg_al = quo8;
+    SETFLAGBIT(OF, false);
     return true;
 }
 
@@ -9338,6 +9339,7 @@ inline bool CpuRunnerLLVM::handler_in_F6_07_IDIV_Eb(Bit8u rmmod) {
     }
     reg_ah = rem;
     reg_al = quo8s;
+	SETFLAGBIT(OF, false);
     return true;
 }
 
@@ -9494,6 +9496,8 @@ inline bool CpuRunnerLLVM::handler_in_F7_04_MUL_Evqp_32(Bit8u rmmod) {
     reg_eax = (Bit32u) (tempu);
     reg_edx = (Bit32u) (tempu >> 32);
     FillFlagsNoCFOF();
+	SETFLAGBIT(ZF, reg_al == 0);
+	SETFLAGBIT(SF, reg_al & 0x80);
     SETFLAGBIT(ZF, reg_eax == 0);
     if (reg_edx) {
         SETFLAGBIT(CF, true);
@@ -9526,6 +9530,8 @@ inline bool CpuRunnerLLVM::handler_in_F7_05_IMUL_Evqp_16(Bit8u rmmod) {
     reg_ax = (Bit16s) (temps);
     reg_dx = (Bit16s) (temps >> 16);
     FillFlagsNoCFOF();
+	SETFLAGBIT(ZF, reg_ax == 0);
+	SETFLAGBIT(SF, reg_ax & 0x8000);
     if (((temps & 0xffff8000) == 0xffff8000 ||
         (temps & 0xffff8000) == 0x0000)) {
         SETFLAGBIT(CF, false);
@@ -9548,6 +9554,8 @@ inline bool CpuRunnerLLVM::handler_in_F7_05_IMUL_Evqp_32(Bit8u rmmod) {
     reg_eax = (Bit32u) (temps);
     reg_edx = (Bit32u) (temps >> 32);
     FillFlagsNoCFOF();
+	SETFLAGBIT(ZF, reg_eax == 0);
+	SETFLAGBIT(SF, reg_eax & 0x80000000);
     if ((reg_edx == 0xffffffff) &&
         (reg_eax & 0x80000000)) {
         SETFLAGBIT(CF, false);
@@ -9593,6 +9601,7 @@ inline bool CpuRunnerLLVM::handler_in_F7_06_DIV_Evqp_16(Bit8u rmmod) {
     }
     reg_dx = rem;
     reg_ax = quo16;
+	SETFLAGBIT(OF, false);
     return true;
 }
 
@@ -9615,6 +9624,7 @@ inline bool CpuRunnerLLVM::handler_in_F7_06_DIV_Evqp_32(Bit8u rmmod) {
     }
     reg_edx = rem;
     reg_eax = quo32;
+	SETFLAGBIT(OF, false);
     return true;
 }
 
@@ -9648,6 +9658,7 @@ inline bool CpuRunnerLLVM::handler_in_F7_07_IDIV_Evqp_16(Bit8u rmmod) {
     }
     reg_dx = rem;
     reg_ax = quo16s;
+	SETFLAGBIT(OF, false);
     return true;
 }
 
@@ -9670,6 +9681,7 @@ inline bool CpuRunnerLLVM::handler_in_F7_07_IDIV_Evqp_32(Bit8u rmmod) {
     }
     reg_edx = rem;
     reg_eax = quo32s;
+	SETFLAGBIT(OF, false);
     return true;
 }
 
