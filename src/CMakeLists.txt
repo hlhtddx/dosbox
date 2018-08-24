@@ -32,6 +32,7 @@ list(APPEND ${project}_SOURCES
     ${CMAKE_SOURCE_DIR}/include/ipxserver.h
     ${CMAKE_SOURCE_DIR}/include/joystick.h
     ${CMAKE_SOURCE_DIR}/include/keyboard.h
+    ${CMAKE_SOURCE_DIR}/include/ir_gen.h
     ${CMAKE_SOURCE_DIR}/include/logging.h
     ${CMAKE_SOURCE_DIR}/include/mapper.h
     ${CMAKE_SOURCE_DIR}/include/mem.h
@@ -80,6 +81,7 @@ add_subdirectory( ints )
 add_subdirectory( misc )
 add_subdirectory( shell )
 add_subdirectory( platform )
+add_subdirectory( analysis )
 
 target_link_libraries( dosbox
     dosbox_cpu
@@ -95,5 +97,6 @@ target_link_libraries( dosbox
     dosbox_mame
     dosbox_gui_tk
     dosbox_zmbv
+    dosbox_analysis
     ${DOSBOX_LIBRARIES}
 )
