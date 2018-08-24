@@ -78,6 +78,9 @@
     <Filter Include="Source Files\llvm">
       <UniqueIdentifier>{28e73a44-fa8a-401c-b652-8a0cf9159f06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\cpu\core_llvm">
+      <UniqueIdentifier>{29398ac5-3fc8-4c8e-84e1-49c8285f10c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\dosbox.cpp">
@@ -443,6 +446,9 @@
     <ClCompile Include="..\src\llvm\llvm.cpp">
       <Filter>Source Files\llvm</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\cpu\core_llvm\core_llvm_runner.cpp">
+      <Filter>Source Files\cpu\core_llvm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\winres.rc">
@@ -740,6 +746,12 @@
     </ClInclude>
     <ClInclude Include="..\include\llvm.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\cpu\core_llvm\core_llvm_common.h">
+      <Filter>Source Files\cpu\core_llvm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\cpu\core_llvm\core_llvm_runner.h">
+      <Filter>Source Files\cpu\core_llvm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

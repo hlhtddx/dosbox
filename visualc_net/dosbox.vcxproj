@@ -101,6 +101,7 @@
     <ClCompile Include="..\src\cpu\core_dyn_x86.cpp" />
     <ClCompile Include="..\src\cpu\core_full.cpp" />
     <ClCompile Include="..\src\cpu\core_llvm.cpp" />
+    <ClCompile Include="..\src\cpu\core_llvm\core_llvm_runner.cpp" />
     <ClCompile Include="..\src\cpu\core_normal.cpp" />
     <ClCompile Include="..\src\cpu\core_prefetch.cpp" />
     <ClCompile Include="..\src\cpu\core_simple.cpp" />
@@ -281,6 +282,8 @@
     <ClInclude Include="..\src\cpu\core_full\save.h" />
     <ClInclude Include="..\src\cpu\core_full\string.h" />
     <ClInclude Include="..\src\cpu\core_full\support.h" />
+    <ClInclude Include="..\src\cpu\core_llvm\core_llvm_common.h" />
+    <ClInclude Include="..\src\cpu\core_llvm\core_llvm_runner.h" />
     <ClInclude Include="..\src\cpu\core_normal\helpers.h" />
     <ClInclude Include="..\src\cpu\core_normal\string.h" />
     <ClInclude Include="..\src\cpu\core_normal\support.h" />
