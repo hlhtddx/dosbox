@@ -80,9 +80,8 @@ bool MemoryRegion::InsertSubMemRegion(PhysPt startAddress, Bit32u regionSize, co
 
 Module::Module(Analyzer *pAnalyzer, const char *name)
 	: MemoryRegion(pAnalyzer) {
-	llvmModule = llvm::make_unique<llvm::Module>("dosbox", m_pAnalyzer->GetContext());
+	llvmModule = nullptr;
 }
 
-Module::~Module() {
-}
+Module::~Module() = default;
 }
