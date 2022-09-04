@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.10)
 
 # Option to with alsa midi support (default yes)
 option( ALSA_MIDI "with alsa midi support (default yes)" OFF )
@@ -30,7 +30,7 @@ option( WINDRES "Enable WINDRES" OFF )
 option( SSHOT "Enable Screenshot" ON )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(PKG_CONFIG_EXECUTABLE "/opt/local/bin/pkg-config")
+    set(PKG_CONFIG_EXECUTABLE "/usr/local/bin/pkg-config")
 endif()
 find_package(PkgConfig)
 
