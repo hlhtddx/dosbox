@@ -1,5 +1,7 @@
 #pragma once
 
+#if LLVM_ANALYZER == 1
+
 #include <dosbox.h>
 #include <mem.h>
 #include <string>
@@ -14,7 +16,6 @@
 //#include "llvm/IR/Verifier.h"
 
 #include "ir_gen.h"
-
 namespace LLVM {
 	class Analyzer : IR_Generator {
 	public:
@@ -112,3 +113,5 @@ namespace LLVM {
 	};
 
 }
+
+#endif

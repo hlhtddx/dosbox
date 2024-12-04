@@ -2,7 +2,7 @@
 set(project "dosbox_analysis")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(LLVM_CMAKE_INC_PATH /opt/local/libexec/llvm-6.0/lib/cmake/llvm)
+    set(LLVM_CMAKE_INC_PATH /usr/local/opt/llvm/lib/cmake/llvm)
     message("set LLVM_CMAKE_INC_PATH to " ${LLVM_CMAKE_INC_PATH})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LLVM_CMAKE_INC_PATH /usr/lib/llvm-6.0/lib/cmake/llvm)
@@ -18,7 +18,7 @@ include(LLVMConfig)
 include(AddLLVM)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    include_directories(/opt/local/libexec/llvm-6.0/include)
+    include_directories(/usr/local/opt/llvm/include)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     include_directories(/usr/lib/llvm-6.0/include)
 endif()

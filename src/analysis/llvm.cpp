@@ -1,5 +1,7 @@
 #include "llvm.h"
 
+#if LLVM_ANALYZER == 1
+
 namespace LLVM {
 
 Analyzer::Analyzer()
@@ -80,9 +82,11 @@ bool MemoryRegion::InsertSubMemRegion(PhysPt startAddress, Bit32u regionSize, co
 
 Module::Module(Analyzer *pAnalyzer, const char *name)
 	: MemoryRegion(pAnalyzer) {
-	llvmModule = llvm::make_unique<llvm::Module>("dosbox", m_pAnalyzer->GetContext());
+//	llvmModule = llvm::make_unique<llvm::Module>("dosbox", m_pAnalyzer->GetContext());
 }
 
 Module::~Module() {
 }
 }
+
+#endif
